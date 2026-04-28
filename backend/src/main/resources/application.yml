@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: cesizen-backend
+
+  # Base de données PostgreSQL
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cesizen_db
+    username: cesizen_user
+    password: cesizen_password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: false
+    open-in-view: false
+
+  # Security
+  security:
+    user:
+      name: admin
+      password: admin123
+
+  # CORS
+  web:
+    cors:
+      allowed-origins: http://localhost:4200
+      allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+      allowed-headers: "*"
+      allow-credentials: true
+
+server:
+  port: 8080
+
+app:
+  api:
+    base-path: /api/v1
+  cors:
+    allowed-origins: http://localhost:4200
+
+  # JWT Configuration
+  jwt:
+    secret: your-super-secret-key-change-this-in-production-with-a-strong-random-key
+    expiration: 86400000  # 24 heures en millisecondes

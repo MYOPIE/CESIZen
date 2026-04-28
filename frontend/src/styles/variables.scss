@@ -1,0 +1,94 @@
+// ===========================
+// Variables de couleurs
+// ===========================
+
+// Palette principale - Bleu clair et Vert clair
+$primary-blue: #2c5aa0;
+$primary-green: #22a668;
+$light-blue: #4a90e2;
+$light-green: #52c41a;
+$pale-blue: #e8f4f8;
+$pale-green: #f0f9f4;
+
+// Couleurs secondaires
+$dark-blue: #1a3a5c;
+$dark-green: #157a4e;
+$accent-yellow: #f5a623;
+$accent-orange: #e67e22;
+
+// Couleurs neutres
+$white: #ffffff;
+$light-gray: #f5f7fa;
+$medium-gray: #d0d8e0;
+$dark-gray: #6c757d;
+$very-dark-gray: #2b3544;
+
+// États
+$success: #22a668;
+$warning: #f5a623;
+$error: #e74c3c;
+$info: #4a90e2;
+
+// Ombres et espacements
+$shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+$shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15);
+$shadow-heavy: 0 8px 24px rgba(0, 0, 0, 0.2);
+
+// Border radius
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 12px;
+
+// Transitions
+$transition-fast: 0.2s ease;
+$transition-normal: 0.3s ease;
+$transition-slow: 0.5s ease;
+
+// ===========================
+// Mixins utiles
+// ===========================
+
+@mixin card-style {
+  background-color: $white;
+  border-radius: $border-radius-md;
+  padding: 1.5rem;
+  box-shadow: $shadow-light;
+  transition: box-shadow $transition-normal;
+
+  &:hover {
+    box-shadow: $shadow-medium;
+  }
+}
+
+@mixin button-style($bg-color, $text-color: $white) {
+  background-color: $bg-color;
+  color: $text-color;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: $border-radius-md;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all $transition-fast;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-medium;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}

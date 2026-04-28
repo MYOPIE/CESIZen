@@ -1,0 +1,95 @@
+<div class="page informations-page">
+  <div class="container">
+    <div class="header-section">
+      <h1>Informations & Ressources</h1>
+      <p class="header-subtitle">Tout ce que vous devez savoir sur le stress et la santé mentale</p>
+    </div>
+
+    <div class="filters-section">
+      <h3>Filtrer par catégorie</h3>
+      <div class="filter-buttons">
+        <button 
+          *ngFor="let category of categories"
+          class="btn filter-btn"
+          [class.active]="selectedCategory === category"
+          (click)="filterByCategory(category)"
+        >
+          {{ category }}
+        </button>
+      </div>
+    </div>
+
+    <div class="articles-grid">
+      <div *ngFor="let article of filteredArticles" class="article-card card card-blue">
+        <div class="article-header">
+          <span class="article-icon">{{ article.icon }}</span>
+          <span class="article-category">{{ article.category }}</span>
+        </div>
+
+        <h3>{{ article.title }}</h3>
+        <p class="article-excerpt">{{ article.excerpt }}</p>
+
+        <div class="article-footer">
+          <span class="reading-time">📖 {{ article.readingTime }} min de lecture</span>
+          <button class="btn btn-primary btn-sm">Lire l'article</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section Ressources supplémentaires -->
+    <section class="resources-section mt-4">
+      <h2>Ressources utiles</h2>
+      <div class="resources-grid">
+        <div class="resource-card card">
+          <h4>📚 Bibliothèque de contenu</h4>
+          <p>Accédez à notre collection complète d'articles, de guides et de ressources sur le stress et la santé mentale.</p>
+          <button class="btn btn-primary btn-sm">Accéder</button>
+        </div>
+
+        <div class="resource-card card">
+          <h4>🎥 Vidéos éducatives</h4>
+          <p>Regardez des vidéos et des tutoriels pour apprendre des techniques de gestion du stress pratiques.</p>
+          <button class="btn btn-primary btn-sm">Regarder</button>
+        </div>
+
+        <div class="resource-card card">
+          <h4>📞 Ressources d'aide</h4>
+          <p>Trouvez les contacts et numéros utiles si vous avez besoin d'aide ou de soutien professionnel.</p>
+          <button class="btn btn-primary btn-sm">En savoir plus</button>
+        </div>
+
+        <div class="resource-card card">
+          <h4>🎁 Téléchargements gratuits</h4>
+          <p>Téléchargez des guides, des modèles et des outils pour mieux gérer votre stress au quotidien.</p>
+          <button class="btn btn-primary btn-sm">Télécharger</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section FAQ -->
+    <section class="faq-section mt-4">
+      <h2>Questions fréquentes</h2>
+      <div class="faq-items">
+        <div class="faq-item card">
+          <h4>Qu'est-ce que CESIZen exactement ?</h4>
+          <p>CESIZen est une plateforme gratuite créée par le Ministère de la Santé pour vous aider à mieux comprendre et gérer votre stress. Elle propose des outils, des informations et des activités de détente accessibles à tous.</p>
+        </div>
+
+        <div class="faq-item card">
+          <h4>Mes données sont-elles sécurisées ?</h4>
+          <p>Oui, nous respectons strictement le RGPD et utilisons le chiffrement pour protéger vos données personnelles. Vous pouvez consulter notre politique de confidentialité pour plus de détails.</p>
+        </div>
+
+        <div class="faq-item card">
+          <h4>Dois-je créer un compte pour utiliser CESIZen ?</h4>
+          <p>Non, vous pouvez accéder à la plupart des informations et outils sans créer de compte. Cependant, créer un compte vous permet de sauvegarder vos progrès et d'accéder à des fonctionnalités supplémentaires.</p>
+        </div>
+
+        <div class="faq-item card">
+          <h4>CESIZen remplace-t-il une consultation médicale ?</h4>
+          <p>Non, CESIZen est un outil d'accompagnement et d'information. Si vous avez besoin d'aide professionnelle, veuillez consulter un médecin ou un psychologue.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

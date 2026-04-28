@@ -1,0 +1,192 @@
+<div class="page compte-page">
+  <div class="container">
+    <h1 class="page-title">Gestion du compte</h1>
+
+    <div *ngIf="successMessage" class="alert alert-success">
+      {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Section Connecté -->
+    <div *ngIf="isConnected" class="connected-section">
+      <div class="profile-card card card-blue">
+        <div class="profile-header">
+          <div class="profile-avatar">👤</div>
+          <div class="profile-info">
+            <h2>{{ userProfile.pseudo }}</h2>
+            <p class="text-muted">{{ userProfile.email }}</p>
+          </div>
+        </div>
+
+        <div class="profile-details">
+          <div class="detail-item">
+            <span class="label">Rôle:</span>
+            <span class="value">{{ userProfile.role }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Compte créé le:</span>
+            <span class="value">{{ userProfile.dateCreation | date: 'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulaire de modification -->
+      <div class="edit-section card mt-3">
+        <h3>Modifier mon profil</h3>
+        <form>
+          <div class="form-group">
+            <label for="pseudo">Pseudo</label>
+            <input type="text" id="pseudo" class="form-control" [value]="userProfile.pseudo" disabled>
+          </div>
+          <div class="form-group">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" class="form-control" [value]="userProfile.email" disabled>
+          </div>
+          <div class="form-group">
+            <label for="newPassword">Nouveau mot de passe</label>
+            <input type="password" id="newPassword" class="form-control" placeholder="Laisser vide pour ne pas changer">
+          </div>
+          <div class="form-buttons">
+            <button type="button" class="btn btn-primary">Mettre à jour</button>
+            <button type="button" class="btn btn-secondary">Annuler</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Actions de compte -->
+      <div class="account-actions mt-4">
+        <button class="btn btn-secondary" (click)="onLogout()">Se déconnecter</button>
+        <button class="btn btn-warning" (click)="onDeleteAccount()">Supprimer mon compte</button>
+      </div>
+    </div>
+
+    <!-- Section Non connecté -->
+    <div *ngIf="!isConnected" class="auth-section">
+      <div class="auth-container">
+        <!-- Formulaire de connexion -->
+        <div *ngIf="showLoginForm" class="auth-form card card-blue">
+          <h3>Se connecter</h3>
+          <p class="form-subtitle">Accédez à votre compte CESIZen</p>
+
+          <form (ngSubmit)="onLogin()">
+            <div class="form-group">
+              <label for="loginEmail">E-mail</label>
+              <input 
+                type="email" 
+                id="loginEmail" 
+                class="form-control"
+                [(ngModel)]="loginForm.email"
+                name="email"
+                placeholder="votre@email.com"
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="loginPassword">Mot de passe</label>
+              <input 
+                type="password" 
+                id="loginPassword" 
+                class="form-control"
+                [(ngModel)]="loginForm.password"
+                name="password"
+                placeholder="••••••••"
+              >
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
+          </form>
+
+          <div class="form-footer">
+            <p>Pas encore de compte ? <a (click)="toggleForm()" class="link">S'inscrire ici</a></p>
+            <a href="#" class="link">Mot de passe oublié ?</a>
+          </div>
+        </div>
+
+        <!-- Formulaire d'inscription -->
+        <div *ngIf="!showLoginForm" class="auth-form card card-green">
+          <h3>Créer un compte</h3>
+          <p class="form-subtitle">Rejoignez CESIZen pour un meilleur bien-être</p>
+
+          <form (ngSubmit)="onRegister()">
+            <div class="form-group">
+              <label for="registerPseudo">Pseudo</label>
+              <input 
+                type="text" 
+                id="registerPseudo" 
+                class="form-control"
+                [(ngModel)]="registerForm.pseudo"
+                name="pseudo"
+                placeholder="Votre pseudo"
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="registerEmail">E-mail</label>
+              <input 
+                type="email" 
+                id="registerEmail" 
+                class="form-control"
+                [(ngModel)]="registerForm.email"
+                name="email"
+                placeholder="votre@email.com"
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="registerPassword">Mot de passe</label>
+              <input 
+                type="password" 
+                id="registerPassword" 
+                class="form-control"
+                [(ngModel)]="registerForm.password"
+                name="password"
+                placeholder="Minimum 8 caractères"
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="confirmPassword">Confirmer mot de passe</label>
+              <input 
+                type="password" 
+                id="confirmPassword" 
+                class="form-control"
+                [(ngModel)]="registerForm.confirmPassword"
+                name="confirmPassword"
+                placeholder="••••••••"
+              >
+            </div>
+
+            <div class="form-group checkbox">
+              <input 
+                type="checkbox" 
+                id="acceptTerms"
+                [(ngModel)]="registerForm.acceptTerms"
+                name="acceptTerms"
+              >
+              <label for="acceptTerms">J'accepte les conditions d'utilisation et la politique de confidentialité</label>
+            </div>
+
+            <button type="submit" class="btn btn-green btn-block">S'inscrire</button>
+          </form>
+
+          <div class="form-footer">
+            <p>Vous avez déjà un compte ? <a (click)="toggleForm()" class="link">Se connecter ici</a></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Informations de sécurité -->
+      <div class="security-info card mt-4">
+        <h3>🔒 Sécurité de vos données</h3>
+        <ul>
+          <li>Vos données sont chiffrées en transit et au repos</li>
+          <li>Nous respectons strictement le RGPD</li>
+          <li>Votre mot de passe ne nous est jamais transmis en clair</li>
+          <li>Vous pouvez supprimer votre compte et toutes vos données à tout moment</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

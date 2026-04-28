@@ -1,0 +1,11 @@
+<app-navbar></app-navbar>
+
+@if (API_status()) {
+  <div class="api-status" [class.connected]="API_status() === 'OK'" [class.error]="API_status().startsWith('Error')">
+    API Status: {{ API_status() }}
+  </div>
+}
+
+<router-outlet></router-outlet>
+
+

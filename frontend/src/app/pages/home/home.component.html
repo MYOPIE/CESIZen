@@ -1,0 +1,52 @@
+<div class="page home-page">
+  <div class="hero-section">
+    <div class="hero-content">
+      <h1>Bienvenue sur <span class="highlight">CESIZen</span></h1>
+      <p class="hero-subtitle">Votre application pour la santé mentale et la gestion du stress</p>
+      <p class="hero-description">
+        Découvrez des outils simples et efficaces pour mieux comprendre votre stress, 
+        gérer vos émotions et cultiver un bien-être durable.
+      </p>
+      <div class="hero-buttons">
+        <button class="btn btn-primary btn-lg" routerLink="/informations">En savoir plus</button>
+        <button class="btn btn-secondary btn-lg" routerLink="/compte">Créer un compte</button>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="image-placeholder">
+        <span>🧘‍♀️</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mt-4">
+    <section class="features-section">
+      <h2 class="text-center mb-4">Nos fonctionnalités</h2>
+      <div class="features-grid">
+        <div *ngFor="let feature of features" class="feature-card card card-blue">
+          <div class="feature-icon">{{ feature.icon }}</div>
+          <h3>{{ feature.title }}</h3>
+          <p>{{ feature.description }}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats-section mt-4">
+      <h2 class="text-center mb-4">À propos de CESIZen</h2>
+      <div class="stats-grid">
+        <div *ngFor="let stat of stats" class="stat-card">
+          <div class="stat-value">{{ stat.value }}</div>
+          <div class="stat-label">{{ stat.label }}</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section mt-4">
+      <div class="cta-card card">
+        <h3>Prêt à commencer ?</h3>
+        <p>Rejoignez des milliers d'utilisateurs qui ont déjà amélioré leur bien-être grâce à CESIZen.</p>
+        <button class="btn btn-green btn-lg" routerLink="/compte">Je crée mon compte</button>
+      </div>
+    </section>
+  </div>
+</div>

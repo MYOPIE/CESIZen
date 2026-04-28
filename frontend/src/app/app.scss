@@ -1,0 +1,37 @@
+@import '../styles/variables.scss';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.api-status-bar {
+  background-color: $pale-blue;
+  padding: 0.75rem;
+  text-align: center;
+  color: $dark-blue;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-bottom: 1px solid $medium-gray;
+
+  p {
+    margin: 0;
+  }
+}
+
+router-outlet + * {
+  flex: 1;
+}
+
+h1 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.status {
+  margin-top: 1.25rem;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background: #eaf5ff;
+}

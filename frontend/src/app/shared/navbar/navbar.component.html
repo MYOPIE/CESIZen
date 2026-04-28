@@ -1,0 +1,21 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-logo">
+      <span class="logo-icon">◇</span>
+      <span class="logo-text">CESIZen</span>
+    </div>
+
+    <button class="navbar-toggle" (click)="toggleMenu()" [attr.aria-expanded]="isMenuOpen">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <ul class="navbar-menu" [class.active]="isMenuOpen">
+      <li><a routerLink="/" routerLinkActive="active" (click)="closeMenu()" [routerLinkActiveOptions]="{ exact: true }">Accueil</a></li>
+      <li><a routerLink="/informations" routerLinkActive="active" (click)="closeMenu()">Informations</a></li>
+      <li><a routerLink="/activites" routerLinkActive="active" (click)="closeMenu()">Activités de détente</a></li>
+      <li><a routerLink="/compte" routerLinkActive="active" (click)="closeMenu()">Mon compte</a></li>
+    </ul>
+  </div>
+</nav>
