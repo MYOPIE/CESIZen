@@ -229,12 +229,9 @@ Pour compléter l'application :
 2. ✅ [COMPTE PAGE] Créée
 3. ✅ [INFORMATIONS PAGE] Créée
 4. ✅ [ACTIVITES PAGE] Créée
-5. 🔲 [DIAGNOSTICS PAGE] À créer
-6. 🔲 [TRACKER PAGE] À créer
-7. 🔲 [RESPIRATION PAGE] À créer
-8. 🔲 Intégration backend
-9. 🔲 Tests unitaires
-10. 🔲 Déploiement
+5. 🔲 Intégration backend
+6. 🔲 Tests unitaires
+7. 🔲 Déploiement
 
 ---
 
