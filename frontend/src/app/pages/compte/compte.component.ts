@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService, UserResponse } from '../../services/auth.service';
@@ -37,7 +37,9 @@ export class CompteComponent implements OnInit {
   updatePassword = '';
   confirmUpdatePassword = '';
 
-  constructor(private authService: AuthService) {}
+  private messageTimeout: any;
+
+  constructor(private authService: AuthService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.authService.currentUser$.subscribe(user => {
@@ -201,15 +203,23 @@ export class CompteComponent implements OnInit {
   }
 
   clearMessages(): void {
-    setTimeout(() => {
+    if (this.messageTimeout) {
+      clearTimeout(this.messageTimeout);
+    }
+    this.messageTimeout = setTimeout(() => {
       this.successMessage = '';
       this.errorMessage = '';
-    }, 5000);
+      this.cdr.detectChanges();
+    }, 2000);
   }
 
   clearErrorAfterDelay(): void {
-    setTimeout(() => {
+    if (this.messageTimeout) {
+      clearTimeout(this.messageTimeout);
+    }
+    this.messageTimeout = setTimeout(() => {
       this.errorMessage = '';
-    }, 5000);
+      this.cdr.detectChanges();
+    }, 2000);
   }
 }

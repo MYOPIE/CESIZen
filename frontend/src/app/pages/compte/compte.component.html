@@ -79,7 +79,7 @@
           <h3>Se connecter</h3>
           <p class="form-subtitle">Accédez à votre compte CESIZen</p>
 
-          <form>
+          <form (ngSubmit)="onLogin()">
             <div class="form-group">
               <label for="loginEmail">E-mail</label>
               <input 
@@ -104,7 +104,7 @@
               >
             </div>
 
-            <button type="button" class="btn btn-primary btn-block" (click)="onLogin()">Se connecter</button>
+            <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
           </form>
 
           <div class="form-footer">
@@ -118,7 +118,7 @@
           <h3>Créer un compte</h3>
           <p class="form-subtitle">Rejoignez CESIZen pour un meilleur bien-être</p>
 
-          <form>
+          <form (ngSubmit)="onRegister()">
             <div class="row">
               <div class="form-group col">
                 <label for="registerFirstName">Prénom</label>
@@ -203,7 +203,7 @@
           <h3>Mot de passe oublié</h3>
           <p class="form-subtitle">Saisissez l'adresse e-mail associée à votre compte</p>
 
-          <form>
+          <form (ngSubmit)="onForgotPassword()">
             <div class="form-group">
               <label for="forgotEmail">E-mail</label>
               <input 
@@ -216,7 +216,7 @@
               >
             </div>
 
-            <button type="button" class="btn btn-primary btn-block" (click)="onForgotPassword()">Envoyer l'e-mail</button>
+            <button type="submit" class="btn btn-primary btn-block">Envoyer l'e-mail</button>
           </form>
 
           <div class="form-footer">

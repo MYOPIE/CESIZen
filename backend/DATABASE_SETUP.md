@@ -235,22 +235,3 @@ backend/
 │   └── init.sql
 └── pom.xml
 ```
-
-## Prochaines Étapes
-
-1. **Implémenter JWT** pour l'authentification sécurisée
-2. **Ajouter les tests unitaires**
-3. **Configurer les permissions par rôle** (Admin/User)
-4. **Ajouter le tracker d'émotions**
-5. **Ajouter les exercices de respiration**
-6. **Déployer sur un serveur**
-
-## Notes de Sécurité
-
-⚠️ **Pour la production** :
-- Changer le mot de passe PostgreSQL
-- Changer la clé JWT secrète dans `application.yml`
-- Activer HTTPS
-- Implémenter des validations plus robustes
-- Ajouter rate limiting
-- Mettre en place une authentification Multi-Facteur
