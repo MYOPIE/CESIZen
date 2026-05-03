@@ -1,4 +1,4 @@
-@import '../../../styles/variables.scss';
+@use '../../../styles/variables.scss' as *;
 
 .navbar {
   background: linear-gradient(135deg, $primary-blue 0%, $light-blue 100%);
