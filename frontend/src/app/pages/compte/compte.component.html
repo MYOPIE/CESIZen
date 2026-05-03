@@ -53,6 +53,20 @@
           <div class="form-group">
             <label for="newPassword">Nouveau mot de passe</label>
             <input type="password" id="newPassword" class="form-control" [(ngModel)]="updatePassword" name="newPassword" placeholder="Laissez vide pour ne pas modifier">
+            <ul *ngIf="updatePassword" class="password-rules list-unstyled mt-2">
+              <li [ngClass]="hasMinLength(updatePassword) ? 'text-success' : 'text-danger'">
+                <span>{{ hasMinLength(updatePassword) ? '✓' : '✗' }}</span> Au moins 8 caractères
+              </li>
+              <li [ngClass]="hasUpperCase(updatePassword) ? 'text-success' : 'text-danger'">
+                <span>{{ hasUpperCase(updatePassword) ? '✓' : '✗' }}</span> Au moins 1 majuscule
+              </li>
+              <li [ngClass]="hasLowerCase(updatePassword) ? 'text-success' : 'text-danger'">
+                <span>{{ hasLowerCase(updatePassword) ? '✓' : '✗' }}</span> Au moins 1 minuscule
+              </li>
+              <li [ngClass]="hasNumber(updatePassword) ? 'text-success' : 'text-danger'">
+                <span>{{ hasNumber(updatePassword) ? '✓' : '✗' }}</span> Au moins 1 chiffre
+              </li>
+            </ul>
           </div>
           <div class="form-group" *ngIf="updatePassword">
             <label for="confirmNewPassword">Confirmer le nouveau mot de passe</label>
@@ -164,8 +178,22 @@
                 class="form-control"
                 [(ngModel)]="registerForm.password"
                 name="password"
-                placeholder="Minimum 8 caractères"
+                placeholder="Votre mot de passe"
               >
+              <ul class="password-rules list-unstyled mt-2">
+                <li [ngClass]="hasMinLength(registerForm.password) ? 'text-success' : 'text-danger'">
+                  <span>{{ hasMinLength(registerForm.password) ? '✓' : '✗' }}</span> Au moins 8 caractères
+                </li>
+                <li [ngClass]="hasUpperCase(registerForm.password) ? 'text-success' : 'text-danger'">
+                  <span>{{ hasUpperCase(registerForm.password) ? '✓' : '✗' }}</span> Au moins 1 majuscule
+                </li>
+                <li [ngClass]="hasLowerCase(registerForm.password) ? 'text-success' : 'text-danger'">
+                  <span>{{ hasLowerCase(registerForm.password) ? '✓' : '✗' }}</span> Au moins 1 minuscule
+                </li>
+                <li [ngClass]="hasNumber(registerForm.password) ? 'text-success' : 'text-danger'">
+                  <span>{{ hasNumber(registerForm.password) ? '✓' : '✗' }}</span> Au moins 1 chiffre
+                </li>
+              </ul>
             </div>
 
             <div class="form-group">

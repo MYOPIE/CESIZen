@@ -55,6 +55,22 @@ export class CompteComponent implements OnInit {
     this.clearMessages();
   }
 
+  hasMinLength(password: string): boolean {
+    return password ? password.length >= 8 : false;
+  }
+
+  hasUpperCase(password: string): boolean {
+    return password ? /[A-Z]/.test(password) : false;
+  }
+
+  hasLowerCase(password: string): boolean {
+    return password ? /[a-z]/.test(password) : false;
+  }
+
+  hasNumber(password: string): boolean {
+    return password ? /\d/.test(password) : false;
+  }
+
   validatePassword(password: string): boolean {
     // Minimum 8 caractères, une majuscule, une minuscule, un chiffre
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
