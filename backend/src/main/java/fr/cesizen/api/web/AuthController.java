@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @RestController
@@ -47,29 +48,37 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody UserLoginRequest request) {
         Optional<User> userOpt = userService.findByEmail(request.getEmail());
 
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
-            if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-                UserResponse userResponse = UserResponse.builder()
-                        .id(user.getId())
-                        .email(user.getEmail())
-                        .firstName(user.getFirstName())
-                        .lastName(user.getLastName())
-                        .role(user.getRole().getValue())
-                        .isActive(user.getIsActive())
-                        .build();
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(AuthResponse.builder()
+                            .message("Adresse e-mail non reconnue.")
+                            .build());
+        }
 
-                return ResponseEntity.ok(AuthResponse.builder()
-                        .user(userResponse)
-                        .token("jwt-token-placeholder") // TODO: Implement JWT token generation
-                        .message("Login successful")
-                        .build());
-            }
+        User user = userOpt.get();
+        if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            UserResponse userResponse = UserResponse.builder()
+                    .id(user.getId())
+                    .email(user.getEmail())
+                    .firstName(user.getFirstName())
+                    .lastName(user.getLastName())
+                    .role(user.getRole().getValue())
+                    .isActive(user.getIsActive())
+                    .createdAt(user.getCreatedAt().format(formatter))
+                    .updatedAt(user.getUpdatedAt().format(formatter))
+                    .build();
+
+            return ResponseEntity.ok(AuthResponse.builder()
+                    .user(userResponse)
+                    .token("jwt-token-placeholder") // TODO: Implement JWT token generation
+                    .message("Login successful")
+                    .build());
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(AuthResponse.builder()
-                        .message("Invalid email or password")
+                        .message("Mot de passe incorrect.")
                         .build());
     }
 }

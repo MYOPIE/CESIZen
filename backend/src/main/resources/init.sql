@@ -43,3 +43,10 @@ CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
 CREATE INDEX IF NOT EXISTS idx_activities_is_active ON activities(is_active);
 CREATE INDEX IF NOT EXISTS idx_informations_is_published ON informations(is_published);
 CREATE INDEX IF NOT EXISTS idx_informations_category ON informations(category);
+
+-- Insertion de comptes pour tester
+-- Mot de passe 'password123' encrypté par BCrypt ($2y$10$wYWONX1zYwIowrB.44g.6e.oOfmEL1Gey7r2Yx.M5mI9RkVJ64Zk2 est 'password123')
+INSERT INTO users (email, first_name, last_name, password, role, is_active, created_at, updated_at) 
+VALUES ('admin@cesizen.fr', 'Admin', 'CESIZen', '$2a$10$X86rCj0l.O5j2mO3M1s3hOoJ.U4Hn/y3MWeh/.AODH2k5rRkWe53a', 'ROLE_ADMIN', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+ON CONFLICT (email) DO NOTHING;
+
