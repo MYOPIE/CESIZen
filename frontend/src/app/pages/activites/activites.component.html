@@ -40,14 +40,16 @@
           <button 
             class="favorite-btn"
             [class.active]="activite.isFavorite"
+            [disabled]="!isLoggedIn"
+            [class.disabled]="!isLoggedIn"
             (click)="toggleFavorite(activite)"
-            [title]="activite.isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'"
+            [title]="!isLoggedIn ? 'Connectez-vous pour ajouter aux favoris' : (activite.isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris')"
           >
             ★
           </button>
         </div>
 
-        <h3>{{ activite.nom }}</h3>
+        <h3>{{ activite.title }}</h3>
         
         <p class="activite-description">{{ activite.description }}</p>
 

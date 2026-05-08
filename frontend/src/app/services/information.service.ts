@@ -1,0 +1,50 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+export interface Information {
+  id: number;
+  title: string;
+  content: string;
+  category: string;
+  isPublished: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  // Properties mapped for UI validation
+  excerpt?: string;
+  icon?: string;
+  readingTime?: number;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class InformationService {
+  private apiUrl = 'http://localhost:8080/api/v1/informations';
+
+  constructor(private http: HttpClient) {}
+
+  getAllInformations(): Observable<Information[]> {
+    return this.http.get<Information[]>(this.apiUrl);
+  }
+
+  getPublishedInformations(): Observable<Information[]> {
+    return this.http.get<Information[]>(`${this.apiUrl}/published`);
+  }
+
+  getInformationById(id: number): Observable<Information> {
+    return this.http.get<Information>(`${this.apiUrl}/${id}`);
+  }
+
+  createInformation(info: Partial<Information>): Observable<Information> {
+    return this.http.post<Information>(this.apiUrl, info);
+  }
+
+  updateInformation(id: number, info: Partial<Information>): Observable<Information> {
+    return this.http.put<Information>(`${this.apiUrl}/${id}`, info);
+  }
+
+  deleteInformation(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+}

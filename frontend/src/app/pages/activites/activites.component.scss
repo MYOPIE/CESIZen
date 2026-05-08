@@ -147,13 +147,18 @@
       color: $medium-gray;
       transition: all $transition-fast;
 
-      &:hover {
+      &:hover:not(:disabled) {
         color: $warning;
         transform: scale(1.2);
       }
 
       &.active {
         color: $warning;
+      }
+      
+      &:disabled, &.disabled {
+        color: #e0e0e0;
+        cursor: not-allowed;
       }
     }
 
