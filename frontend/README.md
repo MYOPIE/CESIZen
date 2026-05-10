@@ -42,7 +42,6 @@ Pour plus d'informations, consultez :
 
 - 📖 [INDEX.md](./INDEX.md) - Guide complet
 - 🚀 [QUICKSTART.md](./QUICKSTART.md) - Démarrage rapide
-- 📄 [PAGES_CREATED.md](./PAGES_CREATED.md) - Détails des pages
 - 🏗️ [ARCHITECTURE.md](./ARCHITECTURE.md) - Architecture
 - 🎨 [VISUAL_SUMMARY.md](./VISUAL_SUMMARY.md) - Aperçu visuel
 

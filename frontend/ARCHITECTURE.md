@@ -255,14 +255,3 @@ ng test
 # Linter
 ng lint
 ```
-
-## Points d'amélioration futurs
-
-- [ ] Service pour la gestion d'état (NgRx ou Signal)
-- [ ] Guards pour l'authentification
-- [ ] Interceptors HTTP
-- [ ] Lazy loading des routes
-- [ ] PWA (Progressive Web App)
-- [ ] Dark mode toggle
-- [ ] i18n (internationalization)
-- [ ] Analytics tracking

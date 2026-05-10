@@ -163,15 +163,6 @@ server:
   port: 8080
 ```
 
-## 🎯 Prochaines Étapes
-
-- [ ] Implémenter JWT
-- [ ] Ajouter @PreAuthorize pour les rôles
-- [ ] Tracker d'Émotions
-- [ ] Exercices de Respiration
-- [ ] Tests Unitaires/Intégration
-- [ ] Pagination et Filtrage
-
 ## 📝 Pistes d'Extension
 
 - `domain/` : modèles métier

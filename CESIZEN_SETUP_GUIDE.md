@@ -76,14 +76,6 @@ cd backend
 mvn clean install -DskipTests
 ```
 
-**Si vous avez des erreurs Lombok:**
-```bash
-# S'assurer que Java 17 est utilisé
-set JAVA_HOME=C:\Program Files\Java\jdk-17.x.x
-# Puis relancer:
-mvn clean install -DskipTests
-```
-
 ## ▶️ Lancer le Backend
 
 ### Option 1: Avec Maven (développement)
@@ -255,37 +247,6 @@ curl -X PUT http://localhost:8080/api/v1/users/1/deactivate
 - `PUT /api/v1/informations/{id}/publish` - Publier
 - `PUT /api/v1/informations/{id}/unpublish` - Dépublier
 
-## 🎯 Prochaines Étapes
-
-### 1. Implémenter JWT pour l'authentification
-- Générer un token JWT au login
-- Valider le token pour les endpoints protégés
-
-### 2. Ajouter les contrôles de rôle (Role-Based Access Control)
-- Seuls les ADMINs peuvent créer/modifier/supprimer
-- Les USERs peuvent voir mais pas modifier
-
-### 3. Ajouter le Tracker d'Émotions
-- Entité `EmotionTracker`
-- Endpoints pour enregistrer et consulter les émotions
-
-### 4. Ajouter les Exercices de Respiration
-- Entité `RespirationExercise`
-- Configurations (7-4-8, 5-5, etc.)
-
-### 5. Intégrer avec le Frontend Angular
-- Mettre à jour les appels API dans l'Angular
-- Ajouter l'authentification JWT
-
-### 6. Tests Unitaires et d'Intégration
-- JUnit 5 pour les tests unitaires
-- Testcontainers pour PostgreSQL en test
-
-### 7. Déploiement
-- Docker (Dockerfile + docker-compose.yml)
-- Server Linux (Ubuntu, Debian)
-- Cloud (AWS, Azure, Heroku)
-
 ## 📝 Notes Importantes
 
 ### Sécurité
@@ -317,12 +278,6 @@ curl -X PUT http://localhost:8080/api/v1/users/1/deactivate
 ### Erreur: "role "cesizen_user" does not exist"  
 → Créer l'utilisateur (voir section "Initialiser la Base de Données")
 
-### Compilation échoue avec Lombok
-→ S'assurer que Java 17 est utilisé:
-```bash
-set JAVA_HOME=C:\Program Files\Java\jdk-17.x.x
-```
-
 ### Application ne démarre pas sur le port 8080
 → Vérifier que le port est libre:
 ```bash
@@ -348,7 +303,6 @@ sudo systemctl start postgresql
 - [Spring Boot Documentation](https://spring.io/projects/spring-boot)
 - [Spring Data JPA](https://spring.io/projects/spring-data-jpa)
 - [PostgreSQL Documentation](https://www.postgresql.org/docs/)
-- [Lombok](https://projectlombok.org/)
 - [REST API Best Practices](https://restfulapi.net/)
 
 ---
