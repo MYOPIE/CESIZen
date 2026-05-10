@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ActiviteService } from '../../services/activite.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -9,7 +11,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   features = [
     {
       icon: '🏥',
@@ -18,25 +20,81 @@ export class HomeComponent {
     },
     {
       icon: '🧘',
-      title: 'Exercices de respiration',
-      description: 'Apprenez des techniques de respiration et cohérence cardiaque pour vous détendre'
-    },
-    {
-      icon: '🎯',
       title: 'Activités de détente',
       description: 'Découvrez des activités adaptées pour gérer votre stress au quotidien'
     },
     {
-      icon: '📊',
-      title: 'Tracker d\'émotions',
-      description: 'Suivez vos émotions et identifiez les patterns de votre bien-être'
+      icon: '🎯',
+      title: 'À venir',
+      description: 'Des fonctionnalités supplémentaires pour une expérience encore plus complète !'
     }
   ];
 
   stats = [
-    { label: 'Utilisateurs actifs', value: '10K+' },
-    { label: 'Activités disponibles', value: '50+' },
-    { label: 'Exercices de respiration', value: '12' },
-    { label: 'Score de satisfaction', value: '4.8/5' }
+    { label: 'Comptes créés', value: '...' },
+    { label: 'Activités disponibles', value: '...' },
+    { label: 'Exercices de respiration', value: '...' }
   ];
+
+  constructor(
+    private activiteService: ActiviteService,
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
+    // Récupérer le nombre total d'utilisateurs
+    this.authService.getAllUsers().subscribe({
+      next: (users) => {
+        const count = users ? users.length.toString() : '0';
+        this.stats = [
+          { label: 'Comptes créés', value: count },
+          this.stats[1],
+          this.stats[2]
+        ];
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des utilisateurs', err);
+        this.stats = [
+          { label: 'Comptes créés', value: '-' },
+          this.stats[1],
+          this.stats[2]
+        ];
+        this.cdr.detectChanges();
+      }
+    });
+
+    // Récupérer les activités
+    this.activiteService.getActiveActivites().subscribe({
+      next: (activites) => {
+        const countActivites = activites ? activites.length.toString() : '0';
+        
+        let respirationCount = 0;
+        if (activites) {
+          respirationCount = activites.filter(a => 
+            a.title?.toLowerCase().includes('respiration') || 
+            a.type?.toLowerCase().includes('respiration') ||
+            a.description?.toLowerCase().includes('respiration')
+          ).length;
+        }
+
+        this.stats = [
+          this.stats[0],
+          { label: 'Activités disponibles', value: countActivites },
+          { label: 'Exercices de respiration', value: respirationCount.toString() }
+        ];
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des activités', err);
+        this.stats = [
+          this.stats[0],
+          { label: 'Activités disponibles', value: '-' },
+          { label: 'Exercices de respiration', value: '-' }
+        ];
+        this.cdr.detectChanges();
+      }
+    });
+  }
 }

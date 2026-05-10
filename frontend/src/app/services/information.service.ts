@@ -10,7 +10,7 @@ export interface Information {
   isPublished: boolean;
   createdAt?: string;
   updatedAt?: string;
-  // Properties mapped for UI validation
+  // Propriétés mappées pour l'interface utilisateur
   excerpt?: string;
   icon?: string;
   readingTime?: number;
@@ -46,5 +46,13 @@ export class InformationService {
 
   deleteInformation(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  publishInformation(id: number): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}/publish`, {});
+  }
+
+  unpublishInformation(id: number): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}/unpublish`, {});
   }
 }

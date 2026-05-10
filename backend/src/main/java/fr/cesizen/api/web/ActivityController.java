@@ -5,6 +5,7 @@ import fr.cesizen.api.web.dto.ActivityRequest;
 import fr.cesizen.api.web.dto.ActivityResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class ActivityController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createActivity(@RequestBody ActivityRequest request) {
         try {
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -52,6 +54,7 @@ public class ActivityController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateActivity(@PathVariable Long id, @RequestBody ActivityRequest request) {
         try {
             return ResponseEntity.ok(activityService.updateActivity(id, request));
@@ -62,6 +65,7 @@ public class ActivityController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteActivity(@PathVariable Long id) {
         try {
             activityService.deleteActivity(id);
@@ -73,6 +77,7 @@ public class ActivityController {
     }
 
     @PutMapping("/{id}/deactivate")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deactivateActivity(@PathVariable Long id) {
         try {
             activityService.deactivateActivity(id);
@@ -84,6 +89,7 @@ public class ActivityController {
     }
 
     @PutMapping("/{id}/reactivate")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> reactivateActivity(@PathVariable Long id) {
         try {
             activityService.reactivateActivity(id);

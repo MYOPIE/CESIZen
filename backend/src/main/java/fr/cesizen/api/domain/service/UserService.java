@@ -28,11 +28,11 @@ public class UserService {
 
     public UserResponse registerUser(UserRegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("Email already exists");
+            throw new IllegalArgumentException("Cet email est déjà utilisé");
         }
 
         if (!request.getPassword().equals(request.getConfirmPassword())) {
-            throw new IllegalArgumentException("Passwords do not match");
+            throw new IllegalArgumentException("Les mots de passe ne correspondent pas");
         }
 
         User user = User.builder()
@@ -54,7 +54,7 @@ public class UserService {
 
     public UserResponse getUserById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
         return mapToResponse(user);
     }
 
@@ -66,14 +66,14 @@ public class UserService {
 
     public UserResponse updateUser(Long id, UserRegisterRequest request) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
 
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
 
         if (request.getPassword() != null && !request.getPassword().isEmpty()) {
             if (!request.getPassword().equals(request.getConfirmPassword())) {
-                throw new IllegalArgumentException("Passwords do not match");
+                throw new IllegalArgumentException("Les mots de passe ne correspondent pas");
             }
             user.setPassword(passwordEncoder.encode(request.getPassword()));
         }
@@ -84,27 +84,27 @@ public class UserService {
 
     public void deleteUser(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
         userRepository.delete(user);
     }
 
     public void deactivateUser(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
         user.setIsActive(false);
         userRepository.save(user);
     }
 
     public void promoteToAdmin(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
         user.setRole(Role.ADMIN);
         userRepository.save(user);
     }
 
     public void demoteFromAdmin(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
         user.setRole(Role.USER);
         userRepository.save(user);
     }

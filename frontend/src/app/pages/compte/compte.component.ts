@@ -46,13 +46,19 @@ export class CompteComponent implements OnInit {
       this.isConnected = !!user;
       if (user) {
         this.userProfile = user;
+      } else {
+        this.userProfile = {};
+        this.currentView = 'login';
       }
+      this.cdr.detectChanges();
     });
   }
 
   switchView(view: 'login' | 'register' | 'forgot'): void {
     this.currentView = view;
-    this.clearMessages();
+    this.successMessage = '';
+    this.errorMessage = '';
+    this.cdr.detectChanges();
   }
 
   hasMinLength(password: string): boolean {
@@ -77,10 +83,15 @@ export class CompteComponent implements OnInit {
     return regex.test(password);
   }
 
+  validateEmail(email: string): boolean {
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return regex.test(email);
+  }
+
   onForgotPassword(): void {
     if (!this.forgotEmail) {
       this.errorMessage = 'Veuillez renseigner votre adresse e-mail.';
-      this.clearErrorAfterDelay();
+      this.cdr.detectChanges();
       return;
     }
     
@@ -92,47 +103,61 @@ export class CompteComponent implements OnInit {
   }
 
   onLogin(): void {
-    if (this.loginForm.email && this.loginForm.password) {
-      this.authService.login(this.loginForm).subscribe({
-        next: (response) => {
-          this.errorMessage = '';
-          this.successMessage = 'Connexion réussie !';
-          this.clearMessages();
-        },
-        error: (err) => {
-          this.successMessage = '';
-          this.errorMessage = err.error?.message || 'Identifiants incorrects';
-          this.clearErrorAfterDelay();
-        }
-      });
-    } else {
+    if (!this.loginForm.email || !this.loginForm.password) {
       this.errorMessage = 'Veuillez remplir tous les champs';
-      this.clearErrorAfterDelay();
+      this.cdr.detectChanges();
+      return;
     }
+
+    if (!this.validateEmail(this.loginForm.email)) {
+      this.errorMessage = 'Veuillez renseigner une adresse e-mail valide.';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    this.authService.login(this.loginForm).subscribe({
+      next: (response) => {
+        this.errorMessage = '';
+        this.successMessage = 'Connexion réussie !';
+        this.cdr.detectChanges();
+        this.clearMessageAfterDelay();
+      },
+      error: (err) => {
+        this.successMessage = '';
+        this.errorMessage = err.error?.message || 'Identifiants incorrects';
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   onRegister(): void {
     if (!this.registerForm.firstName || !this.registerForm.lastName || !this.registerForm.email || !this.registerForm.password) {
       this.errorMessage = 'Veuillez remplir tous les champs';
-      this.clearErrorAfterDelay();
+      this.cdr.detectChanges();
+      return;
+    }
+
+    if (!this.validateEmail(this.registerForm.email)) {
+      this.errorMessage = 'Veuillez renseigner une adresse e-mail valide pour l\'inscription.';
+      this.cdr.detectChanges();
       return;
     }
 
     if (!this.validatePassword(this.registerForm.password)) {
       this.errorMessage = 'Le mot de passe doit faire au moins 8 caractères, et contenir au moins une majuscule, une minuscule et un chiffre.';
-      this.clearErrorAfterDelay();
+      this.cdr.detectChanges();
       return;
     }
 
     if (this.registerForm.password !== this.registerForm.confirmPassword) {
       this.errorMessage = 'Les mots de passe ne correspondent pas';
-      this.clearErrorAfterDelay();
+      this.cdr.detectChanges();
       return;
     }
 
     if (!this.registerForm.acceptTerms) {
       this.errorMessage = 'Vous devez accepter les conditions d\'utilisation';
-      this.clearErrorAfterDelay();
+      this.cdr.detectChanges();
       return;
     }
 
@@ -145,13 +170,30 @@ export class CompteComponent implements OnInit {
     }).subscribe({
       next: (response) => {
         this.errorMessage = '';
-        this.successMessage = 'Inscription réussie ! Vous pouvez maintenant vous connecter.';
-        this.switchView('login');
+        this.successMessage = 'Inscription réussie ! Connexion en cours...';
+        this.cdr.detectChanges();
+        this.clearMessageAfterDelay();
+        
+        this.authService.login({
+          email: this.registerForm.email,
+          password: this.registerForm.password
+        }).subscribe({
+          next: () => {
+            this.successMessage = 'Inscription et connexion réussies !';
+            this.cdr.detectChanges();
+            this.clearMessageAfterDelay();
+          },
+          error: () => {
+            this.errorMessage = 'Inscription réussie, mais échec de la connexion automatique. Veuillez vous connecter.';
+            this.switchView('login');
+            this.cdr.detectChanges();
+          }
+        });
       },
       error: (err) => {
         this.successMessage = '';
         this.errorMessage = err.error?.message || 'Erreur lors de l\'inscription';
-        this.clearErrorAfterDelay();
+        this.cdr.detectChanges();
       }
     });
   }
@@ -164,25 +206,26 @@ export class CompteComponent implements OnInit {
     this.confirmUpdatePassword = '';
     this.errorMessage = '';
     this.successMessage = 'Déconnexion réussie';
-    this.clearMessages();
+    this.cdr.detectChanges();
+    this.clearMessageAfterDelay();
   }
 
   onUpdateProfile(): void {
     if (!this.userProfile.id || !this.userProfile.firstName || !this.userProfile.lastName) {
       this.errorMessage = 'Le prénom et le nom sont requis.';
-      this.clearErrorAfterDelay();
+      this.cdr.detectChanges();
       return;
     }
 
     if (this.updatePassword && !this.validatePassword(this.updatePassword)) {
       this.errorMessage = 'Le mot de passe doit faire au moins 8 caractères, et contenir au moins une majuscule, une minuscule et un chiffre.';
-      this.clearErrorAfterDelay();
+      this.cdr.detectChanges();
       return;
     }
 
     if (this.updatePassword && this.updatePassword !== this.confirmUpdatePassword) {
       this.errorMessage = 'Les nouveaux mots de passe ne correspondent pas.';
-      this.clearErrorAfterDelay();
+      this.cdr.detectChanges();
       return;
     }
 
@@ -199,43 +242,45 @@ export class CompteComponent implements OnInit {
         this.successMessage = 'Profil mis à jour avec succès !';
         this.updatePassword = '';
         this.confirmUpdatePassword = '';
-        this.clearMessages();
+        this.cdr.detectChanges();
+        this.clearMessageAfterDelay();
       },
       error: (err) => {
         this.successMessage = '';
         this.errorMessage = err.error || 'Erreur lors de la mise à jour du profil';
-        this.clearErrorAfterDelay();
+        this.cdr.detectChanges();
+        this.clearMessageAfterDelay();
       }
     });
   }
 
   onDeleteAccount(): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) {
-      // Pour l'instant, seulement déconnecter
-      this.authService.logout();
-      this.successMessage = 'Compte supprimé avec succès';
-      this.clearMessages();
+      if (this.userProfile.id) {
+        this.authService.deleteAccount(this.userProfile.id).subscribe({
+          next: () => {
+            this.authService.logout();
+            this.successMessage = 'Compte supprimé avec succès';
+            this.cdr.detectChanges();
+          },
+          error: (err) => {
+            this.errorMessage = err.error || 'Erreur lors de la suppression du compte.';
+            this.cdr.detectChanges();
+            this.clearMessageAfterDelay();
+          }
+        });
+      }
     }
   }
 
-  clearMessages(): void {
+  clearMessageAfterDelay(): void {
     if (this.messageTimeout) {
       clearTimeout(this.messageTimeout);
     }
     this.messageTimeout = setTimeout(() => {
+      this.errorMessage = '';
       this.successMessage = '';
-      this.errorMessage = '';
       this.cdr.detectChanges();
-    }, 2000);
-  }
-
-  clearErrorAfterDelay(): void {
-    if (this.messageTimeout) {
-      clearTimeout(this.messageTimeout);
-    }
-    this.messageTimeout = setTimeout(() => {
-      this.errorMessage = '';
-      this.cdr.detectChanges();
-    }, 2000);
+    }, 1500);
   }
 }

@@ -22,3 +22,4 @@ backend/target/
 *.iml
 .DS_Store
 Thumbs.db
+DOCUMENTATION_TECHNIQUE_BLOC_2.md

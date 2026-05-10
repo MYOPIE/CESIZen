@@ -31,7 +31,7 @@ public class UserController {
             return ResponseEntity.ok(userService.getUserById(id));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("User not found");
+                    .body("Utilisateur non trouvé");
         }
     }
 
@@ -49,10 +49,10 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         try {
             userService.deleteUser(id);
-            return ResponseEntity.ok("User deleted successfully");
+            return ResponseEntity.ok("Utilisateur supprimé avec succès");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("User not found");
+                    .body("Utilisateur non trouvé");
         }
     }
 
@@ -60,10 +60,10 @@ public class UserController {
     public ResponseEntity<?> deactivateUser(@PathVariable Long id) {
         try {
             userService.deactivateUser(id);
-            return ResponseEntity.ok("User deactivated successfully");
+            return ResponseEntity.ok("Utilisateur désactivé avec succès");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("User not found");
+                    .body("Utilisateur non trouvé");
         }
     }
 
@@ -71,10 +71,10 @@ public class UserController {
     public ResponseEntity<?> promoteToAdmin(@PathVariable Long id) {
         try {
             userService.promoteToAdmin(id);
-            return ResponseEntity.ok("User promoted to admin");
+            return ResponseEntity.ok("Utilisateur promu administrateur");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("User not found");
+                    .body("Utilisateur non trouvé");
         }
     }
 
@@ -82,10 +82,10 @@ public class UserController {
     public ResponseEntity<?> demoteFromAdmin(@PathVariable Long id) {
         try {
             userService.demoteFromAdmin(id);
-            return ResponseEntity.ok("User demoted from admin");
+            return ResponseEntity.ok("Le rôle d'administrateur a été retiré à l'utilisateur");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("User not found");
+                    .body("Utilisateur non trouvé");
         }
     }
 }

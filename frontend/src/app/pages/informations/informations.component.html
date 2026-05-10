@@ -6,12 +6,17 @@
     </div>
 
     <div class="filters-section">
-      <h3>Filtrer par catégorie</h3>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3 style="margin: 0;">Filtrer par catégorie (choix multiples)</h3>
+        <button *ngIf="isAdmin" class="btn btn-blue btn-sm" [routerLink]="['/admin']" [queryParams]="{tab: 'informations'}" style="display: flex; align-items: center; gap: 0.5rem;">
+          <span>➕</span> Ajouter un article
+        </button>
+      </div>
       <div class="filter-buttons">
         <button 
           *ngFor="let category of categories"
           class="btn filter-btn"
-          [class.active]="selectedCategory === category"
+          [class.active]="selectedCategories.has(category)"
           (click)="filterByCategory(category)"
         >
           {{ category }}

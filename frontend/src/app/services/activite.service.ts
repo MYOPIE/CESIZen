@@ -11,7 +11,7 @@ export interface Activite {
   isActive: boolean;
   createdAt?: string;
   updatedAt?: string;
-  // Properties mapped for UI
+  // Propriétés mappées pour l'interface utilisateur
   type?: string; 
   duree?: number;
   difficulte?: number;
@@ -49,5 +49,13 @@ export class ActiviteService {
 
   deleteActivite(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  deactivateActivite(id: number): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}/deactivate`, {});
+  }
+
+  reactivateActivite(id: number): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}/reactivate`, {});
   }
 }

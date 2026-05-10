@@ -1,0 +1,115 @@
+<div class="page admin-page">
+  <div class="container">
+    <div class="header-section">
+      <h1>Administration CESIZen</h1>
+      <p class="header-subtitle">Gestion des contenus de la plateforme</p>
+    </div>
+
+    <!-- Navigation / Tabs -->
+    <div class="admin-tabs">
+      <button 
+        class="tab-btn" 
+        [class.active]="currentTab === 'activites'" 
+        (click)="setTab('activites')">
+        Activités de détente
+      </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="currentTab === 'informations'" 
+        (click)="setTab('informations')">
+        Informations & Ressources
+      </button>
+    </div>
+
+    <!-- CONTENU ACTIVITES -->
+    <div class="admin-content" *ngIf="currentTab === 'activites'">
+      <div class="content-header">
+        <h2>Liste des Activités</h2>
+        <button class="btn btn-green" (click)="createActivite()">+ Nouvelle Activité</button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Titre</th>
+              <th>Statut</th>
+              <th>Date de création</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let activite of activites">
+              <td>{{ activite.id }}</td>
+              <td><strong>{{ activite.title }}</strong></td>
+              <td>
+                <span class="badge" [ngClass]="activite.isActive ? 'badge-success' : 'badge-danger'">
+                  {{ activite.isActive ? 'Active' : 'Désactivée' }}
+                </span>
+              </td>
+              <td>{{ activite.createdAt | date:'dd/MM/yyyy' }}</td>
+              <td class="actions">
+                <button class="btn-action activate" (click)="toggleActiviteActive(activite)" [title]="activite.isActive ? 'Désactiver' : 'Activer'">
+                  {{ activite.isActive ? '⏸️' : '▶️' }}
+                </button>
+                <button class="btn-action edit" (click)="editActivite(activite)" title="Modifier">✏️</button>
+                <button class="btn-action delete" (click)="deleteActivite(activite.id)" title="Supprimer">🗑️</button>
+              </td>
+            </tr>
+            <tr *ngIf="activites.length === 0">
+              <td colspan="5" class="text-center">Aucune activité trouvée.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CONTENU INFORMATIONS -->
+    <div class="admin-content" *ngIf="currentTab === 'informations'">
+      <div class="content-header">
+        <h2>Liste des Informations</h2>
+        <button class="btn btn-blue" (click)="createInformation()">+ Nouvelle Information</button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Titre</th>
+              <th>Catégorie</th>
+              <th>Statut</th>
+              <th>Date de création</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let info of informations">
+              <td>{{ info.id }}</td>
+              <td><strong>{{ info.title }}</strong></td>
+              <td>{{ info.category }}</td>
+              <td>
+                <span class="badge" [ngClass]="info.isPublished ? 'badge-success' : 'badge-danger'">
+                  {{ info.isPublished ? 'Publiée' : 'Brouillon' }}
+                </span>
+              </td>
+              <td>{{ info.createdAt | date:'dd/MM/yyyy' }}</td>
+              <td class="actions">
+                <button class="btn-action activate" (click)="toggleInformationPublished(info)" [title]="info.isPublished ? 'Brouillon' : 'Publier'">
+                  {{ info.isPublished ? '⏸️' : '▶️' }}
+                </button>
+                <button class="btn-action edit" (click)="editInformation(info)" title="Modifier">✏️</button>
+                <button class="btn-action delete" (click)="deleteInformation(info.id)" title="Supprimer">🗑️</button>
+              </td>
+            </tr>
+            <tr *ngIf="informations.length === 0">
+              <td colspan="6" class="text-center">Aucune information trouvée.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>

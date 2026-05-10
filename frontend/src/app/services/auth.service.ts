@@ -27,7 +27,7 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<UserResponse | null>(null);
 
   constructor(private http: HttpClient) {
-    // Check if user is already logged in (e.g., from localStorage)
+    // Vérifier si l'utilisateur est déjà connecté (ex: depuis le localStorage)
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
       this.currentUserSubject.next(JSON.parse(storedUser));
@@ -42,6 +42,10 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
+  getAllUsers(): Observable<UserResponse[]> {
+    return this.http.get<UserResponse[]>(`http://localhost:8080/api/v1/users`);
+  }
+
   register(data: any): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, data);
   }
@@ -53,6 +57,10 @@ export class AuthService {
         this.currentUserSubject.next(updatedUser);
       })
     );
+  }
+
+  deleteAccount(id: number): Observable<any> {
+    return this.http.delete(`http://localhost:8080/api/v1/users/${id}`, { responseType: 'text' });
   }
 
   login(data: any): Observable<AuthResponse> {
@@ -73,5 +81,9 @@ export class AuthService {
     localStorage.removeItem('currentUser');
     localStorage.removeItem('token');
     this.currentUserSubject.next(null);
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
   }
 }

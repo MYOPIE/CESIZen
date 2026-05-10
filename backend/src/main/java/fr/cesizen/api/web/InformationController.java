@@ -5,6 +5,7 @@ import fr.cesizen.api.web.dto.InformationRequest;
 import fr.cesizen.api.web.dto.InformationResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class InformationController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createInformation(@RequestBody InformationRequest request) {
         try {
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -57,6 +59,7 @@ public class InformationController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateInformation(@PathVariable Long id, @RequestBody InformationRequest request) {
         try {
             return ResponseEntity.ok(informationService.updateInformation(id, request));
@@ -67,6 +70,7 @@ public class InformationController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteInformation(@PathVariable Long id) {
         try {
             informationService.deleteInformation(id);
@@ -78,6 +82,7 @@ public class InformationController {
     }
 
     @PutMapping("/{id}/publish")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> publishInformation(@PathVariable Long id) {
         try {
             informationService.publishInformation(id);
@@ -89,6 +94,7 @@ public class InformationController {
     }
 
     @PutMapping("/{id}/unpublish")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> unpublishInformation(@PathVariable Long id) {
         try {
             informationService.unpublishInformation(id);

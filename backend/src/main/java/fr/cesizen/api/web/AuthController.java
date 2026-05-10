@@ -7,6 +7,7 @@ import fr.cesizen.api.web.dto.UserLoginRequest;
 import fr.cesizen.api.web.dto.UserRegisterRequest;
 import fr.cesizen.api.web.dto.UserResponse;
 import org.springframework.http.HttpStatus;
+import fr.cesizen.api.config.JwtUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -21,10 +22,12 @@ public class AuthController {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtils jwtUtils;
 
-    public AuthController(UserService userService, PasswordEncoder passwordEncoder) {
+    public AuthController(UserService userService, PasswordEncoder passwordEncoder, JwtUtils jwtUtils) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtils = jwtUtils;
     }
 
     @PostMapping("/register")
@@ -34,7 +37,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(AuthResponse.builder()
                             .user(user)
-                            .message("User registered successfully")
+                            .message("Utilisateur enregistré avec succès")
                             .build());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -69,10 +72,12 @@ public class AuthController {
                     .updatedAt(user.getUpdatedAt().format(formatter))
                     .build();
 
+            String token = jwtUtils.generateToken(user.getEmail(), user.getRole().getValue());
+
             return ResponseEntity.ok(AuthResponse.builder()
                     .user(userResponse)
-                    .token("jwt-token-placeholder") // TODO: Implement JWT token generation
-                    .message("Login successful")
+                    .token(token)
+                    .message("Connexion réussie")
                     .build());
         }
 
