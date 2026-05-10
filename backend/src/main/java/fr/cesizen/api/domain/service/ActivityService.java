@@ -36,7 +36,7 @@ public class ActivityService {
 
     public ActivityResponse getActivityById(Long id) {
         Activity activity = activityRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Activity not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Activité non trouvée"));
         return mapToResponse(activity);
     }
 
@@ -54,7 +54,7 @@ public class ActivityService {
 
     public ActivityResponse updateActivity(Long id, ActivityRequest request) {
         Activity activity = activityRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Activity not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Activité non trouvée"));
 
         activity.setTitle(request.getTitle());
         activity.setDescription(request.getDescription());
@@ -67,20 +67,20 @@ public class ActivityService {
 
     public void deleteActivity(Long id) {
         Activity activity = activityRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Activity not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Activité non trouvée"));
         activityRepository.delete(activity);
     }
 
     public void deactivateActivity(Long id) {
         Activity activity = activityRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Activity not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Activité non trouvée"));
         activity.setIsActive(false);
         activityRepository.save(activity);
     }
 
     public void reactivateActivity(Long id) {
         Activity activity = activityRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Activity not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Activité non trouvée"));
         activity.setIsActive(true);
         activityRepository.save(activity);
     }

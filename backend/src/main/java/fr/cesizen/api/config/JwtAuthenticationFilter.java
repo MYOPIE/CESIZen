@@ -45,8 +45,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             
-            // To keep it simple, we construct UserDetails from token without hitting DB 
-            // since role is embedded in the token.
+            // Pour simplifier, nous construisons UserDetails à partir du token sans accéder à la base de données
+            // puisque le rôle est intégré dans le token.
             SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
             
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

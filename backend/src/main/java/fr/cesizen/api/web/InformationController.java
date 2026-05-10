@@ -54,7 +54,7 @@ public class InformationController {
             return ResponseEntity.ok(informationService.getInformationById(id));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Information not found");
+                    .body("Information non trouvée");
         }
     }
 
@@ -65,7 +65,7 @@ public class InformationController {
             return ResponseEntity.ok(informationService.updateInformation(id, request));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Information not found");
+                    .body("Information non trouvée");
         }
     }
 
@@ -74,10 +74,10 @@ public class InformationController {
     public ResponseEntity<?> deleteInformation(@PathVariable Long id) {
         try {
             informationService.deleteInformation(id);
-            return ResponseEntity.ok("Information deleted successfully");
+            return ResponseEntity.ok("Information supprimée avec succès");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Information not found");
+                    .body("Information non trouvée");
         }
     }
 
@@ -86,10 +86,10 @@ public class InformationController {
     public ResponseEntity<?> publishInformation(@PathVariable Long id) {
         try {
             informationService.publishInformation(id);
-            return ResponseEntity.ok("Information published successfully");
+            return ResponseEntity.ok("Information publiée avec succès");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Information not found");
+                    .body("Information non trouvée");
         }
     }
 
@@ -98,10 +98,10 @@ public class InformationController {
     public ResponseEntity<?> unpublishInformation(@PathVariable Long id) {
         try {
             informationService.unpublishInformation(id);
-            return ResponseEntity.ok("Information unpublished successfully");
+            return ResponseEntity.ok("Information dépubliée avec succès");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Information not found");
+                    .body("Information non trouvée");
         }
     }
 }

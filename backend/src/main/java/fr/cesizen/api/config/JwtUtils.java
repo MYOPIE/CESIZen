@@ -16,10 +16,10 @@ import java.util.function.Function;
 @Component
 public class JwtUtils {
 
-    // Generate a secure secret key for HS256
+    // Génère une clé secrète sécurisée pour HS256
     private final SecretKey secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     
-    // Valid for 24 hours
+    // Valide pendant 24 heures
     private static final long JWT_TOKEN_VALIDITY = 24 * 60 * 60 * 1000;
 
     public String extractUsername(String token) {

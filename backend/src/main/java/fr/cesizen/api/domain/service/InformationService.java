@@ -35,7 +35,7 @@ public class InformationService {
 
     public InformationResponse getInformationById(Long id) {
         Information information = informationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Information not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Information non trouvée"));
         return mapToResponse(information);
     }
 
@@ -59,7 +59,7 @@ public class InformationService {
 
     public InformationResponse updateInformation(Long id, InformationRequest request) {
         Information information = informationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Information not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Information non trouvée"));
 
         information.setTitle(request.getTitle());
         information.setContent(request.getContent());
@@ -71,20 +71,20 @@ public class InformationService {
 
     public void deleteInformation(Long id) {
         Information information = informationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Information not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Information non trouvée"));
         informationRepository.delete(information);
     }
 
     public void publishInformation(Long id) {
         Information information = informationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Information not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Information non trouvée"));
         information.setIsPublished(true);
         informationRepository.save(information);
     }
 
     public void unpublishInformation(Long id) {
         Information information = informationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Information not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Information non trouvée"));
         information.setIsPublished(false);
         informationRepository.save(information);
     }

@@ -23,3 +23,4 @@ backend/target/
 .DS_Store
 Thumbs.db
 DOCUMENTATION_TECHNIQUE_BLOC_2.md
+JWT_DOCUMENTATION.md
