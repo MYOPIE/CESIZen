@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ActiviteService } from '../../services/activite.service';
 import { AuthService } from '../../services/auth.service';
+import { InformationService } from '../../services/information.service';
 
 @Component({
   selector: 'app-home',
@@ -33,12 +34,13 @@ export class HomeComponent implements OnInit {
   stats = [
     { label: 'Comptes créés', value: '...' },
     { label: 'Activités disponibles', value: '...' },
-    { label: 'Exercices de respiration', value: '...' }
+    { label: 'Informations en ligne', value: '...' }
   ];
 
   constructor(
     private activiteService: ActiviteService,
     private authService: AuthService,
+    private informationService: InformationService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -70,19 +72,10 @@ export class HomeComponent implements OnInit {
       next: (activites) => {
         const countActivites = activites ? activites.length.toString() : '0';
         
-        let respirationCount = 0;
-        if (activites) {
-          respirationCount = activites.filter(a => 
-            a.title?.toLowerCase().includes('respiration') || 
-            a.type?.toLowerCase().includes('respiration') ||
-            a.description?.toLowerCase().includes('respiration')
-          ).length;
-        }
-
         this.stats = [
           this.stats[0],
           { label: 'Activités disponibles', value: countActivites },
-          { label: 'Exercices de respiration', value: respirationCount.toString() }
+          this.stats[2]
         ];
         this.cdr.detectChanges();
       },
@@ -91,7 +84,30 @@ export class HomeComponent implements OnInit {
         this.stats = [
           this.stats[0],
           { label: 'Activités disponibles', value: '-' },
-          { label: 'Exercices de respiration', value: '-' }
+          this.stats[2]
+        ];
+        this.cdr.detectChanges();
+      }
+    });
+
+    // Récupérer les informations
+    this.informationService.getPublishedInformations().subscribe({
+      next: (infos) => {
+        const countInfos = infos ? infos.length.toString() : '0';
+        
+        this.stats = [
+          this.stats[0],
+          this.stats[1],
+          { label: 'Informations en ligne', value: countInfos }
+        ];
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des informations', err);
+        this.stats = [
+          this.stats[0],
+          this.stats[1],
+          { label: 'Informations en ligne', value: '-' }
         ];
         this.cdr.detectChanges();
       }

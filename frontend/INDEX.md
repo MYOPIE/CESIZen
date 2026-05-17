@@ -21,24 +21,7 @@ Contient:
 
 ---
 
-### 2. **PAGES_CREATED.md** 📄
-**Pour qui?** Ceux qui veulent connaître les pages créées
-
-Contient:
-- Détails de chaque page
-- Routes et chemins d'accès
-- Fonctionnalités implémentées
-- Structure des fichiers
-
-**Pages documentées:**
-- Home (/)
-- Compte (/compte)
-- Informations (/informations)
-- Activités (/activites)
-
----
-
-### 3. **ARCHITECTURE.md** 🏗️
+### 2. **ARCHITECTURE.md** 🏗️
 **Pour qui?** Architectes et développeurs seniors
 
 Contient:
@@ -51,7 +34,7 @@ Contient:
 
 ---
 
-### 4. **VISUAL_SUMMARY.md** 🎨
+### 3. **VISUAL_SUMMARY.md** 🎨
 **Pour qui?** Ceux qui aiment les visualisations
 
 Contient:

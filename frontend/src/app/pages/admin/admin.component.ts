@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActiviteService, Activite } from '../../services/activite.service';
 import { InformationService, Information } from '../../services/information.service';
+import { CategoryService, Category } from '../../services/category.service';
 import { AuthService } from '../../services/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -11,60 +12,109 @@ import { Router, ActivatedRoute } from '@angular/router';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './admin.component.html',
-  styleUrl: './admin.component.scss'
+  styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent implements OnInit {
   currentTab: 'activites' | 'informations' = 'activites';
 
   activites: Activite[] = [];
   informations: Information[] = [];
+  
+  activityCategories: Category[] = [];
+  informationCategories: Category[] = [];
+
+  showActiviteForm = false;
+  newActivite: Partial<Activite> & { categoryId?: number } = { title: '', description: '', image: '', isActive: true, duree: 15, difficulte: 1 };
+
+  showInformationForm = false;
+  newInformation: Partial<Information> & { categoryId?: number } = { title: '', content: '', readingTime: 3, isPublished: true };
 
   constructor(
     private activiteService: ActiviteService,
     private informationService: InformationService,
+    private categoryService: CategoryService,
     private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      if (params['tab'] === 'informations') {
-        this.currentTab = 'informations';
-      } else if (params['tab'] === 'activites') {
-        this.currentTab = 'activites';
-      }
+      this.currentTab = params['tab'] === 'informations' ? 'informations' : 'activites';
     });
 
-    // Vérifier si l'utilisateur est admin
     this.authService.currentUser$.subscribe(user => {
-      // Pour l'instant, on vérifie juste si c'est renseigné ROLE_ADMIN. 
-      // Adaptez cette vérification selon comment le rôle est retourné.
       if (!user || user.role !== 'ROLE_ADMIN') {
-        // Rediriger si non admin (à décommenter quand l'auth sera robuste)
         // this.router.navigate(['/']);
       }
     });
 
+    this.loadAllData();
+  }
+
+  loadAllData(): void {
     this.loadActivites();
     this.loadInformations();
+    this.loadCategories();
   }
 
   setTab(tab: 'activites' | 'informations'): void {
     this.currentTab = tab;
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { tab },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  // --- CATEGORIES --- //
+  loadCategories(): void {
+    this.categoryService.getCategories('ACTIVITY').subscribe(data => {
+      this.activityCategories = data;
+    });
+    this.categoryService.getCategories('INFORMATION').subscribe(data => {
+      this.informationCategories = data;
+    });
   }
 
   // --- ACTIVITES --- //
   loadActivites(): void {
     this.activiteService.getAllActivites().subscribe({
-      next: (data) => this.activites = data,
+      next: (data) => {
+        this.activites = data;
+        this.cdr.detectChanges();
+      },
       error: (err) => console.error('Erreur chargement activités', err)
     });
   }
 
   createActivite(): void {
-    // Placeholder - à transformer en ouverture de modal
-    alert('Création d\'activité (Bientôt disponible)');
+    this.showActiviteForm = true;
+  }
+
+  submitActivite(): void {
+    if (!this.newActivite.title || !this.newActivite.description || !this.newActivite.categoryId) return;
+    
+    const payload: Partial<Activite> = {
+      ...this.newActivite,
+      category: { id: this.newActivite.categoryId } as Category
+    };
+    delete (payload as any).categoryId;
+
+
+    this.activiteService.createActivite(payload).subscribe({
+      next: () => {
+        this.loadActivites();
+        this.cancelActiviteForm();
+      },
+      error: (err) => console.error('Erreur création activité', err)
+    });
+  }
+
+  cancelActiviteForm(): void {
+    this.showActiviteForm = false;
+    this.newActivite = { title: '', description: '', image: '', isActive: true, duree: 15, difficulte: 1 };
   }
 
   editActivite(activite: Activite): void {
@@ -86,7 +136,15 @@ export class AdminComponent implements OnInit {
       : this.activiteService.reactivateActivite(activite.id);
       
     request.subscribe({
-      next: () => this.loadActivites(),
+      next: () => {
+        const index = this.activites.findIndex(a => a.id === activite.id);
+        if (index > -1) {
+          this.activites[index].isActive = !this.activites[index].isActive;
+          this.cdr.detectChanges();
+        } else {
+          this.loadActivites();
+        }
+      },
       error: (err) => console.error('Erreur mise à jour de l\'état de l\'activité', err)
     });
   }
@@ -94,13 +152,39 @@ export class AdminComponent implements OnInit {
   // --- INFORMATIONS --- //
   loadInformations(): void {
     this.informationService.getAllInformations().subscribe({
-      next: (data) => this.informations = data,
+      next: (data) => {
+        this.informations = data;
+        this.cdr.detectChanges();
+      },
       error: (err) => console.error('Erreur chargement informations', err)
     });
   }
 
   createInformation(): void {
-    alert('Création d\'information (Bientôt disponible)');
+    this.showInformationForm = true;
+  }
+
+  submitInformation(): void {
+    if (!this.newInformation.title || !this.newInformation.content || !this.newInformation.categoryId) return;
+
+    const payload: Partial<Information> = {
+      ...this.newInformation,
+      category: { id: this.newInformation.categoryId } as Category
+    };
+    delete (payload as any).categoryId;
+
+    this.informationService.createInformation(payload).subscribe({
+      next: () => {
+        this.loadInformations();
+        this.cancelInformationForm();
+      },
+      error: (err) => console.error('Erreur création information', err)
+    });
+  }
+
+  cancelInformationForm(): void {
+    this.showInformationForm = false;
+    this.newInformation = { title: '', content: '', readingTime: 3, isPublished: true };
   }
 
   editInformation(info: Information): void {
@@ -122,7 +206,15 @@ export class AdminComponent implements OnInit {
       : this.informationService.publishInformation(info.id);
 
     request.subscribe({
-      next: () => this.loadInformations(),
+      next: () => {
+         const index = this.informations.findIndex(i => i.id === info.id);
+        if (index > -1) {
+          this.informations[index].isPublished = !this.informations[index].isPublished;
+          this.cdr.detectChanges();
+        } else {
+          this.loadInformations();
+        }
+      },
       error: (err) => console.error('Erreur mise à jour statut information', err)
     });
   }

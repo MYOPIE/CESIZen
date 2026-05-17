@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Category } from './category.service';
 
 export interface Information {
   id: number;
   title: string;
   content: string;
-  category: string;
+  category?: Category;
   isPublished: boolean;
   createdAt?: string;
   updatedAt?: string;
-  // Propriétés mappées pour l'interface utilisateur
   excerpt?: string;
   icon?: string;
   readingTime?: number;
+  isFavorite?: boolean;
 }
 
 @Injectable({

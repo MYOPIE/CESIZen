@@ -131,3 +131,45 @@
 .text-center {
   text-align: center;
 }
+
+.admin-form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background-color: #fafafa;
+  border-radius: $border-radius-md;
+  box-shadow: $shadow-light;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: $dark-gray;
+  }
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid $light-gray;
+  border-radius: $border-radius-sm;
+  font-family: inherit;
+  font-size: 1rem;
+  
+  &:focus {
+    outline: none;
+    border-color: $primary-blue;
+    box-shadow: 0 0 0 2px rgba(84, 153, 199, 0.2);
+  }
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}

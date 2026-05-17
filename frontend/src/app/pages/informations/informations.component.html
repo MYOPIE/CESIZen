@@ -7,28 +7,40 @@
 
     <div class="filters-section">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-        <h3 style="margin: 0;">Filtrer par catégorie (choix multiples)</h3>
+        <h3 style="margin: 0;">Filtrer par catégorie</h3>
         <button *ngIf="isAdmin" class="btn btn-blue btn-sm" [routerLink]="['/admin']" [queryParams]="{tab: 'informations'}" style="display: flex; align-items: center; gap: 0.5rem;">
           <span>➕</span> Ajouter un article
         </button>
       </div>
       <div class="filter-buttons">
         <button 
+          class="btn filter-btn"
+          [class.active]="selectedCategoryId === null"
+          (click)="filterByCategory(null)"
+        >
+          Toutes
+        </button>
+        <button 
           *ngFor="let category of categories"
           class="btn filter-btn"
-          [class.active]="selectedCategories.has(category)"
-          (click)="filterByCategory(category)"
+          [class.active]="selectedCategoryId === category.id"
+          (click)="filterByCategory(category.id)"
         >
-          {{ category }}
+          {{ category.name }}
         </button>
       </div>
     </div>
 
     <div class="articles-grid">
       <div *ngFor="let article of filteredArticles" class="article-card card card-blue">
-        <div class="article-header">
-          <span class="article-icon">{{ article.icon }}</span>
-          <span class="article-category">{{ article.category }}</span>
+        <div class="article-header" style="display: flex; justify-content: space-between;">
+          <div>
+            <span class="article-icon">{{ article.icon }}</span>
+            <span class="article-category">{{ article.category?.name }}</span>
+          </div>
+          <button class="favorite-btn" (click)="toggleFavorite(article)" [class.active]="article.isFavorite" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">
+            {{ article.isFavorite ? '❤️' : '🤍' }}
+          </button>
         </div>
 
         <h3>{{ article.title }}</h3>

@@ -107,81 +107,6 @@ curl -X POST http://localhost:8080/api/v1/auth/register \
   }'
 ```
 
-**Réponse:**
-```json
-{
-  "user": {
-    "id": 1,
-    "email": "user@example.com",
-    "firstName": "John",
-    "lastName": "Doe",
-    "role": "ROLE_USER",
-    "isActive": true,
-    "createdAt": "2024-04-27 21:30:00",
-    "updatedAt": "2024-04-27 21:30:00"
-  },
-  "message": "User registered successfully"
-}
-```
-
-### 2. Se connecter
-```bash
-curl -X POST http://localhost:8080/api/v1/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "user@example.com",
-    "password": "password123"
-  }'
-```
-
-### 3. Voir tous les utilisateurs (Admin)
-```bash
-curl -X GET http://localhost:8080/api/v1/users
-```
-
-### 4. Créer une activité détente
-```bash
-curl -X POST http://localhost:8080/api/v1/activities \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "Yoga Relaxant",
-    "description": "Une séance de yoga pour se détendre",
-    "content": "Position du lotus, respiration profonde...",
-    "instructions": "1. S'asseoir confortablement\n2. Respirer profondément..."
-  }'
-```
-
-### 5. Voir les activités actives
-```bash
-curl -X GET http://localhost:8080/api/v1/activities/active
-```
-
-### 6. Créer une information de santé mentale
-```bash
-curl -X POST http://localhost:8080/api/v1/informations \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "Gestion du stress",
-    "content": "5 techniques pour gérer votre stress quotidien...",
-    "category": "Mental Health"
-  }'
-```
-
-### 7. Voir les informations publiées
-```bash
-curl -X GET http://localhost:8080/api/v1/informations/published
-```
-
-### 8. Promouvoir un utilisateur en Admin
-```bash
-curl -X PUT http://localhost:8080/api/v1/users/1/promote-admin
-```
-
-### 9. Désactiver un compte
-```bash
-curl -X PUT http://localhost:8080/api/v1/users/1/deactivate
-```
-
 ## 📊 Structure de la Base de Données
 
 ### Table: users
@@ -307,9 +232,4 @@ sudo systemctl start postgresql
 
 ---
 
-✨ **Votre backend CESIZen est prêt!** Vous pouvez maintenant:
-1. Ajouter, supprimer, modifier les comptes utilisateurs
-2. Gérer les droits administrateur
-3. Créer et gérer les fiches activités
-4. Créer et publier les fiches informations
-5. Connecter l'Angular frontend
+✨ **Votre backend CESIZen est prêt!**

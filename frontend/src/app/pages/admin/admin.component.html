@@ -25,7 +25,53 @@
     <div class="admin-content" *ngIf="currentTab === 'activites'">
       <div class="content-header">
         <h2>Liste des Activités</h2>
-        <button class="btn btn-green" (click)="createActivite()">+ Nouvelle Activité</button>
+        <button class="btn btn-green" (click)="createActivite()" *ngIf="!showActiviteForm">+ Nouvelle Activité</button>
+      </div>
+
+      <!-- Formulaire de création d'activité -->
+      <div class="admin-form-container" *ngIf="showActiviteForm">
+        <h3>Créer une nouvelle activité</h3>
+        <form (ngSubmit)="submitActivite()" #activiteForm="ngForm">
+          <div class="form-group">
+            <label for="actTitle">Titre *</label>
+            <input type="text" id="actTitle" name="title" [(ngModel)]="newActivite.title" required class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="actDesc">Description *</label>
+            <textarea id="actDesc" name="description" [(ngModel)]="newActivite.description" required class="form-control"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="actCat">Catégorie *</label>
+            <select id="actCat" name="categoryId" [(ngModel)]="newActivite.categoryId" required class="form-control">
+              <option [ngValue]="undefined" disabled>Sélectionner une catégorie</option>
+              <option *ngFor="let cat of activityCategories" [ngValue]="cat.id">{{ cat.name }}</option>
+            </select>
+          </div>
+          <div class="form-group" style="display: flex; gap: 1rem;">
+            <div style="flex: 1;">
+              <label for="actDuree">Durée (minutes)</label>
+              <input type="number" id="actDuree" name="duree" [(ngModel)]="newActivite.duree" class="form-control">
+            </div>
+            <div style="flex: 1;">
+              <label for="actDiff">Niveau de difficulté</label>
+              <select id="actDiff" name="difficulte" [(ngModel)]="newActivite.difficulte" class="form-control">
+                <option [ngValue]="1">1 - Très facile</option>
+                <option [ngValue]="2">2 - Facile</option>
+                <option [ngValue]="3">3 - Moyen</option>
+                <option [ngValue]="4">4 - Difficile</option>
+                <option [ngValue]="5">5 - Très difficile</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="actImg">URL de l'image (optionnel)</label>
+            <input type="text" id="actImg" name="image" [(ngModel)]="newActivite.image" class="form-control">
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-green" [disabled]="!activiteForm.form.valid">Enregistrer</button>
+            <button type="button" class="btn btn-outline" (click)="cancelActiviteForm()">Annuler</button>
+          </div>
+        </form>
       </div>
 
       <div class="table-responsive">
@@ -34,6 +80,7 @@
             <tr>
               <th>ID</th>
               <th>Titre</th>
+              <th>Catégorie</th>
               <th>Statut</th>
               <th>Date de création</th>
               <th>Actions</th>
@@ -43,6 +90,7 @@
             <tr *ngFor="let activite of activites">
               <td>{{ activite.id }}</td>
               <td><strong>{{ activite.title }}</strong></td>
+              <td>{{ activite.category?.name }}</td>
               <td>
                 <span class="badge" [ngClass]="activite.isActive ? 'badge-success' : 'badge-danger'">
                   {{ activite.isActive ? 'Active' : 'Désactivée' }}
@@ -58,7 +106,7 @@
               </td>
             </tr>
             <tr *ngIf="activites.length === 0">
-              <td colspan="5" class="text-center">Aucune activité trouvée.</td>
+              <td colspan="6" class="text-center">Aucune activité trouvée.</td>
             </tr>
           </tbody>
         </table>
@@ -69,7 +117,39 @@
     <div class="admin-content" *ngIf="currentTab === 'informations'">
       <div class="content-header">
         <h2>Liste des Informations</h2>
-        <button class="btn btn-blue" (click)="createInformation()">+ Nouvelle Information</button>
+        <button class="btn btn-blue" (click)="createInformation()" *ngIf="!showInformationForm">+ Nouvelle Information</button>
+      </div>
+
+      <!-- Formulaire de création d'information -->
+      <div class="admin-form-container" *ngIf="showInformationForm">
+        <h3>Créer une nouvelle information</h3>
+        <form (ngSubmit)="submitInformation()" #infoForm="ngForm">
+          <div class="form-group">
+            <label for="infoTitle">Titre *</label>
+            <input type="text" id="infoTitle" name="title" [(ngModel)]="newInformation.title" required class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="infoContent">Contenu *</label>
+            <textarea id="infoContent" name="content" [(ngModel)]="newInformation.content" required class="form-control"></textarea>
+          </div>
+          <div class="form-group" style="display: flex; gap: 1rem;">
+            <div style="flex: 1;">
+              <label for="infoCat">Catégorie *</label>
+              <select id="infoCat" name="categoryId" [(ngModel)]="newInformation.categoryId" required class="form-control">
+                <option [ngValue]="undefined" disabled>Sélectionner une catégorie</option>
+                <option *ngFor="let cat of informationCategories" [ngValue]="cat.id">{{ cat.name }}</option>
+              </select>
+            </div>
+            <div style="flex: 1;">
+              <label for="infoReadTime">Temps de lecture (minutes)</label>
+              <input type="number" id="infoReadTime" name="readingTime" [(ngModel)]="newInformation.readingTime" class="form-control">
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-blue" [disabled]="!infoForm.form.valid">Enregistrer</button>
+            <button type="button" class="btn btn-outline" (click)="cancelInformationForm()">Annuler</button>
+          </div>
+        </form>
       </div>
 
       <div class="table-responsive">
@@ -88,7 +168,7 @@
             <tr *ngFor="let info of informations">
               <td>{{ info.id }}</td>
               <td><strong>{{ info.title }}</strong></td>
-              <td>{{ info.category }}</td>
+              <td>{{ info.category?.name }}</td>
               <td>
                 <span class="badge" [ngClass]="info.isPublished ? 'badge-success' : 'badge-danger'">
                   {{ info.isPublished ? 'Publiée' : 'Brouillon' }}

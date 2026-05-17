@@ -8,19 +8,26 @@
     <div class="controls-section">
       <div class="filters-section">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-          <h3 style="margin: 0;">Filtrer par type (choix multiples)</h3>
+          <h3 style="margin: 0;">Filtrer par catégorie</h3>
           <button *ngIf="isAdmin" class="btn btn-green btn-sm" routerLink="/admin" style="display: flex; align-items: center; gap: 0.5rem;">
             <span>➕</span> Ajouter une activité
           </button>
         </div>
         <div class="filter-buttons">
           <button 
-            *ngFor="let type of types"
             class="btn filter-btn"
-            [class.active]="selectedTypes.has(type)"
-            (click)="filterByType(type)"
+            [class.active]="selectedCategoryId === null"
+            (click)="filterByCategory(null)"
           >
-            {{ type }}
+            Toutes
+          </button>
+          <button 
+            *ngFor="let category of categories"
+            class="btn filter-btn"
+            [class.active]="selectedCategoryId === category.id"
+            (click)="filterByCategory(category.id)"
+          >
+            {{ category.name }}
           </button>
         </div>
       </div>
@@ -60,8 +67,8 @@
 
         <div class="activite-info">
           <div class="info-item">
-            <span class="label">Type:</span>
-            <span class="value">{{ activite.type }}</span>
+            <span class="label">Catégorie:</span>
+            <span class="value">{{ activite.category?.name }}</span>
           </div>
           <div class="info-item">
             <span class="label">Durée:</span>
@@ -80,7 +87,7 @@
     <!-- Message si aucune activité trouvée -->
     <div *ngIf="filteredActivites.length === 0" class="no-results">
       <p>Aucune activité ne correspond à votre recherche.</p>
-      <button class="btn btn-primary" (click)="filterByType('Tous')">Réinitialiser les filtres</button>
+      <button class="btn btn-primary" (click)="filterByCategory(null)">Réinitialiser les filtres</button>
     </div>
 
     <!-- Section conseils -->

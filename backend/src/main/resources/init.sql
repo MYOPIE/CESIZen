@@ -21,9 +21,14 @@ CREATE TABLE IF NOT EXISTS activities (
     description TEXT,
     content TEXT,
     instructions TEXT,
+    category_id BIGINT,
+    duree INT,
+    difficulte VARCHAR(50),
+    image VARCHAR(255),
     is_active BOOLEAN NOT NULL DEFAULT true,
     created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL
+    updated_at TIMESTAMP NOT NULL,
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
 );
 
 -- Création de la table informations
@@ -31,10 +36,38 @@ CREATE TABLE IF NOT EXISTS informations (
     id BIGSERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     content TEXT,
-    category VARCHAR(100),
+    category_id BIGINT,
+    reading_time INT,
+    icon VARCHAR(255),
+    excerpt TEXT,
     is_published BOOLEAN NOT NULL DEFAULT true,
     created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP NOT NULL
+    updated_at TIMESTAMP NOT NULL,
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
+);
+
+-- Création de la table categories
+CREATE TABLE IF NOT EXISTS categories (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    type VARCHAR(50) NOT NULL -- 'ACTIVITY' ou 'INFORMATION'
+);
+
+-- Création des tables de jointure pour les favoris
+CREATE TABLE IF NOT EXISTS user_favorite_activities (
+    user_id BIGINT NOT NULL,
+    activity_id BIGINT NOT NULL,
+    PRIMARY KEY (user_id, activity_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (activity_id) REFERENCES activities(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS user_favorite_informations (
+    user_id BIGINT NOT NULL,
+    information_id BIGINT NOT NULL,
+    PRIMARY KEY (user_id, information_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (information_id) REFERENCES informations(id) ON DELETE CASCADE
 );
 
 -- Index pour les recherches courantes
@@ -42,7 +75,7 @@ CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
 CREATE INDEX IF NOT EXISTS idx_activities_is_active ON activities(is_active);
 CREATE INDEX IF NOT EXISTS idx_informations_is_published ON informations(is_published);
-CREATE INDEX IF NOT EXISTS idx_informations_category ON informations(category);
+CREATE INDEX IF NOT EXISTS idx_informations_category_id ON informations(category_id);
 
 -- Insertion de comptes pour tester
 -- Mot de passe 'password123' encrypté par BCrypt ($2y$10$wYWONX1zYwIowrB.44g.6e.oOfmEL1Gey7r2Yx.M5mI9RkVJ64Zk2 est 'password123')
