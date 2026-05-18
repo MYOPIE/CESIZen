@@ -33,6 +33,10 @@ export class InformationService {
     return this.http.get<Information[]>(`${this.apiUrl}/published`);
   }
 
+  getInformationsByCategory(categoryId: number): Observable<Information[]> {
+    return this.http.get<Information[]>(`${this.apiUrl}/category/${categoryId}`);
+  }
+
   getInformationById(id: number): Observable<Information> {
     return this.http.get<Information>(`${this.apiUrl}/${id}`);
   }

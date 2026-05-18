@@ -101,6 +101,11 @@
       background-color: #ffebee;
       color: $error;
     }
+
+    &-info {
+      background-color: $pale-blue;
+      color: $primary-blue;
+    }
   }
 }
 
@@ -150,6 +155,10 @@
     font-weight: 500;
     color: $dark-gray;
   }
+}
+
+.btn-purple {
+  @include button-style(#9b59b6, white);
 }
 
 .form-control {

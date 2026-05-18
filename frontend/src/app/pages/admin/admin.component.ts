@@ -15,10 +15,11 @@ import { Router, ActivatedRoute } from '@angular/router';
   styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent implements OnInit {
-  currentTab: 'activites' | 'informations' = 'activites';
+  currentTab: 'activites' | 'informations' | 'categories' = 'activites';
 
   activites: Activite[] = [];
   informations: Information[] = [];
+  categories: Category[] = [];
   
   activityCategories: Category[] = [];
   informationCategories: Category[] = [];
@@ -28,6 +29,9 @@ export class AdminComponent implements OnInit {
 
   showInformationForm = false;
   newInformation: Partial<Information> & { categoryId?: number } = { title: '', content: '', readingTime: 3, isPublished: true };
+
+  showCategoryForm = false;
+  newCategory: Partial<Category> = { name: '', type: 'ACTIVITY' };
 
   constructor(
     private activiteService: ActiviteService,
@@ -41,7 +45,9 @@ export class AdminComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      this.currentTab = params['tab'] === 'informations' ? 'informations' : 'activites';
+      if (params['tab'] === 'informations') this.currentTab = 'informations';
+      else if (params['tab'] === 'categories') this.currentTab = 'categories';
+      else this.currentTab = 'activites';
     });
 
     this.authService.currentUser$.subscribe(user => {
@@ -59,7 +65,7 @@ export class AdminComponent implements OnInit {
     this.loadCategories();
   }
 
-  setTab(tab: 'activites' | 'informations'): void {
+  setTab(tab: 'activites' | 'informations' | 'categories'): void {
     this.currentTab = tab;
     this.router.navigate([], {
       relativeTo: this.route,
@@ -70,12 +76,47 @@ export class AdminComponent implements OnInit {
 
   // --- CATEGORIES --- //
   loadCategories(): void {
-    this.categoryService.getCategories('ACTIVITY').subscribe(data => {
-      this.activityCategories = data;
+    this.categoryService.getCategories().subscribe(data => {
+      this.categories = data;
+      this.activityCategories = data.filter(c => c.type === 'ACTIVITY');
+      this.informationCategories = data.filter(c => c.type === 'INFORMATION');
+      this.cdr.detectChanges();
     });
-    this.categoryService.getCategories('INFORMATION').subscribe(data => {
-      this.informationCategories = data;
+  }
+
+  createCategory(): void {
+    this.showCategoryForm = true;
+    this.cdr.detectChanges();
+  }
+
+  submitCategory(): void {
+    if (!this.newCategory.name || !this.newCategory.type) return;
+
+    this.categoryService.createCategory(this.newCategory).subscribe({
+      next: () => {
+        this.loadCategories();
+        this.cancelCategoryForm();
+      },
+      error: (err) => {
+        console.error('Erreur création catégorie', err);
+        alert('Erreur lors de la création de la catégorie');
+      }
     });
+  }
+
+  cancelCategoryForm(): void {
+    this.showCategoryForm = false;
+    this.newCategory = { name: '', type: 'ACTIVITY' };
+    this.cdr.detectChanges();
+  }
+
+  deleteCategory(id: number): void {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?')) {
+      this.categoryService.deleteCategory(id).subscribe({
+        next: () => this.loadCategories(),
+        error: (err) => console.error('Erreur suppression catégorie', err)
+      });
+    }
   }
 
   // --- ACTIVITES --- //
@@ -90,33 +131,38 @@ export class AdminComponent implements OnInit {
   }
 
   createActivite(): void {
+    // TODO : récupérer les niveaux de difficulté pour permettre à l'admin de les sélectionner lors de la création d'une activité + mettre à jour le temps de lecture dans le champ en base
     this.showActiviteForm = true;
+    this.cdr.detectChanges();
   }
 
   submitActivite(): void {
     if (!this.newActivite.title || !this.newActivite.description || !this.newActivite.categoryId) return;
     
-    const payload: Partial<Activite> = {
-      ...this.newActivite,
-      category: { id: this.newActivite.categoryId } as Category
+    // Le backend (ActivityRequest) attend categoryId en tant que champ plat
+    const payload: Partial<Activite> & { categoryId?: number } = {
+      ...this.newActivite
     };
-    delete (payload as any).categoryId;
-
 
     this.activiteService.createActivite(payload).subscribe({
       next: () => {
         this.loadActivites();
         this.cancelActiviteForm();
       },
-      error: (err) => console.error('Erreur création activité', err)
+      error: (err) => {
+        console.error('Erreur création activité', err);
+        alert('Erreur lors de la création de l\'activité');
+      }
     });
   }
 
   cancelActiviteForm(): void {
     this.showActiviteForm = false;
     this.newActivite = { title: '', description: '', image: '', isActive: true, duree: 15, difficulte: 1 };
+    this.cdr.detectChanges();
   }
 
+  // TODO : implémenter les méthodes d'édition d'activités + permettre de les désactiver/réactiver (isActive) pour les différencier des activités visibles sur le site sans les supprimer définitivement
   editActivite(activite: Activite): void {
     alert('Modification de l\'activité : ' + activite.title);
   }
@@ -162,31 +208,36 @@ export class AdminComponent implements OnInit {
 
   createInformation(): void {
     this.showInformationForm = true;
+    this.cdr.detectChanges();
   }
 
   submitInformation(): void {
     if (!this.newInformation.title || !this.newInformation.content || !this.newInformation.categoryId) return;
 
-    const payload: Partial<Information> = {
-      ...this.newInformation,
-      category: { id: this.newInformation.categoryId } as Category
+    // Le backend (InformationRequest) attend categoryId
+    const payload: Partial<Information> & { categoryId?: number } = {
+      ...this.newInformation
     };
-    delete (payload as any).categoryId;
 
     this.informationService.createInformation(payload).subscribe({
       next: () => {
         this.loadInformations();
         this.cancelInformationForm();
       },
-      error: (err) => console.error('Erreur création information', err)
+      error: (err) => {
+        console.error('Erreur création information', err);
+        alert('Erreur lors de la création de l\'information');
+      }
     });
   }
 
   cancelInformationForm(): void {
     this.showInformationForm = false;
     this.newInformation = { title: '', content: '', readingTime: 3, isPublished: true };
+    this.cdr.detectChanges();
   }
 
+  // TODO : implémenter les méthodes d'édition d'informations + permettre de les publier/dépublier pour les différencier des informations visibles sur le site sans les supprimer définitivement
   editInformation(info: Information): void {
     alert('Modification de l\'information : ' + info.title);
   }

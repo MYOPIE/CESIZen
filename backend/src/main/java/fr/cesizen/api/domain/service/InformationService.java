@@ -1,9 +1,12 @@
 package fr.cesizen.api.domain.service;
 
 import fr.cesizen.api.domain.entity.Information;
+import fr.cesizen.api.domain.entity.Category;
 import fr.cesizen.api.domain.repository.InformationRepository;
+import fr.cesizen.api.domain.repository.CategoryRepository;
 import fr.cesizen.api.web.dto.InformationRequest;
 import fr.cesizen.api.web.dto.InformationResponse;
+import fr.cesizen.api.web.dto.CategoryResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,17 +18,25 @@ import java.util.List;
 public class InformationService {
 
     private final InformationRepository informationRepository;
+    private final CategoryRepository categoryRepository;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public InformationService(InformationRepository informationRepository) {
+    public InformationService(InformationRepository informationRepository, CategoryRepository categoryRepository) {
         this.informationRepository = informationRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     public InformationResponse createInformation(InformationRequest request) {
+        Category category = null;
+        if (request.getCategoryId() != null) {
+            category = categoryRepository.findById(request.getCategoryId())
+                    .orElseThrow(() -> new IllegalArgumentException("Catégorie non trouvée"));
+        }
+
         Information information = Information.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
-                .category(request.getCategory())
+                .category(category)
                 .isPublished(true)
                 .build();
 
@@ -51,8 +62,8 @@ public class InformationService {
                 .toList();
     }
 
-    public List<InformationResponse> getInformationsByCategory(String category) {
-        return informationRepository.findByCategory(category).stream()
+    public List<InformationResponse> getInformationsByCategory(Long categoryId) {
+        return informationRepository.findByCategoryId(categoryId).stream()
                 .map(this::mapToResponse)
                 .toList();
     }
@@ -61,9 +72,15 @@ public class InformationService {
         Information information = informationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Information non trouvée"));
 
+        Category category = null;
+        if (request.getCategoryId() != null) {
+            category = categoryRepository.findById(request.getCategoryId())
+                    .orElseThrow(() -> new IllegalArgumentException("Catégorie non trouvée"));
+        }
+
         information.setTitle(request.getTitle());
         information.setContent(request.getContent());
-        information.setCategory(request.getCategory());
+        information.setCategory(category);
 
         Information updatedInformation = informationRepository.save(information);
         return mapToResponse(updatedInformation);
@@ -90,11 +107,20 @@ public class InformationService {
     }
 
     private InformationResponse mapToResponse(Information information) {
+        CategoryResponse categoryResponse = null;
+        if (information.getCategory() != null) {
+             categoryResponse = CategoryResponse.builder()
+                 .id(information.getCategory().getId())
+                 .name(information.getCategory().getName())
+                 .type(information.getCategory().getType())
+                 .build();
+        }
+
         return InformationResponse.builder()
                 .id(information.getId())
                 .title(information.getTitle())
                 .content(information.getContent())
-                .category(information.getCategory())
+                .category(categoryResponse)
                 .isPublished(information.getIsPublished())
                 .createdAt(information.getCreatedAt().format(formatter))
                 .updatedAt(information.getUpdatedAt().format(formatter))

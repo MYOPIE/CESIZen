@@ -97,7 +97,7 @@ export class CompteComponent implements OnInit {
     
     // Simulation d'envoi d'e-mail de réinitialisation
     this.errorMessage = '';
-    this.successMessage = 'Si votre compte existe, un e-mail de réinitialisation de mot de passe a bien été envoyé.';
+    this.successMessage = 'Si votre compte existe, un e-mail de réinitialisation de mot de passe a été envoyé.';
     this.forgotEmail = '';
     this.switchView('login');
   }
@@ -216,6 +216,8 @@ export class CompteComponent implements OnInit {
       this.cdr.detectChanges();
       return;
     }
+
+    // TODO : implémenter la modification de l'adresse e-mail + vérifier que la nouvelle adresse e-mail n'est pas déjà utilisée par un autre compte + valider le format de la nouvelle adresse e-mail + demander la confirmation du mot de passe actuel pour valider les modifications + envoyer un e-mail de confirmation en cas de changement d'adresse e-mail + implémenter la réinitialisation du mot de passe en cas d'oubli du mot de passe actuel pour valider les modifications
 
     if (this.updatePassword && !this.validatePassword(this.updatePassword)) {
       this.errorMessage = 'Le mot de passe doit faire au moins 8 caractères, et contenir au moins une majuscule, une minuscule et un chiffre.';

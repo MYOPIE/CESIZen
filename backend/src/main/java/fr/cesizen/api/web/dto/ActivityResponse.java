@@ -7,6 +7,7 @@ public class ActivityResponse {
     private String content;
     private String instructions;
     private Boolean isActive;
+    private CategoryResponse category;
     private String createdAt;
     private String updatedAt;
 
@@ -18,6 +19,7 @@ public class ActivityResponse {
     public String getContent()      { return content; }
     public String getInstructions() { return instructions; }
     public Boolean getIsActive()    { return isActive; }
+    public CategoryResponse getCategory() { return category; }
     public String getCreatedAt()    { return createdAt; }
     public String getUpdatedAt()    { return updatedAt; }
 
@@ -27,6 +29,7 @@ public class ActivityResponse {
     public void setContent(String content)           { this.content = content; }
     public void setInstructions(String instructions) { this.instructions = instructions; }
     public void setIsActive(Boolean isActive)        { this.isActive = isActive; }
+    public void setCategory(CategoryResponse category) { this.category = category; }
     public void setCreatedAt(String createdAt)       { this.createdAt = createdAt; }
     public void setUpdatedAt(String updatedAt)       { this.updatedAt = updatedAt; }
 
@@ -36,6 +39,7 @@ public class ActivityResponse {
         private Long id;
         private String title, description, content, instructions, createdAt, updatedAt;
         private Boolean isActive;
+        private CategoryResponse category;
 
         public Builder id(Long id)                { this.id = id; return this; }
         public Builder title(String v)            { this.title = v; return this; }
@@ -43,6 +47,7 @@ public class ActivityResponse {
         public Builder content(String v)          { this.content = v; return this; }
         public Builder instructions(String v)     { this.instructions = v; return this; }
         public Builder isActive(Boolean v)        { this.isActive = v; return this; }
+        public Builder category(CategoryResponse v) { this.category = v; return this; }
         public Builder createdAt(String v)        { this.createdAt = v; return this; }
         public Builder updatedAt(String v)        { this.updatedAt = v; return this; }
 
@@ -50,7 +55,8 @@ public class ActivityResponse {
             ActivityResponse r = new ActivityResponse();
             r.setId(id); r.setTitle(title); r.setDescription(description);
             r.setContent(content); r.setInstructions(instructions);
-            r.setIsActive(isActive); r.setCreatedAt(createdAt); r.setUpdatedAt(updatedAt);
+            r.setIsActive(isActive); r.setCategory(category); 
+            r.setCreatedAt(createdAt); r.setUpdatedAt(updatedAt);
             return r;
         }
     }

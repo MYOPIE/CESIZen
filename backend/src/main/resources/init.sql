@@ -37,20 +37,28 @@ CREATE TABLE IF NOT EXISTS informations (
     title VARCHAR(255) NOT NULL,
     content TEXT,
     category_id BIGINT,
+    difficulty_id BIGINT,
     reading_time INT,
     icon VARCHAR(255),
     excerpt TEXT,
     is_published BOOLEAN NOT NULL DEFAULT true,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
-    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
+    FOREIGN KEY (difficulty_id) REFERENCES difficulties(id) ON DELETE SET NULL
 );
 
 -- Création de la table categories
 CREATE TABLE IF NOT EXISTS categories (
     id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL UNIQUE,
+    name VARCHAR(100) NOT NULL,
     type VARCHAR(50) NOT NULL -- 'ACTIVITY' ou 'INFORMATION'
+);
+
+-- Création de la table difficultés
+CREATE TABLE IF NOT EXISTS difficulties (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL UNIQUE
 );
 
 -- Création des tables de jointure pour les favoris
@@ -76,10 +84,37 @@ CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
 CREATE INDEX IF NOT EXISTS idx_activities_is_active ON activities(is_active);
 CREATE INDEX IF NOT EXISTS idx_informations_is_published ON informations(is_published);
 CREATE INDEX IF NOT EXISTS idx_informations_category_id ON informations(category_id);
+CREATE INDEX IF NOT EXISTS idx_informations_difficulty_id ON informations(difficulty_id);
 
 -- Insertion de comptes pour tester
 -- Mot de passe 'password123' encrypté par BCrypt ($2y$10$wYWONX1zYwIowrB.44g.6e.oOfmEL1Gey7r2Yx.M5mI9RkVJ64Zk2 est 'password123')
 INSERT INTO users (email, first_name, last_name, password, role, is_active, created_at, updated_at) 
-VALUES ('admin@cesizen.fr', 'Admin', 'CESIZen', '$2a$10$X86rCj0l.O5j2mO3M1s3hOoJ.U4Hn/y3MWeh/.AODH2k5rRkWe53a', 'ROLE_ADMIN', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+VALUES
+    ('admin@cesizen.fr',
+    'Admin',
+    'CESIZen',
+    '$2a$10$X86rCj0l.O5j2mO3M1s3hOoJ.U4Hn/y3MWeh/.AODH2k5rRkWe53a',
+    'ADMIN',
+    true,
+    CURRENT_TIMESTAMP,
+    CURRENT_TIMESTAMP)
 ON CONFLICT (email) DO NOTHING;
 
+-- Insertion de catégories pour tester
+INSERT INTO categories (name, type) 
+VALUES 
+    ('Détente', 'ACTIVITY'),
+    ('Respiration', 'ACTIVITY'),
+    ('Détente', 'INFORMATION'),
+    ('Respiration', 'INFORMATION')
+ON CONFLICT (name) DO NOTHING;
+
+-- Insertion de niveaux de difficulté pour tester
+INSERT INTO difficulties (name) 
+VALUES 
+    ('Très facile'),
+    ('Facile'),
+    ('Moyen'),
+    ('Difficile'),
+    ('Très difficile')
+ON CONFLICT (name) DO NOTHING;

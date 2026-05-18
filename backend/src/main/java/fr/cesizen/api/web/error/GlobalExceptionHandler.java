@@ -52,12 +52,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleUnexpected(Exception exception, HttpServletRequest request) {
+        exception.printStackTrace();
         ApiErrorResponse response = new ApiErrorResponse(
                 Instant.now(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Internal server error",
                 request.getRequestURI(),
-                List.of("Une erreur inattendue est survenue")
+                List.of("Une erreur inattendue est survenue : " + exception.getMessage())
         );
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);

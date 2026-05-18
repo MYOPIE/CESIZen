@@ -19,6 +19,12 @@
         (click)="setTab('informations')">
         Informations & Ressources
       </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="currentTab === 'categories'" 
+        (click)="setTab('categories')">
+        Catégories
+      </button>
     </div>
 
     <!-- CONTENU ACTIVITES -->
@@ -53,6 +59,7 @@
               <input type="number" id="actDuree" name="duree" [(ngModel)]="newActivite.duree" class="form-control">
             </div>
             <div style="flex: 1;">
+              <!-- TODO: Implémenter la sélection du niveau de difficulté via la table difficulté -->
               <label for="actDiff">Niveau de difficulté</label>
               <select id="actDiff" name="difficulte" [(ngModel)]="newActivite.difficulte" class="form-control">
                 <option [ngValue]="1">1 - Très facile</option>
@@ -191,5 +198,64 @@
       </div>
     </div>
 
+    <!-- CONTENU CATEGORIES -->
+    <div class="admin-content" *ngIf="currentTab === 'categories'">
+      <div class="content-header">
+        <h2>Liste des Catégories</h2>
+        <button class="btn btn-purple" (click)="createCategory()" *ngIf="!showCategoryForm">+ Nouvelle Catégorie</button>
+      </div>
+
+      <!-- Formulaire de création de catégorie -->
+      <div class="admin-form-container" *ngIf="showCategoryForm">
+        <h3>Créer une nouvelle catégorie</h3>
+        <form (ngSubmit)="submitCategory()" #categoryForm="ngForm">
+          <div class="form-group">
+            <label for="catName">Nom *</label>
+            <input type="text" id="catName" name="name" [(ngModel)]="newCategory.name" required class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="catType">Type *</label>
+            <select id="catType" name="type" [(ngModel)]="newCategory.type" required class="form-control">
+              <option value="ACTIVITY">Activité de détente</option>
+              <option value="INFORMATION">Information & Ressource</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-purple" [disabled]="!categoryForm.form.valid">Enregistrer</button>
+            <button type="button" class="btn btn-outline" (click)="cancelCategoryForm()">Annuler</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nom</th>
+              <th>Type</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let category of categories">
+              <td>{{ category.id }}</td>
+              <td><strong>{{ category.name }}</strong></td>
+              <td>
+                <span class="badge" [ngClass]="category.type === 'ACTIVITY' ? 'badge-success' : 'badge-info'">
+                  {{ category.type === 'ACTIVITY' ? 'Activité' : 'Information' }}
+                </span>
+              </td>
+              <td class="actions">
+                <button class="btn-action delete" (click)="deleteCategory(category.id)" title="Supprimer">🗑️</button>
+              </td>
+            </tr>
+            <tr *ngIf="categories.length === 0">
+              <td colspan="4" class="text-center">Aucune catégorie trouvée.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>

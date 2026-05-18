@@ -49,6 +49,7 @@
       <div *ngFor="let activite of filteredActivites" class="activite-card card card-green">
         <div class="card-header">
           <span class="activite-image">{{ activite.image }}</span>
+          <!-- TODO : permettre d'enlever des favoris + ajouter en base (utilisateur concerné) -->
           <button 
             class="favorite-btn"
             [class.active]="activite.isFavorite"

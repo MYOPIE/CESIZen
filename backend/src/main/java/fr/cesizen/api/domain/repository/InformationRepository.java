@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface InformationRepository extends JpaRepository<Information, Long> {
     List<Information> findByIsPublishedTrue();
-    List<Information> findByCategory(String category);
+    List<Information> findByCategoryId(Long categoryId);
 }

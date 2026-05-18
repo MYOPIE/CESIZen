@@ -43,9 +43,9 @@ public class InformationController {
         return ResponseEntity.ok(informationService.getPublishedInformations());
     }
 
-    @GetMapping("/category/{category}")
-    public ResponseEntity<List<InformationResponse>> getInformationsByCategory(@PathVariable String category) {
-        return ResponseEntity.ok(informationService.getInformationsByCategory(category));
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<InformationResponse>> getInformationsByCategory(@PathVariable Long categoryId) {
+        return ResponseEntity.ok(informationService.getInformationsByCategory(categoryId));
     }
 
     @GetMapping("/{id}")
