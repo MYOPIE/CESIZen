@@ -3,14 +3,16 @@ package fr.cesizen.api.domain.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "categories")
+@Table(name = "categories", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"name", "type"})
+})
 public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(nullable = false, length = 100)
     private String name;
 
     @Column(nullable = false, length = 50)

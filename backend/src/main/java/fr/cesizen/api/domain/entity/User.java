@@ -2,6 +2,7 @@ package fr.cesizen.api.domain.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -36,6 +37,14 @@ public class User {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @ManyToMany
+    @JoinTable(
+        name = "user_favorite_activities",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "activity_id")
+    )
+    private Set<Activity> favoriteActivities;
+
     // ── Constructeurs ──────────────────────────────────────────
 
     public User() {}
@@ -65,6 +74,7 @@ public class User {
     public Boolean getIsActive()         { return isActive; }
     public LocalDateTime getCreatedAt()  { return createdAt; }
     public LocalDateTime getUpdatedAt()  { return updatedAt; }
+    public Set<Activity> getFavoriteActivities() { return favoriteActivities; }
 
     // ── Setters ────────────────────────────────────────────────
 
@@ -77,6 +87,9 @@ public class User {
     public void setIsActive(Boolean isActive)          { this.isActive = isActive; }
     public void setCreatedAt(LocalDateTime createdAt)  { this.createdAt = createdAt; }
     public void setUpdatedAt(LocalDateTime updatedAt)  { this.updatedAt = updatedAt; }
+    public void setFavoriteActivities(Set<Activity> favoriteActivities) {
+        this.favoriteActivities = favoriteActivities;
+    }
 
     // ── Builder manuel ─────────────────────────────────────────
 
@@ -88,7 +101,7 @@ public class User {
         private Role role;
         private Boolean isActive;
         private LocalDateTime createdAt, updatedAt;
-
+        private Set<Activity> favoriteActivities;
         public Builder id(Long id)                         { this.id = id; return this; }
         public Builder email(String email)                 { this.email = email; return this; }
         public Builder firstName(String firstName)         { this.firstName = firstName; return this; }
@@ -98,6 +111,10 @@ public class User {
         public Builder isActive(Boolean isActive)          { this.isActive = isActive; return this; }
         public Builder createdAt(LocalDateTime createdAt)  { this.createdAt = createdAt; return this; }
         public Builder updatedAt(LocalDateTime updatedAt)  { this.updatedAt = updatedAt; return this; }
+        public Builder favoriteActivities(Set<Activity> favoriteActivities) {
+            this.favoriteActivities = favoriteActivities;
+            return this;
+        }
 
         public User build() {
             return new User(id, email, firstName, lastName,

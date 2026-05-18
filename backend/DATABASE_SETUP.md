@@ -38,7 +38,7 @@ psql -U postgres
 
 ### Créer l'utilisateur et la base de données
 ```sql
--- Créer l'utilisateur
+-- Créer l'utilisateur si absent
 CREATE USER cesizen_user WITH PASSWORD 'cesizen_password';
 
 -- Créer la base de données

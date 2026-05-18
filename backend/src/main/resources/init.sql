@@ -52,7 +52,8 @@ CREATE TABLE IF NOT EXISTS informations (
 CREATE TABLE IF NOT EXISTS categories (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    type VARCHAR(50) NOT NULL -- 'ACTIVITY' ou 'INFORMATION'
+    type VARCHAR(50) NOT NULL,
+    UNIQUE(name, type)
 );
 
 -- Création de la table difficultés
@@ -87,7 +88,7 @@ CREATE INDEX IF NOT EXISTS idx_informations_category_id ON informations(category
 CREATE INDEX IF NOT EXISTS idx_informations_difficulty_id ON informations(difficulty_id);
 
 -- Insertion de comptes pour tester
--- Mot de passe 'password123' encrypté par BCrypt ($2y$10$wYWONX1zYwIowrB.44g.6e.oOfmEL1Gey7r2Yx.M5mI9RkVJ64Zk2 est 'password123')
+-- Mot de passe 'password123' encrypté par BCrypt
 INSERT INTO users (email, first_name, last_name, password, role, is_active, created_at, updated_at) 
 VALUES
     ('admin@cesizen.fr',
@@ -107,10 +108,10 @@ VALUES
     ('Respiration', 'ACTIVITY'),
     ('Détente', 'INFORMATION'),
     ('Respiration', 'INFORMATION')
-ON CONFLICT (name) DO NOTHING;
+ON CONFLICT (name, type) DO NOTHING;
 
 -- Insertion de niveaux de difficulté pour tester
-INSERT INTO difficulties (name) 
+INSERT INTO difficulty_levels (name) 
 VALUES 
     ('Très facile'),
     ('Facile'),

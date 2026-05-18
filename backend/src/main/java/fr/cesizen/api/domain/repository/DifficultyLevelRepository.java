@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import fr.cesizen.api.domain.entity.DifficultyLevel;
 
 @Repository
-// TODO : créer cette interface de repository pour l'entité DifficultyLevel
 public interface DifficultyLevelRepository extends JpaRepository<DifficultyLevel, Long> {
-    List<DifficultyLevel> findByIsPublishedTrue();
+    boolean existsByName(String name);
 }

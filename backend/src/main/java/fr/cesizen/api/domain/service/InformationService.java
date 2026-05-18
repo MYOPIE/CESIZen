@@ -38,6 +38,7 @@ public class InformationService {
                 .content(request.getContent())
                 .category(category)
                 .isPublished(true)
+                .readingTime(request.getReadingTime())
                 .build();
 
         Information savedInformation = informationRepository.save(information);
@@ -81,6 +82,9 @@ public class InformationService {
         information.setTitle(request.getTitle());
         information.setContent(request.getContent());
         information.setCategory(category);
+        if(request.getReadingTime() != null) {
+            information.setReadingTime(request.getReadingTime());
+        }
 
         Information updatedInformation = informationRepository.save(information);
         return mapToResponse(updatedInformation);
@@ -122,6 +126,7 @@ public class InformationService {
                 .content(information.getContent())
                 .category(categoryResponse)
                 .isPublished(information.getIsPublished())
+                .readingTime(information.getReadingTime())
                 .createdAt(information.getCreatedAt().format(formatter))
                 .updatedAt(information.getUpdatedAt().format(formatter))
                 .build();

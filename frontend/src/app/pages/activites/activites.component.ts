@@ -70,7 +70,7 @@ export class ActivitesComponent implements OnInit {
 
     // Tri
     if (this.sortBy === 'duree') {
-      filtered.sort((a, b) => (a.duree || 0) - (b.duree || 0));
+      filtered.sort((a, b) => (a.durationMinutes || a.duree || 0) - (b.durationMinutes || b.duree || 0));
     } else if (this.sortBy === 'nom') {
       filtered.sort((a, b) => a.title.localeCompare(b.title));
     }
@@ -96,14 +96,8 @@ export class ActivitesComponent implements OnInit {
     action.subscribe({
       error: (err) => {
         console.error('Erreur lors du changement de favori', err);
-        activite.isFavorite = !activite.isFavorite; // Revert on error
+        activite.isFavorite = !activite.isFavorite; // Annuler en erreur
       }
     });
-  }
-
-  getDifficulteLabel(niveau: number | undefined): string {
-    if (niveau === undefined) return 'Inconnu';
-    const labels = ['Très facile', 'Facile', 'Moyen', 'Difficile', 'Très difficile'];
-    return labels[niveau - 1] || 'Inconnu';
   }
 }

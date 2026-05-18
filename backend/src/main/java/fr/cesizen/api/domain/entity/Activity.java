@@ -51,9 +51,8 @@ public class Activity {
     @Column(name = "duration_minutes")
     private Integer durationMinutes;
 
-    // TODO : lié cette colonne avec la table des difficultés (à créer)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "difficulty_level")
+    @JoinColumn(name = "difficulty_level_id")
     private DifficultyLevel difficultyLevel;
 
     // ── Constructeurs ────────────────────────────────────────────────

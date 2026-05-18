@@ -38,9 +38,14 @@
             <span class="article-icon">{{ article.icon }}</span>
             <span class="article-category">{{ article.category?.name }}</span>
           </div>
-          <!-- TODO : bouton favori similaire à celui des activités + permettre d'enlever des favoris + ajouter en base (utilisateur concerné) -->
-          <button class="favorite-btn" (click)="toggleFavorite(article)" [class.active]="article.isFavorite" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">
-            {{ article.isFavorite ? '❤️' : '🤍' }}
+          <button class="favorite-btn" 
+            [disabled]="!isLoggedIn"
+            [class.disabled]="!isLoggedIn"
+            [title]="!isLoggedIn ? 'Connectez-vous pour ajouter aux favoris' : (article.isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris')"
+            (click)="toggleFavorite(article)" 
+            [class.active]="article.isFavorite" 
+            style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">
+            ★
           </button>
         </div>
 

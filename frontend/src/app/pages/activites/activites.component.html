@@ -49,7 +49,6 @@
       <div *ngFor="let activite of filteredActivites" class="activite-card card card-green">
         <div class="card-header">
           <span class="activite-image">{{ activite.image }}</span>
-          <!-- TODO : permettre d'enlever des favoris + ajouter en base (utilisateur concerné) -->
           <button 
             class="favorite-btn"
             [class.active]="activite.isFavorite"
@@ -73,11 +72,11 @@
           </div>
           <div class="info-item">
             <span class="label">Durée:</span>
-            <span class="value">{{ activite.duree }} min</span>
+            <span class="value">{{ activite.durationMinutes || activite.duree }} min</span>
           </div>
           <div class="info-item">
             <span class="label">Niveau:</span>
-            <span class="value">{{ getDifficulteLabel(activite.difficulte) }}</span>
+            <span class="value">{{ activite.difficultyLevel?.name }}</span>
           </div>
         </div>
 

@@ -41,16 +41,15 @@ public class Information {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // TODO : lié cette colonne au front pour afficher la durée de l'activité
-    @Column(name = "duration_minutes")
-    private Integer durationMinutes;
+    @Column(name = "reading_time")
+    private Integer readingTime;
 
     // ── Constructeurs ──────────────────────────────────────────
 
     public Information() {}
 
     public Information(Long id, String title, String content, Category category,
-                      Boolean isPublished, LocalDateTime createdAt, LocalDateTime updatedAt, Integer durationMinutes) {
+                      Boolean isPublished, LocalDateTime createdAt, LocalDateTime updatedAt, Integer readingTime) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -58,7 +57,7 @@ public class Information {
         this.isPublished = isPublished;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.durationMinutes = durationMinutes;
+        this.readingTime = readingTime;
     }
 
     // ── Getters ────────────────────────────────────────────────
@@ -70,7 +69,7 @@ public class Information {
     public Boolean getIsPublished()      { return isPublished; }
     public LocalDateTime getCreatedAt()  { return createdAt; }
     public LocalDateTime getUpdatedAt()  { return updatedAt; }
-    public Integer getDurationMinutes() { return durationMinutes; }
+    public Integer getReadingTime() { return readingTime; }
 
     // ── Setters ────────────────────────────────────────────────
 
@@ -81,7 +80,7 @@ public class Information {
     public void setIsPublished(Boolean isPublished)    { this.isPublished = isPublished; }
     public void setCreatedAt(LocalDateTime createdAt)   { this.createdAt = createdAt; }
     public void setUpdatedAt(LocalDateTime updatedAt)   { this.updatedAt = updatedAt; }
-    public void setDurationMinutes(Integer durationMinutes) { this.durationMinutes = durationMinutes; }
+    public void setReadingTime(Integer readingTime) { this.readingTime = readingTime; }
 
     // ── Builder manuel ───────────────────────────────────────────────
 
@@ -93,7 +92,7 @@ public class Information {
         private Category category;
         private Boolean isPublished;
         private LocalDateTime createdAt, updatedAt;
-        private Integer durationMinutes;
+        private Integer readingTime;
         
         public Builder id(Long id)                 { this.id = id; return this; }
         public Builder title(String title)         { this.title = title; return this; }
@@ -102,11 +101,11 @@ public class Information {
         public Builder isPublished(Boolean v)      { this.isPublished = v; return this; }
         public Builder createdAt(LocalDateTime c)  { this.createdAt = c; return this; }
         public Builder updatedAt(LocalDateTime u)  { this.updatedAt = u; return this; }
-        public Builder durationMinutes(Integer d)  { this.durationMinutes = d; return this; }
+        public Builder readingTime(Integer r)  { this.readingTime = r; return this; }
 
         public Information build() {
             return new Information(id, title, content, category, isPublished,
-                                   createdAt, updatedAt, durationMinutes);
+                                   createdAt, updatedAt, readingTime);
         }
     }
 

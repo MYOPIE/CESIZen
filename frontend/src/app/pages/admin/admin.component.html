@@ -59,14 +59,10 @@
               <input type="number" id="actDuree" name="duree" [(ngModel)]="newActivite.duree" class="form-control">
             </div>
             <div style="flex: 1;">
-              <!-- TODO: Implémenter la sélection du niveau de difficulté via la table difficulté -->
-              <label for="actDiff">Niveau de difficulté</label>
-              <select id="actDiff" name="difficulte" [(ngModel)]="newActivite.difficulte" class="form-control">
-                <option [ngValue]="1">1 - Très facile</option>
-                <option [ngValue]="2">2 - Facile</option>
-                <option [ngValue]="3">3 - Moyen</option>
-                <option [ngValue]="4">4 - Difficile</option>
-                <option [ngValue]="5">5 - Très difficile</option>
+              <label for="actDiff">Niveau de difficulté *</label>
+              <select id="actDiff" name="difficultyLevelId" [(ngModel)]="newActivite.difficultyLevelId" required class="form-control">
+                <option [ngValue]="undefined" disabled>Sélectionner un niveau</option>
+                <option *ngFor="let diff of difficultyLevels" [ngValue]="diff.id">{{ diff.name }}</option>
               </select>
             </div>
           </div>
@@ -88,6 +84,7 @@
               <th>ID</th>
               <th>Titre</th>
               <th>Catégorie</th>
+              <th>Difficulté</th>
               <th>Statut</th>
               <th>Date de création</th>
               <th>Actions</th>
@@ -98,6 +95,7 @@
               <td>{{ activite.id }}</td>
               <td><strong>{{ activite.title }}</strong></td>
               <td>{{ activite.category?.name }}</td>
+              <td>{{ activite.difficultyLevel?.name || 'N/A' }}</td>
               <td>
                 <span class="badge" [ngClass]="activite.isActive ? 'badge-success' : 'badge-danger'">
                   {{ activite.isActive ? 'Active' : 'Désactivée' }}

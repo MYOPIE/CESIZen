@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Category } from './category.service';
+import { DifficultyLevel } from './difficulty.service';
 
 export interface Activite {
   id: number;
@@ -13,8 +14,9 @@ export interface Activite {
   createdAt?: string;
   updatedAt?: string;
   category?: Category; 
+  difficultyLevel?: DifficultyLevel;
+  durationMinutes?: number;
   duree?: number;
-  difficulte?: number;
   image?: string;
   isFavorite?: boolean;
 }

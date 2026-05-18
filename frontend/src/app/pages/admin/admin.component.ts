@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActiviteService, Activite } from '../../services/activite.service';
 import { InformationService, Information } from '../../services/information.service';
 import { CategoryService, Category } from '../../services/category.service';
+import { DifficultyService, DifficultyLevel } from '../../services/difficulty.service';
 import { AuthService } from '../../services/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -20,12 +21,13 @@ export class AdminComponent implements OnInit {
   activites: Activite[] = [];
   informations: Information[] = [];
   categories: Category[] = [];
+  difficultyLevels: DifficultyLevel[] = [];
   
   activityCategories: Category[] = [];
   informationCategories: Category[] = [];
 
   showActiviteForm = false;
-  newActivite: Partial<Activite> & { categoryId?: number } = { title: '', description: '', image: '', isActive: true, duree: 15, difficulte: 1 };
+  newActivite: Partial<Activite> & { categoryId?: number, difficultyLevelId?: number } = { title: '', description: '', image: '', isActive: true, duree: 15 };
 
   showInformationForm = false;
   newInformation: Partial<Information> & { categoryId?: number } = { title: '', content: '', readingTime: 3, isPublished: true };
@@ -37,6 +39,7 @@ export class AdminComponent implements OnInit {
     private activiteService: ActiviteService,
     private informationService: InformationService,
     private categoryService: CategoryService,
+    private difficultyService: DifficultyService,
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
@@ -63,6 +66,14 @@ export class AdminComponent implements OnInit {
     this.loadActivites();
     this.loadInformations();
     this.loadCategories();
+    this.loadDifficultyLevels();
+  }
+
+  loadDifficultyLevels(): void {
+    this.difficultyService.getAllDifficultyLevels().subscribe(data => {
+      this.difficultyLevels = data;
+      this.cdr.detectChanges();
+    });
   }
 
   setTab(tab: 'activites' | 'informations' | 'categories'): void {
@@ -131,40 +142,58 @@ export class AdminComponent implements OnInit {
   }
 
   createActivite(): void {
-    // TODO : récupérer les niveaux de difficulté pour permettre à l'admin de les sélectionner lors de la création d'une activité + mettre à jour le temps de lecture dans le champ en base
     this.showActiviteForm = true;
     this.cdr.detectChanges();
   }
 
   submitActivite(): void {
-    if (!this.newActivite.title || !this.newActivite.description || !this.newActivite.categoryId) return;
+    if (!this.newActivite.title || !this.newActivite.description || !this.newActivite.categoryId || !this.newActivite.difficultyLevelId) return;
     
-    // Le backend (ActivityRequest) attend categoryId en tant que champ plat
-    const payload: Partial<Activite> & { categoryId?: number } = {
-      ...this.newActivite
+    // Le backend (ActivityRequest) attend categoryId et durationMinutes
+    const payload: Partial<Activite> & { categoryId?: number, difficultyLevelId?: number, durationMinutes?: number } = {
+      ...this.newActivite,
+      durationMinutes: this.newActivite.duree
     };
 
-    this.activiteService.createActivite(payload).subscribe({
-      next: () => {
-        this.loadActivites();
-        this.cancelActiviteForm();
-      },
-      error: (err) => {
-        console.error('Erreur création activité', err);
-        alert('Erreur lors de la création de l\'activité');
-      }
-    });
+    if (this.newActivite.id) {
+      this.activiteService.updateActivite(this.newActivite.id, payload).subscribe({
+        next: () => {
+          this.loadActivites();
+          this.cancelActiviteForm();
+        },
+        error: (err) => {
+          console.error('Erreur mise à jour activité', err);
+          alert('Erreur lors de la mise à jour de l\'activité');
+        }
+      });
+    } else {
+      this.activiteService.createActivite(payload).subscribe({
+        next: () => {
+          this.loadActivites();
+          this.cancelActiviteForm();
+        },
+        error: (err) => {
+          console.error('Erreur création activité', err);
+          alert('Erreur lors de la création de l\'activité');
+        }
+      });
+    }
   }
 
   cancelActiviteForm(): void {
     this.showActiviteForm = false;
-    this.newActivite = { title: '', description: '', image: '', isActive: true, duree: 15, difficulte: 1 };
+    this.newActivite = { title: '', description: '', image: '', isActive: true, duree: 15 };
     this.cdr.detectChanges();
   }
 
-  // TODO : implémenter les méthodes d'édition d'activités + permettre de les désactiver/réactiver (isActive) pour les différencier des activités visibles sur le site sans les supprimer définitivement
   editActivite(activite: Activite): void {
-    alert('Modification de l\'activité : ' + activite.title);
+    this.newActivite = {
+      ...activite,
+      categoryId: activite.category?.id,
+      difficultyLevelId: activite.difficultyLevel?.id
+    };
+    this.showActiviteForm = true;
+    this.cdr.detectChanges();
   }
 
   deleteActivite(id: number): void {
@@ -183,13 +212,7 @@ export class AdminComponent implements OnInit {
       
     request.subscribe({
       next: () => {
-        const index = this.activites.findIndex(a => a.id === activite.id);
-        if (index > -1) {
-          this.activites[index].isActive = !this.activites[index].isActive;
-          this.cdr.detectChanges();
-        } else {
-          this.loadActivites();
-        }
+        this.loadActivites();
       },
       error: (err) => console.error('Erreur mise à jour de l\'état de l\'activité', err)
     });
@@ -214,21 +237,33 @@ export class AdminComponent implements OnInit {
   submitInformation(): void {
     if (!this.newInformation.title || !this.newInformation.content || !this.newInformation.categoryId) return;
 
-    // Le backend (InformationRequest) attend categoryId
     const payload: Partial<Information> & { categoryId?: number } = {
       ...this.newInformation
     };
 
-    this.informationService.createInformation(payload).subscribe({
-      next: () => {
-        this.loadInformations();
-        this.cancelInformationForm();
-      },
-      error: (err) => {
-        console.error('Erreur création information', err);
-        alert('Erreur lors de la création de l\'information');
-      }
-    });
+    if (this.newInformation.id) {
+      this.informationService.updateInformation(this.newInformation.id, payload).subscribe({
+        next: () => {
+          this.loadInformations();
+          this.cancelInformationForm();
+        },
+        error: (err) => {
+          console.error('Erreur mise à jour information', err);
+          alert('Erreur lors de la mise à jour de l\'information');
+        }
+      });
+    } else {
+      this.informationService.createInformation(payload).subscribe({
+        next: () => {
+          this.loadInformations();
+          this.cancelInformationForm();
+        },
+        error: (err) => {
+          console.error('Erreur création information', err);
+          alert('Erreur lors de la création de l\'information');
+        }
+      });
+    }
   }
 
   cancelInformationForm(): void {
@@ -237,9 +272,13 @@ export class AdminComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  // TODO : implémenter les méthodes d'édition d'informations + permettre de les publier/dépublier pour les différencier des informations visibles sur le site sans les supprimer définitivement
   editInformation(info: Information): void {
-    alert('Modification de l\'information : ' + info.title);
+    this.newInformation = {
+      ...info,
+      categoryId: info.category?.id
+    };
+    this.showInformationForm = true;
+    this.cdr.detectChanges();
   }
 
   deleteInformation(id: number): void {
@@ -258,13 +297,7 @@ export class AdminComponent implements OnInit {
 
     request.subscribe({
       next: () => {
-         const index = this.informations.findIndex(i => i.id === info.id);
-        if (index > -1) {
-          this.informations[index].isPublished = !this.informations[index].isPublished;
-          this.cdr.detectChanges();
-        } else {
-          this.loadInformations();
-        }
+         this.loadInformations();
       },
       error: (err) => console.error('Erreur mise à jour statut information', err)
     });
