@@ -28,4 +28,5 @@ jobs:
           restore-keys: ${{ runner.os }}-m2-
 
       - name: Build and run unit tests
+        working-directory: backend
         run: mvn -B test
