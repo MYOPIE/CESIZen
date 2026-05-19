@@ -1,8 +1,21 @@
 package fr.cesizen.api.domain.entity;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
@@ -45,6 +58,14 @@ public class User {
     )
     private Set<Activity> favoriteActivities;
 
+    @ManyToMany
+    @JoinTable(
+        name = "user_favorite_informations",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "information_id")
+    )
+    private Set<Information> favoriteInformations;
+
     // ── Constructeurs ──────────────────────────────────────────
 
     public User() {}
@@ -75,6 +96,7 @@ public class User {
     public LocalDateTime getCreatedAt()  { return createdAt; }
     public LocalDateTime getUpdatedAt()  { return updatedAt; }
     public Set<Activity> getFavoriteActivities() { return favoriteActivities; }
+    public Set<Information> getFavoriteInformations() { return favoriteInformations; }
 
     // ── Setters ────────────────────────────────────────────────
 
@@ -89,6 +111,9 @@ public class User {
     public void setUpdatedAt(LocalDateTime updatedAt)  { this.updatedAt = updatedAt; }
     public void setFavoriteActivities(Set<Activity> favoriteActivities) {
         this.favoriteActivities = favoriteActivities;
+    }
+    public void setFavoriteInformations(Set<Information> favoriteInformations) {
+        this.favoriteInformations = favoriteInformations;
     }
 
     // ── Builder manuel ─────────────────────────────────────────

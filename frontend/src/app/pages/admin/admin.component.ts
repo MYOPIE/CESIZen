@@ -35,6 +35,15 @@ export class AdminComponent implements OnInit {
   showCategoryForm = false;
   newCategory: Partial<Category> = { name: '', type: 'ACTIVITY' };
 
+  activitesSortColumn: string = '';
+  activitesSortDirection: 'asc' | 'desc' = 'asc';
+
+  informationsSortColumn: string = '';
+  informationsSortDirection: 'asc' | 'desc' = 'asc';
+
+  categoriesSortColumn: string = '';
+  categoriesSortDirection: 'asc' | 'desc' = 'asc';
+
   constructor(
     private activiteService: ActiviteService,
     private informationService: InformationService,
@@ -190,7 +199,8 @@ export class AdminComponent implements OnInit {
     this.newActivite = {
       ...activite,
       categoryId: activite.category?.id,
-      difficultyLevelId: activite.difficultyLevel?.id
+      difficultyLevelId: activite.difficultyLevel?.id,
+      duree: activite.durationMinutes || activite.duree
     };
     this.showActiviteForm = true;
     this.cdr.detectChanges();
@@ -300,6 +310,107 @@ export class AdminComponent implements OnInit {
          this.loadInformations();
       },
       error: (err) => console.error('Erreur mise à jour statut information', err)
+    });
+  }
+
+  sortActivites(column: string) {
+    if (this.activitesSortColumn === column) {
+      this.activitesSortDirection = this.activitesSortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.activitesSortColumn = column;
+      this.activitesSortDirection = 'asc';
+    }
+  }
+
+  sortInformations(column: string) {
+    if (this.informationsSortColumn === column) {
+      this.informationsSortDirection = this.informationsSortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.informationsSortColumn = column;
+      this.informationsSortDirection = 'asc';
+    }
+  }
+
+  sortCategories(column: string) {
+    if (this.categoriesSortColumn === column) {
+      this.categoriesSortDirection = this.categoriesSortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.categoriesSortColumn = column;
+      this.categoriesSortDirection = 'asc';
+    }
+  }
+
+  private compareValues(a: any, b: any, direction: 'asc' | 'desc') {
+    if (a == null && b == null) return 0;
+    if (a == null) return direction === 'asc' ? -1 : 1;
+    if (b == null) return direction === 'asc' ? 1 : -1;
+
+    if (typeof a === 'number' && typeof b === 'number') {
+      return direction === 'asc' ? a - b : b - a;
+    }
+
+    const dateA = new Date(a);
+    const dateB = new Date(b);
+    if (!isNaN(dateA.getTime()) && !isNaN(dateB.getTime())) {
+      return direction === 'asc' ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
+    }
+
+    const sa = String(a).toLowerCase();
+    const sb = String(b).toLowerCase();
+    if (sa < sb) return direction === 'asc' ? -1 : 1;
+    if (sa > sb) return direction === 'asc' ? 1 : -1;
+    return 0;
+  }
+
+  get sortedActivites(): Activite[] {
+    if (!this.activitesSortColumn) return this.activites;
+    const col = this.activitesSortColumn;
+    const dir = this.activitesSortDirection;
+    return [...this.activites].sort((x, y) => {
+      let va: any = null;
+      let vb: any = null;
+      switch (col) {
+        case 'id': va = x.id; vb = y.id; break;
+        case 'title': va = x.title; vb = y.title; break;
+        case 'categoryId': va = x.category?.name; vb = y.category?.name; break;
+        case 'difficultyLevelId': va = x.difficultyLevel?.name; vb = y.difficultyLevel?.name; break;
+        case 'durationMinutes': va = x.durationMinutes ?? x.duree; vb = y.durationMinutes ?? y.duree; break;
+        case 'isActive': va = x.isActive ? 1 : 0; vb = y.isActive ? 1 : 0; break;
+        case 'createdAt': va = x.createdAt; vb = y.createdAt; break;
+        default: va = (x as any)[col]; vb = (y as any)[col]; break;
+      }
+      return this.compareValues(va, vb, dir);
+    });
+  }
+
+  get sortedInformations(): Information[] {
+    if (!this.informationsSortColumn) return this.informations;
+    const col = this.informationsSortColumn;
+    const dir = this.informationsSortDirection;
+    return [...this.informations].sort((a, b) => {
+      let va: any = null;
+      let vb: any = null;
+      switch (col) {
+        case 'id': va = a.id; vb = b.id; break;
+        case 'title': va = a.title; vb = b.title; break;
+        case 'categoryId': va = a.category?.name; vb = b.category?.name; break;
+        case 'readingTime': va = a.readingTime; vb = b.readingTime; break;
+        case 'isPublished': va = a.isPublished ? 1 : 0; vb = b.isPublished ? 1 : 0; break;
+        case 'createdAt': va = a.createdAt; vb = b.createdAt; break;
+        default: va = (a as any)[col]; vb = (b as any)[col]; break;
+      }
+      return this.compareValues(va, vb, dir);
+    });
+  }
+
+  get sortedCategories(): Category[] {
+    if (!this.categoriesSortColumn) return this.categories;
+    const col = this.categoriesSortColumn;
+    const dir = this.categoriesSortDirection;
+    return [...this.categories].sort((a, b) => {
+      const va = (a as any)[col];
+      const vb = (b as any)[col];
+      return this.compareValues(va, vb, dir);
     });
   }
 }

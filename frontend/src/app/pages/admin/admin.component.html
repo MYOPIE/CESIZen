@@ -81,21 +81,65 @@
         <table class="admin-table">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Titre</th>
-              <th>Catégorie</th>
-              <th>Difficulté</th>
-              <th>Statut</th>
-              <th>Date de création</th>
+              <th (click)="sortActivites('id')" style="cursor: pointer;">
+                ID
+                <span *ngIf="activitesSortColumn === 'id'">
+                  {{ activitesSortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+                <span *ngIf="activitesSortColumn !== 'id'" style="color: #ccc;">↕</span>
+              </th>
+              <th (click)="sortActivites('title')" style="cursor: pointer;">
+                Titre
+                <span *ngIf="activitesSortColumn === 'title'">
+                  {{ activitesSortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+                <span *ngIf="activitesSortColumn !== 'title'" style="color: #ccc;">↕</span>
+              </th>
+              <th (click)="sortActivites('categoryId')" style="cursor: pointer;">
+                Catégorie
+                <span *ngIf="activitesSortColumn === 'categoryId'">
+                  {{ activitesSortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+                <span *ngIf="activitesSortColumn !== 'categoryId'" style="color: #ccc;">↕</span>
+              </th>
+              <th (click)="sortActivites('difficultyLevelId')" style="cursor: pointer;">
+                Difficulté
+                <span *ngIf="activitesSortColumn === 'difficultyLevelId'">
+                  {{ activitesSortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+                <span *ngIf="activitesSortColumn !== 'difficultyLevelId'" style="color: #ccc;">↕</span>
+              </th>
+              <th (click)="sortActivites('durationMinutes')" style="cursor: pointer;">
+                Durée (min)
+                <span *ngIf="activitesSortColumn === 'durationMinutes'">
+                  {{ activitesSortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+                <span *ngIf="activitesSortColumn !== 'durationMinutes'" style="color: #ccc;">↕</span>
+              </th>
+              <th (click)="sortActivites('isActive')" style="cursor: pointer;">
+                Statut
+                <span *ngIf="activitesSortColumn === 'isActive'">
+                  {{ activitesSortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+                <span *ngIf="activitesSortColumn !== 'isActive'" style="color: #ccc;">↕</span>
+              </th>
+              <th (click)="sortActivites('createdAt')" style="cursor: pointer;">
+                Date de création
+                <span *ngIf="activitesSortColumn === 'createdAt'">
+                  {{ activitesSortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+                <span *ngIf="activitesSortColumn !== 'createdAt'" style="color: #ccc;">↕</span>
+              </th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let activite of activites">
+            <tr *ngFor="let activite of sortedActivites">
               <td>{{ activite.id }}</td>
               <td><strong>{{ activite.title }}</strong></td>
               <td>{{ activite.category?.name }}</td>
               <td>{{ activite.difficultyLevel?.name || 'N/A' }}</td>
+              <td>{{ activite.durationMinutes || activite.duree || '-' }}</td>
               <td>
                 <span class="badge" [ngClass]="activite.isActive ? 'badge-success' : 'badge-danger'">
                   {{ activite.isActive ? 'Active' : 'Désactivée' }}
@@ -110,7 +154,7 @@
                 <button class="btn-action delete" (click)="deleteActivite(activite.id)" title="Supprimer">🗑️</button>
               </td>
             </tr>
-            <tr *ngIf="activites.length === 0">
+            <tr *ngIf="sortedActivites.length === 0">
               <td colspan="6" class="text-center">Aucune activité trouvée.</td>
             </tr>
           </tbody>
@@ -161,19 +205,57 @@
         <table class="admin-table">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Titre</th>
-              <th>Catégorie</th>
-              <th>Statut</th>
-              <th>Date de création</th>
+              <th (click)="sortInformations('id')" style="cursor: pointer;">
+                ID
+                <span *ngIf="informationsSortColumn === 'id'">
+                  {{ informationsSortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+                <span *ngIf="informationsSortColumn !== 'id'" style="color: #ccc;">↕</span>
+              </th>
+              <th (click)="sortInformations('title')" style="cursor: pointer;">
+                Titre
+                <span *ngIf="informationsSortColumn === 'title'">
+                  {{ informationsSortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+                <span *ngIf="informationsSortColumn !== 'title'" style="color: #ccc;">↕</span>
+              </th>
+              <th (click)="sortInformations('categoryId')" style="cursor: pointer;">
+                Catégorie
+                <span *ngIf="informationsSortColumn === 'categoryId'">
+                  {{ informationsSortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+                <span *ngIf="informationsSortColumn !== 'categoryId'" style="color: #ccc;">↕</span>
+              </th>
+              <th (click)="sortInformations('readingTime')" style="cursor: pointer;">
+                Temps de lecture (minutes)
+                <span *ngIf="informationsSortColumn === 'readingTime'">
+                  {{ informationsSortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+                <span *ngIf="informationsSortColumn !== 'readingTime'" style="color: #ccc;">↕</span>
+              </th>
+              <th (click)="sortInformations('isPublished')" style="cursor: pointer;">
+                Statut
+                <span *ngIf="informationsSortColumn === 'isPublished'">
+                  {{ informationsSortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+                <span *ngIf="informationsSortColumn !== 'isPublished'" style="color: #ccc;">↕</span>
+              </th>
+              <th (click)="sortInformations('createdAt')" style="cursor: pointer;">
+                Date de création
+                <span *ngIf="informationsSortColumn === 'createdAt'">
+                  {{ informationsSortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+                <span *ngIf="informationsSortColumn !== 'createdAt'" style="color: #ccc;">↕</span>
+              </th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let info of informations">
+            <tr *ngFor="let info of sortedInformations">
               <td>{{ info.id }}</td>
               <td><strong>{{ info.title }}</strong></td>
               <td>{{ info.category?.name }}</td>
+              <td>{{ info.readingTime || '-' }}</td>
               <td>
                 <span class="badge" [ngClass]="info.isPublished ? 'badge-success' : 'badge-danger'">
                   {{ info.isPublished ? 'Publiée' : 'Brouillon' }}
@@ -188,7 +270,7 @@
                 <button class="btn-action delete" (click)="deleteInformation(info.id)" title="Supprimer">🗑️</button>
               </td>
             </tr>
-            <tr *ngIf="informations.length === 0">
+            <tr *ngIf="sortedInformations.length === 0">
               <td colspan="6" class="text-center">Aucune information trouvée.</td>
             </tr>
           </tbody>
@@ -229,14 +311,32 @@
         <table class="admin-table">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Nom</th>
-              <th>Type</th>
+              <th (click)="sortCategories('id')" style="cursor: pointer;">
+                ID
+                <span *ngIf="categoriesSortColumn === 'id'">
+                  {{ categoriesSortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+                <span *ngIf="categoriesSortColumn !== 'id'" style="color: #ccc;">↕</span>
+              </th>
+              <th (click)="sortCategories('name')" style="cursor: pointer;">
+                Nom
+                <span *ngIf="categoriesSortColumn === 'name'">
+                  {{ categoriesSortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+                <span *ngIf="categoriesSortColumn !== 'name'" style="color: #ccc;">↕</span>
+              </th>
+              <th (click)="sortCategories('type')" style="cursor: pointer;">
+                Type
+                <span *ngIf="categoriesSortColumn === 'type'">
+                  {{ categoriesSortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+                <span *ngIf="categoriesSortColumn !== 'type'" style="color: #ccc;">↕</span>
+              </th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let category of categories">
+            <tr *ngFor="let category of sortedCategories">
               <td>{{ category.id }}</td>
               <td><strong>{{ category.name }}</strong></td>
               <td>
@@ -248,7 +348,7 @@
                 <button class="btn-action delete" (click)="deleteCategory(category.id)" title="Supprimer">🗑️</button>
               </td>
             </tr>
-            <tr *ngIf="categories.length === 0">
+            <tr *ngIf="sortedCategories.length === 0">
               <td colspan="4" class="text-center">Aucune catégorie trouvée.</td>
             </tr>
           </tbody>

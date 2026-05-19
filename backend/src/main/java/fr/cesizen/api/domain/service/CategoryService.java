@@ -1,13 +1,14 @@
 package fr.cesizen.api.domain.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import fr.cesizen.api.domain.entity.Category;
 import fr.cesizen.api.domain.repository.CategoryRepository;
 import fr.cesizen.api.web.dto.CategoryRequest;
 import fr.cesizen.api.web.dto.CategoryResponse;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -20,8 +21,8 @@ public class CategoryService {
     }
 
     public CategoryResponse createCategory(CategoryRequest request) {
-        if (categoryRepository.existsByName(request.getName())) {
-            throw new IllegalArgumentException("Une catégorie avec ce nom existe déjà");
+        if (categoryRepository.existsByNameAndType(request.getName(), request.getType())) {
+            throw new IllegalArgumentException("Une catégorie avec ce nom et ce type existe déjà");
         }
 
         Category category = Category.builder()
@@ -55,8 +56,8 @@ public class CategoryService {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Catégorie non trouvée"));
 
-        if (!category.getName().equals(request.getName()) && categoryRepository.existsByName(request.getName())) {
-            throw new IllegalArgumentException("Une catégorie avec ce nom existe déjà");
+        if ((!category.getName().equals(request.getName()) || !category.getType().equals(request.getType())) && categoryRepository.existsByNameAndType(request.getName(), request.getType())) {
+            throw new IllegalArgumentException("Une catégorie avec ce nom et ce type existe déjà");
         }
 
         category.setName(request.getName());

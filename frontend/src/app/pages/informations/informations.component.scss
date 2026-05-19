@@ -99,6 +99,29 @@
     text-transform: uppercase;
   }
 
+  .favorite-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: $dark-gray;
+    transition: all $transition-fast;
+
+    &:hover:not(:disabled) {
+      color: $warning;
+      transform: scale(1.2);
+    }
+
+    &.active {
+      color: $warning;
+    }
+    
+    &:disabled, &.disabled {
+      color: $medium-gray;
+      cursor: not-allowed;
+    }
+  }
+
   h3 {
     color: $dark-blue;
     margin-bottom: 0.75rem;

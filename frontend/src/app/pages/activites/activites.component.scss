@@ -144,7 +144,7 @@
       border: none;
       font-size: 1.5rem;
       cursor: pointer;
-      color: $medium-gray;
+      color: $dark-gray;
       transition: all $transition-fast;
 
       &:hover:not(:disabled) {
@@ -157,7 +157,7 @@
       }
       
       &:disabled, &.disabled {
-        color: #e0e0e0;
+        color: $medium-gray;
         cursor: not-allowed;
       }
     }

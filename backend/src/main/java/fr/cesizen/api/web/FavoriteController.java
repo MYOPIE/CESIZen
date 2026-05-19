@@ -1,4 +1,4 @@
-package fr.cesizen.api.web.controller;
+package fr.cesizen.api.web;
 
 import java.util.List;
 
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.cesizen.api.domain.service.FavoriteService;
 import fr.cesizen.api.web.dto.ActivityResponse;
+import fr.cesizen.api.web.dto.InformationResponse;
 
 @RestController
 @RequestMapping("/api/favorites")
@@ -39,5 +40,23 @@ public class FavoriteController {
     public ResponseEntity<List<ActivityResponse>> getFavoriteActivities(@PathVariable Long userId) {
         List<ActivityResponse> activities = favoriteService.getFavoriteActivities(userId);
         return ResponseEntity.ok(activities);
+    }
+
+    @PostMapping("/users/{userId}/informations/{informationId}")
+    public ResponseEntity<Void> addFavoriteInformation(@PathVariable Long userId, @PathVariable Long informationId) {
+        favoriteService.addFavoriteInformation(userId, informationId);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/users/{userId}/informations/{informationId}")
+    public ResponseEntity<Void> removeFavoriteInformation(@PathVariable Long userId, @PathVariable Long informationId) {
+        favoriteService.removeFavoriteInformation(userId, informationId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/users/{userId}/informations")
+    public ResponseEntity<List<InformationResponse>> getFavoriteInformations(@PathVariable Long userId) {
+        List<InformationResponse> informations = favoriteService.getFavoriteInformations(userId);
+        return ResponseEntity.ok(informations);
     }
 }

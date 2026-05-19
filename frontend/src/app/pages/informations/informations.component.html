@@ -33,7 +33,7 @@
 
     <div class="articles-grid">
       <div *ngFor="let article of filteredArticles" class="article-card card card-blue">
-        <div class="article-header" style="display: flex; justify-content: space-between;">
+        <div class="article-header" style="display: flex; justify-content: space-between; align-items: center;">
           <div>
             <span class="article-icon">{{ article.icon }}</span>
             <span class="article-category">{{ article.category?.name }}</span>
@@ -43,8 +43,7 @@
             [class.disabled]="!isLoggedIn"
             [title]="!isLoggedIn ? 'Connectez-vous pour ajouter aux favoris' : (article.isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris')"
             (click)="toggleFavorite(article)" 
-            [class.active]="article.isFavorite" 
-            style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">
+            [class.active]="article.isFavorite">
             ★
           </button>
         </div>
