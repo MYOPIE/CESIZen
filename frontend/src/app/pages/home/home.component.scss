@@ -17,6 +17,7 @@
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
     padding: 2rem 1rem;
+    margin-bottom: 2rem;
   }
 }
 
@@ -155,6 +156,20 @@
   }
 }
 
+@media (max-width: 520px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    padding: 1.5rem 1rem;
+
+    .stat-value {
+      font-size: 2rem;
+    }
+  }
+}
+
 .stat-card {
   @include card-style;
   text-align: center;
@@ -203,6 +218,22 @@
 
     .btn-green {
       @include button-style($light-green, $very-dark-gray);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .cta-section {
+    .cta-card {
+      padding: 2rem 1rem;
+
+      h3 {
+        font-size: 1.5rem;
+      }
+
+      p {
+        font-size: 1rem;
+      }
     }
   }
 }

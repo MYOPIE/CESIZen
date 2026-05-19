@@ -2,7 +2,7 @@
 
 ## 🎯 Bienvenue!
 
-Vous trouverez ici la documentation complète du frontend CESIZen avec toutes les pages, composants et guides nécessaires pour développer et déployer l'application.
+Vous trouverez ici les points d'entrée de la documentation frontend. Le détail technique, les nouveautés fonctionnelles et la stratégie de tests sont centralisés dans [DOCUMENTATION_TECHNIQUE_BLOC_2.md](../DOCUMENTATION_TECHNIQUE_BLOC_2.md).
 
 ---
 
@@ -12,10 +12,10 @@ Vous trouverez ici la documentation complète du frontend CESIZen avec toutes le
 **Pour qui?** Développeurs qui veulent démarrer rapidement
 
 Contient:
-- Installation et lancement
-- Navigation rapide
-- Fonctionnalités testables
-- Troubleshooting
+- Démarrage minimal
+- Commandes de test
+- Parcours à vérifier
+- Références vers la doc centrale
 
 👉 **Commencez ici!**
 
@@ -28,9 +28,9 @@ Contient:
 - Hiérarchie des composants
 - Structure des fichiers complète
 - Flux de données et événements
-- Mixins et utilitaires SCSS
 - Points d'extension
 - Commandes npm
+- Rappels de conception
 
 ---
 
@@ -222,10 +222,11 @@ Vous avez maintenant une application Angular moderne et professionnelle avec :
 - ✅ **4 pages complètes** bien structurées
 - ✅ **Design cohérent** bleu/vert clair
 - ✅ **Code maintenable** et extensible
-- ✅ **Documentation compète** et claire
+- ✅ **Documentation centrale enrichie**
+- ✅ **Tests front automatisés**
 - ✅ **Responsive design** pour tous les appareils
 
-**Prêt à développer? Lancez `ng serve` et commencez!** 🚀
+**Prêt à développer? Lancez `ng serve` et consultez la documentation centrale pour les tests et la soutenance.**
 
 ---
 

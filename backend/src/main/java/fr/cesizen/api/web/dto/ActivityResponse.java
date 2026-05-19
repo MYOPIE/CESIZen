@@ -19,6 +19,13 @@ public class ActivityResponse {
 
     public ActivityResponse() {}
 
+    public ActivityResponse(Long id, String title, String description, Integer durationMinutes) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.durationMinutes = durationMinutes;
+    }
+
     public Long getId()             { return id; }
     public String getTitle()        { return title; }
     public String getDescription()  { return description; }

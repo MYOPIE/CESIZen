@@ -19,6 +19,7 @@ html, body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: $light-gray;
   color: $very-dark-gray;
+  overflow-x: hidden;
 }
 
 // ===========================
@@ -259,6 +260,25 @@ label {
   border-radius: $border-radius-md;
   margin-bottom: 1rem;
 
+
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+@media (max-width: 480px) {
+  .btn,
+  button {
+    max-width: 100%;
+  }
+
+  .btn-lg {
+    width: 100%;
+  }
+}
   &.alert-success {
     background-color: rgba($success, 0.1);
     border-left: 4px solid $success;

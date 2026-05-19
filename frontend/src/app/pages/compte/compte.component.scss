@@ -58,6 +58,11 @@
         padding: 0.75rem 0;
         border-bottom: 1px solid $medium-gray;
 
+        @media (max-width: 768px) {
+          flex-direction: column;
+          gap: 0.25rem;
+        }
+
         &:last-child {
           border-bottom: none;
         }
@@ -145,6 +150,10 @@
   .auth-container {
     max-width: 500px;
     margin: 2rem auto;
+
+    @media (max-width: 768px) {
+      margin: 1rem auto;
+    }
   }
 
   .auth-form {
@@ -353,6 +362,22 @@
         background-color: #e74c3c;
       }
     }
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-section {
+    .auth-form {
+      padding: 1rem;
+
+      h3 {
+        font-size: 1.4rem;
+      }
+    }
+  }
+
+  .security-info {
+    padding: 1rem;
   }
 }
 
