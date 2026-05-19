@@ -64,4 +64,13 @@ describe('ActiviteService', () => {
     service.reactivateActivite(2).subscribe();
     expect(http.put).toHaveBeenCalledWith('http://localhost:8080/api/v1/activities/2/reactivate', {});
   });
+
+    it('handles errors gracefully', () => {
+        http.get.mockReturnValue(of([]));
+        const service = createService();
+        service.getActiviteById(999).subscribe({
+            error: (err) => expect(err).toBeDefined()
+        });
+        expect(http.get).toHaveBeenCalledWith('http://localhost:8080/api/v1/activities/999');
+    });
 });
