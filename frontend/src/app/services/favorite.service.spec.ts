@@ -40,4 +40,16 @@ describe('FavoriteService', () => {
     service.removeFavoriteInformation(9).subscribe();
     expect(http.delete).toHaveBeenCalledWith('/api/favorites/users/42/informations/9');
   });
+
+    it('handles missing user gracefully', () => {
+        const service = createService({ currentUserValue: null });
+        service.addFavoriteActivity(7).subscribe();
+        expect(http.post).toHaveBeenCalledWith('/api/favorites/users/undefined/activities/7', {});
+        service.removeFavoriteActivity(7).subscribe();
+        expect(http.delete).toHaveBeenCalledWith('/api/favorites/users/undefined/activities/7');
+        service.addFavoriteInformation(9).subscribe();
+        expect(http.post).toHaveBeenCalledWith('/api/favorites/users/undefined/informations/9', {});
+        service.removeFavoriteInformation(9).subscribe();
+        expect(http.delete).toHaveBeenCalledWith('/api/favorites/users/undefined/informations/9');
+    });
 });
