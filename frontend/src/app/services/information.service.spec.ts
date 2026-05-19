@@ -53,4 +53,15 @@ describe('InformationService', () => {
     service.unpublishInformation(1).subscribe();
     expect(http.put).toHaveBeenCalledWith('http://localhost:8080/api/v1/informations/1/unpublish', {});
   });
+
+  it('handles errors gracefully', () => {
+    http.get.mockReturnValue(of([]));
+    const service = createService();
+    service.getInformationById(999).subscribe({
+      error: (err) => {
+        expect(err).toBeDefined();
+      }
+    });
+    expect(http.get).toHaveBeenCalledWith('http://localhost:8080/api/v1/informations/999');
+    });
 });

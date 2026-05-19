@@ -19,9 +19,8 @@ jobs:
           node-version: '18'
           cache: 'npm'
       - name: Install dependencies
+        working-directory: frontend
         run: npm ci
       - name: Run unit tests
-        run: npm run test -- --watch=false
-      - name: Run npm tests
         working-directory: frontend
-        run: npm test
+        run: npm run test -- --watch=false
