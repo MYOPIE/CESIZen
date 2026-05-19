@@ -3,6 +3,7 @@ package fr.cesizen.api.domain.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +30,7 @@ public class FavoriteService {
         this.informationRepository = informationRepository;
     }
 
-    public void addFavorite(Long userId, Long activityId) {
+    public void addFavorite(@NonNull Long userId, @NonNull Long activityId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
         Activity activity = activityRepository.findById(activityId)
@@ -39,7 +40,7 @@ public class FavoriteService {
         userRepository.save(user);
     }
 
-    public void removeFavorite(Long userId, Long activityId) {
+    public void removeFavorite(@NonNull Long userId, @NonNull Long activityId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
         Activity activity = activityRepository.findById(activityId)
@@ -49,7 +50,7 @@ public class FavoriteService {
         userRepository.save(user);
     }
 
-    public List<ActivityResponse> getFavoriteActivities(Long userId) {
+    public List<ActivityResponse> getFavoriteActivities(@NonNull Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
         
@@ -69,7 +70,7 @@ public class FavoriteService {
                 .collect(Collectors.toList());
     }
 
-    public void addFavoriteInformation(Long userId, Long informationId) {
+    public void addFavoriteInformation(@NonNull Long userId, @NonNull Long informationId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
         Information info = informationRepository.findById(informationId)
@@ -79,7 +80,7 @@ public class FavoriteService {
         userRepository.save(user);
     }
 
-    public void removeFavoriteInformation(Long userId, Long informationId) {
+    public void removeFavoriteInformation(@NonNull Long userId, @NonNull Long informationId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
         Information info = informationRepository.findById(informationId)
@@ -89,7 +90,7 @@ public class FavoriteService {
         userRepository.save(user);
     }
 
-    public List<InformationResponse> getFavoriteInformations(Long userId) {
+    public List<InformationResponse> getFavoriteInformations(@NonNull Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
         

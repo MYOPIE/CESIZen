@@ -3,12 +3,15 @@ package fr.cesizen.api.web;
 import fr.cesizen.api.domain.service.CategoryService;
 import fr.cesizen.api.web.dto.CategoryRequest;
 import fr.cesizen.api.web.dto.CategoryResponse;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
+
+import org.springframework.lang.NonNull;
 
 @RestController
 @RequestMapping("/api/v1/categories")
@@ -29,7 +32,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable Long id) {
+    public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable @NonNull Long id) {
         return ResponseEntity.ok(categoryService.getCategoryById(id));
     }
 
@@ -43,13 +46,13 @@ public class CategoryController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CategoryResponse> updateCategory(@PathVariable Long id, @RequestBody CategoryRequest request) {
+    public ResponseEntity<CategoryResponse> updateCategory(@PathVariable @NonNull Long id, @RequestBody CategoryRequest request) {
         return ResponseEntity.ok(categoryService.updateCategory(id, request));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCategory(@PathVariable @NonNull Long id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.noContent().build();
     }

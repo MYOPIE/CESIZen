@@ -1,17 +1,19 @@
 package fr.cesizen.api.domain.service;
 
-import fr.cesizen.api.domain.entity.User;
-import fr.cesizen.api.domain.entity.Role;
-import fr.cesizen.api.domain.repository.UserRepository;
-import fr.cesizen.api.web.dto.UserRegisterRequest;
-import fr.cesizen.api.web.dto.UserResponse;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Optional;
+import fr.cesizen.api.domain.entity.Role;
+import fr.cesizen.api.domain.entity.User;
+import fr.cesizen.api.domain.repository.UserRepository;
+import fr.cesizen.api.web.dto.UserRegisterRequest;
+import fr.cesizen.api.web.dto.UserResponse;
 
 @Service
 @Transactional
@@ -52,7 +54,7 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-    public UserResponse getUserById(Long id) {
+    public UserResponse getUserById(@NonNull Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
         return mapToResponse(user);
@@ -64,7 +66,7 @@ public class UserService {
                 .toList();
     }
 
-    public UserResponse updateUser(Long id, UserRegisterRequest request) {
+    public UserResponse updateUser(@NonNull Long id, UserRegisterRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
 
@@ -82,27 +84,27 @@ public class UserService {
         return mapToResponse(updatedUser);
     }
 
-    public void deleteUser(Long id) {
+    public void deleteUser(@NonNull Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
         userRepository.delete(user);
     }
 
-    public void deactivateUser(Long id) {
+    public void deactivateUser(@NonNull Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
         user.setIsActive(false);
         userRepository.save(user);
     }
 
-    public void promoteToAdmin(Long id) {
+    public void promoteToAdmin(@NonNull Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
         user.setRole(Role.ADMIN);
         userRepository.save(user);
     }
 
-    public void demoteFromAdmin(Long id) {
+    public void demoteFromAdmin(@NonNull Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
         user.setRole(Role.USER);

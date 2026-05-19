@@ -1,13 +1,15 @@
 package fr.cesizen.api.domain.service;
 
+import java.util.List;
+
+import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import fr.cesizen.api.domain.entity.DifficultyLevel;
 import fr.cesizen.api.domain.repository.DifficultyLevelRepository;
 import fr.cesizen.api.web.dto.DifficultyLevelRequest;
 import fr.cesizen.api.web.dto.DifficultyLevelResponse;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -32,7 +34,7 @@ public class DifficultyLevelService {
         return mapToResponse(saved);
     }
 
-    public DifficultyLevelResponse getDifficultyLevelById(Long id) {
+    public DifficultyLevelResponse getDifficultyLevelById(@NonNull Long id) {
         DifficultyLevel difficultyLevel = difficultyLevelRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Niveau de difficulté non trouvé"));
         return mapToResponse(difficultyLevel);
@@ -44,7 +46,7 @@ public class DifficultyLevelService {
                 .toList();
     }
 
-    public DifficultyLevelResponse updateDifficultyLevel(Long id, DifficultyLevelRequest request) {
+    public DifficultyLevelResponse updateDifficultyLevel(@NonNull Long id, DifficultyLevelRequest request) {
         DifficultyLevel difficultyLevel = difficultyLevelRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Niveau de difficulté non trouvé"));
 
@@ -58,7 +60,7 @@ public class DifficultyLevelService {
         return mapToResponse(updated);
     }
 
-    public void deleteDifficultyLevel(Long id) {
+    public void deleteDifficultyLevel(@NonNull Long id) {
         DifficultyLevel difficultyLevel = difficultyLevelRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Niveau de difficulté non trouvé"));
         difficultyLevelRepository.delete(difficultyLevel);

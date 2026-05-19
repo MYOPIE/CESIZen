@@ -1,14 +1,24 @@
 package fr.cesizen.api.web;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import fr.cesizen.api.domain.service.InformationService;
 import fr.cesizen.api.web.dto.InformationRequest;
 import fr.cesizen.api.web.dto.InformationResponse;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/informations")
@@ -23,7 +33,7 @@ public class InformationController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> createInformation(@RequestBody InformationRequest request) {
+    public ResponseEntity<?> createInformation(@RequestBody @NonNull InformationRequest request) {
         try {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(informationService.createInformation(request));
@@ -44,12 +54,12 @@ public class InformationController {
     }
 
     @GetMapping("/category/{categoryId}")
-    public ResponseEntity<List<InformationResponse>> getInformationsByCategory(@PathVariable Long categoryId) {
+    public ResponseEntity<List<InformationResponse>> getInformationsByCategory(@PathVariable @NonNull Long categoryId) {
         return ResponseEntity.ok(informationService.getInformationsByCategory(categoryId));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getInformationById(@PathVariable Long id) {
+    public ResponseEntity<?> getInformationById(@PathVariable @NonNull Long id) {
         try {
             return ResponseEntity.ok(informationService.getInformationById(id));
         } catch (IllegalArgumentException e) {
@@ -60,7 +70,7 @@ public class InformationController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> updateInformation(@PathVariable Long id, @RequestBody InformationRequest request) {
+    public ResponseEntity<?> updateInformation(@PathVariable @NonNull Long id, @RequestBody InformationRequest request) {
         try {
             return ResponseEntity.ok(informationService.updateInformation(id, request));
         } catch (IllegalArgumentException e) {
@@ -71,7 +81,7 @@ public class InformationController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> deleteInformation(@PathVariable Long id) {
+    public ResponseEntity<?> deleteInformation(@PathVariable @NonNull Long id) {
         try {
             informationService.deleteInformation(id);
             return ResponseEntity.ok("Information supprimée avec succès");
@@ -83,7 +93,7 @@ public class InformationController {
 
     @PutMapping("/{id}/publish")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> publishInformation(@PathVariable Long id) {
+    public ResponseEntity<?> publishInformation(@PathVariable @NonNull Long id) {
         try {
             informationService.publishInformation(id);
             return ResponseEntity.ok("Information publiée avec succès");
@@ -95,7 +105,7 @@ public class InformationController {
 
     @PutMapping("/{id}/unpublish")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> unpublishInformation(@PathVariable Long id) {
+    public ResponseEntity<?> unpublishInformation(@PathVariable @NonNull Long id) {
         try {
             informationService.unpublishInformation(id);
             return ResponseEntity.ok("Information dépubliée avec succès");

@@ -3,6 +3,7 @@ package fr.cesizen.api.web;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,37 +26,37 @@ public class FavoriteController {
     }
 
     @PostMapping("/users/{userId}/activities/{activityId}")
-    public ResponseEntity<Void> addFavorite(@PathVariable Long userId, @PathVariable Long activityId) {
+    public ResponseEntity<Void> addFavorite(@PathVariable @NonNull Long userId, @PathVariable @NonNull Long activityId) {
         favoriteService.addFavorite(userId, activityId);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/users/{userId}/activities/{activityId}")
-    public ResponseEntity<Void> removeFavorite(@PathVariable Long userId, @PathVariable Long activityId) {
+    public ResponseEntity<Void> removeFavorite(@PathVariable @NonNull Long userId, @PathVariable @NonNull Long activityId) {
         favoriteService.removeFavorite(userId, activityId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/users/{userId}")
-    public ResponseEntity<List<ActivityResponse>> getFavoriteActivities(@PathVariable Long userId) {
+    public ResponseEntity<List<ActivityResponse>> getFavoriteActivities(@PathVariable @NonNull Long userId) {
         List<ActivityResponse> activities = favoriteService.getFavoriteActivities(userId);
         return ResponseEntity.ok(activities);
     }
 
     @PostMapping("/users/{userId}/informations/{informationId}")
-    public ResponseEntity<Void> addFavoriteInformation(@PathVariable Long userId, @PathVariable Long informationId) {
+    public ResponseEntity<Void> addFavoriteInformation(@PathVariable @NonNull Long userId, @PathVariable @NonNull Long informationId) {
         favoriteService.addFavoriteInformation(userId, informationId);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/users/{userId}/informations/{informationId}")
-    public ResponseEntity<Void> removeFavoriteInformation(@PathVariable Long userId, @PathVariable Long informationId) {
+    public ResponseEntity<Void> removeFavoriteInformation(@PathVariable @NonNull Long userId, @PathVariable @NonNull Long informationId) {
         favoriteService.removeFavoriteInformation(userId, informationId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/users/{userId}/informations")
-    public ResponseEntity<List<InformationResponse>> getFavoriteInformations(@PathVariable Long userId) {
+    public ResponseEntity<List<InformationResponse>> getFavoriteInformations(@PathVariable @NonNull Long userId) {
         List<InformationResponse> informations = favoriteService.getFavoriteInformations(userId);
         return ResponseEntity.ok(informations);
     }

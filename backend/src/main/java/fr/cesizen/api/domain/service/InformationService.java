@@ -1,17 +1,19 @@
 package fr.cesizen.api.domain.service;
 
-import fr.cesizen.api.domain.entity.Information;
-import fr.cesizen.api.domain.entity.Category;
-import fr.cesizen.api.domain.repository.InformationRepository;
-import fr.cesizen.api.domain.repository.CategoryRepository;
-import fr.cesizen.api.web.dto.InformationRequest;
-import fr.cesizen.api.web.dto.InformationResponse;
-import fr.cesizen.api.web.dto.CategoryResponse;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.format.DateTimeFormatter;
-import java.util.List;
+import fr.cesizen.api.domain.entity.Category;
+import fr.cesizen.api.domain.entity.Information;
+import fr.cesizen.api.domain.repository.CategoryRepository;
+import fr.cesizen.api.domain.repository.InformationRepository;
+import fr.cesizen.api.web.dto.CategoryResponse;
+import fr.cesizen.api.web.dto.InformationRequest;
+import fr.cesizen.api.web.dto.InformationResponse;
 
 @Service
 @Transactional
@@ -26,7 +28,7 @@ public class InformationService {
         this.categoryRepository = categoryRepository;
     }
 
-    public InformationResponse createInformation(InformationRequest request) {
+    public InformationResponse createInformation(@NonNull InformationRequest request) {
         Category category = null;
         if (request.getCategoryId() != null) {
             category = categoryRepository.findById(request.getCategoryId())
@@ -45,7 +47,7 @@ public class InformationService {
         return mapToResponse(savedInformation);
     }
 
-    public InformationResponse getInformationById(Long id) {
+    public InformationResponse getInformationById(@NonNull Long id) {
         Information information = informationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Information non trouvée"));
         return mapToResponse(information);
@@ -63,13 +65,13 @@ public class InformationService {
                 .toList();
     }
 
-    public List<InformationResponse> getInformationsByCategory(Long categoryId) {
+    public List<InformationResponse> getInformationsByCategory(@NonNull Long categoryId) {
         return informationRepository.findByCategoryId(categoryId).stream()
                 .map(this::mapToResponse)
                 .toList();
     }
 
-    public InformationResponse updateInformation(Long id, InformationRequest request) {
+    public InformationResponse updateInformation(@NonNull Long id, InformationRequest request) {
         Information information = informationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Information non trouvée"));
 
@@ -90,20 +92,20 @@ public class InformationService {
         return mapToResponse(updatedInformation);
     }
 
-    public void deleteInformation(Long id) {
+    public void deleteInformation(@NonNull Long id) {
         Information information = informationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Information non trouvée"));
         informationRepository.delete(information);
     }
 
-    public void publishInformation(Long id) {
+    public void publishInformation(@NonNull Long id) {
         Information information = informationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Information non trouvée"));
         information.setIsPublished(true);
         informationRepository.save(information);
     }
 
-    public void unpublishInformation(Long id) {
+    public void unpublishInformation(@NonNull Long id) {
         Information information = informationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Information non trouvée"));
         information.setIsPublished(false);

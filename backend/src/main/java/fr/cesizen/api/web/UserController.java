@@ -1,13 +1,22 @@
 package fr.cesizen.api.web;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import fr.cesizen.api.domain.service.UserService;
 import fr.cesizen.api.web.dto.UserRegisterRequest;
 import fr.cesizen.api.web.dto.UserResponse;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -26,7 +35,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+    public ResponseEntity<?> getUserById(@PathVariable @NonNull Long id) {
         try {
             return ResponseEntity.ok(userService.getUserById(id));
         } catch (IllegalArgumentException e) {
@@ -36,7 +45,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserRegisterRequest request) {
+    public ResponseEntity<?> updateUser(@PathVariable @NonNull Long id, @RequestBody UserRegisterRequest request) {
         try {
             return ResponseEntity.ok(userService.updateUser(id, request));
         } catch (IllegalArgumentException e) {
@@ -46,7 +55,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<?> deleteUser(@PathVariable @NonNull Long id) {
         try {
             userService.deleteUser(id);
             return ResponseEntity.ok("Utilisateur supprimé avec succès");
@@ -57,7 +66,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/deactivate")
-    public ResponseEntity<?> deactivateUser(@PathVariable Long id) {
+    public ResponseEntity<?> deactivateUser(@PathVariable @NonNull Long id) {
         try {
             userService.deactivateUser(id);
             return ResponseEntity.ok("Utilisateur désactivé avec succès");
@@ -68,7 +77,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/promote-admin")
-    public ResponseEntity<?> promoteToAdmin(@PathVariable Long id) {
+    public ResponseEntity<?> promoteToAdmin(@PathVariable @NonNull Long id) {
         try {
             userService.promoteToAdmin(id);
             return ResponseEntity.ok("Utilisateur promu administrateur");
@@ -79,7 +88,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/demote-admin")
-    public ResponseEntity<?> demoteFromAdmin(@PathVariable Long id) {
+    public ResponseEntity<?> demoteFromAdmin(@PathVariable @NonNull Long id) {
         try {
             userService.demoteFromAdmin(id);
             return ResponseEntity.ok("Le rôle d'administrateur a été retiré à l'utilisateur");

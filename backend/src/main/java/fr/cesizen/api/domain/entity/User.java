@@ -127,6 +127,8 @@ public class User {
         private Boolean isActive;
         private LocalDateTime createdAt, updatedAt;
         private Set<Activity> favoriteActivities;
+        private Set<Information> favoriteInformations;
+        
         public Builder id(Long id)                         { this.id = id; return this; }
         public Builder email(String email)                 { this.email = email; return this; }
         public Builder firstName(String firstName)         { this.firstName = firstName; return this; }
@@ -140,7 +142,10 @@ public class User {
             this.favoriteActivities = favoriteActivities;
             return this;
         }
-
+        public Builder favoriteInformations(Set<Information> favoriteInformations) {
+            this.favoriteInformations = favoriteInformations;
+            return this;
+        }
         public User build() {
             return new User(id, email, firstName, lastName,
                             password, role, isActive, createdAt, updatedAt);

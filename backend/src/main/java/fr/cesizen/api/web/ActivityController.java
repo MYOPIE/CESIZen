@@ -1,14 +1,24 @@
 package fr.cesizen.api.web;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import fr.cesizen.api.domain.service.ActivityService;
 import fr.cesizen.api.web.dto.ActivityRequest;
 import fr.cesizen.api.web.dto.ActivityResponse;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/activities")
@@ -44,7 +54,7 @@ public class ActivityController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getActivityById(@PathVariable Long id) {
+    public ResponseEntity<?> getActivityById(@PathVariable @NonNull Long id) {
         try {
             return ResponseEntity.ok(activityService.getActivityById(id));
         } catch (IllegalArgumentException e) {
@@ -55,7 +65,7 @@ public class ActivityController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> updateActivity(@PathVariable Long id, @RequestBody ActivityRequest request) {
+    public ResponseEntity<?> updateActivity(@PathVariable @NonNull Long id, @RequestBody ActivityRequest request) {
         try {
             return ResponseEntity.ok(activityService.updateActivity(id, request));
         } catch (IllegalArgumentException e) {
@@ -66,7 +76,7 @@ public class ActivityController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> deleteActivity(@PathVariable Long id) {
+    public ResponseEntity<?> deleteActivity(@PathVariable @NonNull Long id) {
         try {
             activityService.deleteActivity(id);
             return ResponseEntity.ok("Activity deleted successfully");
@@ -78,7 +88,7 @@ public class ActivityController {
 
     @PutMapping("/{id}/deactivate")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> deactivateActivity(@PathVariable Long id) {
+    public ResponseEntity<?> deactivateActivity(@PathVariable @NonNull Long id) {
         try {
             activityService.deactivateActivity(id);
             return ResponseEntity.ok("Activity deactivated successfully");
@@ -90,7 +100,7 @@ public class ActivityController {
 
     @PutMapping("/{id}/reactivate")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> reactivateActivity(@PathVariable Long id) {
+    public ResponseEntity<?> reactivateActivity(@PathVariable @NonNull Long id) {
         try {
             activityService.reactivateActivity(id);
             return ResponseEntity.ok("Activity reactivated successfully");

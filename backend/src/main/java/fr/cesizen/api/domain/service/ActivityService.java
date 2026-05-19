@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fr.cesizen.api.domain.entity.Activity;
 import fr.cesizen.api.domain.entity.Category;
 import fr.cesizen.api.domain.entity.DifficultyLevel;
-import fr.cesizen.api.domain.entity.User;
 import fr.cesizen.api.domain.repository.ActivityRepository;
 import fr.cesizen.api.domain.repository.CategoryRepository;
 import fr.cesizen.api.domain.repository.DifficultyLevelRepository;
@@ -66,7 +66,7 @@ public class ActivityService {
         return mapToResponse(savedActivity);
     }
 
-    public ActivityResponse getActivityById(Long id) {
+    public ActivityResponse getActivityById(@NonNull Long id) {
         Activity activity = activityRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Activité non trouvée"));
         return mapToResponse(activity);
@@ -84,7 +84,7 @@ public class ActivityService {
                 .toList();
     }
 
-    public ActivityResponse updateActivity(Long id, ActivityRequest request) {
+    public ActivityResponse updateActivity(@NonNull Long id, ActivityRequest request) {
         Activity activity = activityRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Activité non trouvée"));
 
@@ -112,20 +112,20 @@ public class ActivityService {
         return mapToResponse(updatedActivity);
     }
 
-    public void deleteActivity(Long id) {
+    public void deleteActivity(@NonNull Long id) {
         Activity activity = activityRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Activité non trouvée"));
         activityRepository.delete(activity);
     }
 
-    public void deactivateActivity(Long id) {
+    public void deactivateActivity(@NonNull Long id) {
         Activity activity = activityRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Activité non trouvée"));
         activity.setIsActive(false);
         activityRepository.save(activity);
     }
 
-    public void reactivateActivity(Long id) {
+    public void reactivateActivity(@NonNull Long id) {
         Activity activity = activityRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Activité non trouvée"));
         activity.setIsActive(true);
@@ -165,7 +165,7 @@ public class ActivityService {
                 .build();
     }
 
-    public List<ActivityResponse> getActivitiesWithFavoriteStatus(Long userId) {
+    public List<ActivityResponse> getActivitiesWithFavoriteStatus(@NonNull Long userId) {
         List<Activity> activities = activityRepository.findAll();
         
         Set<Long> favoriteIds = userRepository.findById(userId)

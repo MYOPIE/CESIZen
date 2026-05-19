@@ -2,6 +2,7 @@ package fr.cesizen.api.domain.service;
 
 import java.util.List;
 
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +35,7 @@ public class CategoryService {
         return mapToResponse(savedCategory);
     }
 
-    public CategoryResponse getCategoryById(Long id) {
+    public CategoryResponse getCategoryById(@NonNull Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Catégorie non trouvée"));
         return mapToResponse(category);
@@ -52,7 +53,7 @@ public class CategoryService {
                 .toList();
     }
 
-    public CategoryResponse updateCategory(Long id, CategoryRequest request) {
+    public CategoryResponse updateCategory(@NonNull Long id, CategoryRequest request) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Catégorie non trouvée"));
 
@@ -67,7 +68,7 @@ public class CategoryService {
         return mapToResponse(updatedCategory);
     }
 
-    public void deleteCategory(Long id) {
+    public void deleteCategory(@NonNull Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Catégorie non trouvée"));
         categoryRepository.delete(category);
