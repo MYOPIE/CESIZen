@@ -17,7 +17,7 @@ import { FavoriteService } from '../../services/favorite.service';
 export class ActivitesComponent implements OnInit {
   activites: Activite[] = [];
   categories: Category[] = [];
-  selectedCategoryId: number | null = null;
+  selectedCategoryIds: number[] = [];
   sortBy = 'duree';
   
   isLoggedIn = false;
@@ -64,8 +64,8 @@ export class ActivitesComponent implements OnInit {
   get filteredActivites() {
     let filtered = this.activites;
 
-    if (this.selectedCategoryId) {
-      filtered = filtered.filter(a => a.category && a.category.id === this.selectedCategoryId);
+    if (this.selectedCategoryIds && this.selectedCategoryIds.length > 0) {
+      filtered = filtered.filter(a => a.category && this.selectedCategoryIds.includes(a.category.id));
     }
 
     // Tri
@@ -79,7 +79,17 @@ export class ActivitesComponent implements OnInit {
   }
 
   filterByCategory(categoryId: number | null): void {
-    this.selectedCategoryId = categoryId;
+    if (categoryId === null) {
+      this.selectedCategoryIds = [];
+      return;
+    }
+
+    const idx = this.selectedCategoryIds.indexOf(categoryId);
+    if (idx === -1) {
+      this.selectedCategoryIds.push(categoryId);
+    } else {
+      this.selectedCategoryIds.splice(idx, 1);
+    }
   }
 
   toggleFavorite(activite: Activite): void {

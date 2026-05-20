@@ -57,7 +57,7 @@ describe('ActivitesComponent', () => {
       { id: 3, title: 'C', description: '', content: '', instructions: '', isActive: true, category: categoryA, durationMinutes: 5 }
     ];
 
-    component.selectedCategoryId = 1;
+    component.selectedCategoryIds = [1];
 
     expect(component.filteredActivites.map((activite) => activite.id)).toEqual([3, 2]);
   });
@@ -67,7 +67,7 @@ describe('ActivitesComponent', () => {
 
     component.filterByCategory(2);
 
-    expect(component.selectedCategoryId).toBe(2);
+    expect(component.selectedCategoryIds).toEqual([2]);
   });
 
   it('redirects unauthenticated users to the account page before toggling favorites', () => {

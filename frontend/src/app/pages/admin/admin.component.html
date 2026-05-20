@@ -196,7 +196,7 @@
               </select>
             </div>
             <div style="flex: 1;">
-              <label for="infoReadTime">Temps de lecture (minutes)</label>
+              <label for="infoReadTime">Temps de lecture (min)</label>
               <input type="number" id="infoReadTime" name="readingTime" [(ngModel)]="newInformation.readingTime" class="form-control">
             </div>
           </div>
@@ -233,7 +233,7 @@
                 <span *ngIf="informationsSortColumn !== 'categoryId'" style="color: #ccc;">↕</span>
               </th>
               <th (click)="sortInformations('readingTime')" style="cursor: pointer;">
-                Temps de lecture (minutes)
+                Temps de lecture (min)
                 <span *ngIf="informationsSortColumn === 'readingTime'">
                   {{ informationsSortDirection === 'asc' ? '↑' : '↓' }}
                 </span>

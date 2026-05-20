@@ -16,7 +16,7 @@ import { FavoriteService } from '../../services/favorite.service';
 export class InformationsComponent implements OnInit {
   articles: Information[] = [];
   categories: Category[] = [];
-  selectedCategoryId: number | null = null;
+  selectedCategoryIds: number[] = [];
   isAdmin = false;
   isLoggedIn = false;
 
@@ -59,14 +59,24 @@ export class InformationsComponent implements OnInit {
   }
 
   get filteredArticles() {
-    if (!this.selectedCategoryId) {
+    if (!this.selectedCategoryIds || this.selectedCategoryIds.length === 0) {
       return this.articles;
     }
-    return this.articles.filter(a => a.category && a.category.id === this.selectedCategoryId);
+    return this.articles.filter(a => a.category && this.selectedCategoryIds.includes(a.category.id));
   }
 
   filterByCategory(categoryId: number | null): void {
-    this.selectedCategoryId = categoryId;
+    if (categoryId === null) {
+      this.selectedCategoryIds = [];
+      return;
+    }
+
+    const idx = this.selectedCategoryIds.indexOf(categoryId);
+    if (idx === -1) {
+      this.selectedCategoryIds.push(categoryId);
+    } else {
+      this.selectedCategoryIds.splice(idx, 1);
+    }
   }
 
   toggleFavorite(info: Information): void {

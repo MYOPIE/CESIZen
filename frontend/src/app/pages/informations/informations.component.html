@@ -15,7 +15,7 @@
       <div class="filter-buttons">
         <button 
           class="btn filter-btn"
-          [class.active]="selectedCategoryId === null"
+          [class.active]="selectedCategoryIds.length === 0"
           (click)="filterByCategory(null)"
         >
           Toutes
@@ -23,7 +23,7 @@
         <button 
           *ngFor="let category of categories"
           class="btn filter-btn"
-          [class.active]="selectedCategoryId === category.id"
+          [class.active]="selectedCategoryIds.includes(category.id)"
           (click)="filterByCategory(category.id)"
         >
           {{ category.name }}

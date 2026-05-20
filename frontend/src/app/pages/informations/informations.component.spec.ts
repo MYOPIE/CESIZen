@@ -62,7 +62,7 @@ describe('InformationsComponent', () => {
       { id: 3, title: 'C', content: '', isPublished: true, category: categoryA }
     ];
 
-    component.selectedCategoryId = 1;
+    component.selectedCategoryIds = [1];
 
     expect(component.filteredArticles.map((article) => article.id)).toEqual([1, 3]);
   });

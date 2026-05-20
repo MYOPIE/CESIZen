@@ -47,7 +47,6 @@ public class Activity {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // TODO : lié cette colonne au front pour afficher la durée de l'activité
     @Column(name = "duration_minutes")
     private Integer durationMinutes;
 
