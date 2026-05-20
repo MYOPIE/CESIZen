@@ -285,6 +285,15 @@ L'automatisation repose sur le socle déjà présent dans le projet front.
 #### 9.5 Résultats obtenus
 La suite front valide actuellement 32 tests répartis sur 8 fichiers de specs. Cette base couvre le comportement des services, des composants de page et des garde-fous applicatifs liés à l'authentification.
 
+#### 9.6 Cahier de recette délocalisé
+Le cahier de recette complet a été extrait du corps de cette documentation et déposé dans le fichier `CAHIER_RECETTE_TESTS.md` (racine du dépôt). Ce fichier contient la matrice de tests détaillée (ID Test, Module, Fonctionnalité, Pré-conditions, Étapes, Données de test, Résultat attendu, Résultat obtenu, Statut, Commentaires, Criticité, Responsable, Date) ainsi que les nouveaux cas ajoutés lors des dernières implémentations :
+
+- Tests de sécurité API et RBAC (`SEC-01` à `SEC-03`)
+- Cas d'administration et de publication (`ADM-*`)
+- Cas étendus pour les activités (`ACT-*`) et les favoris (`INF-*`, `ACT-*`)
+
+Ce fichier est conçu pour être copié-collé dans Excel ; je peux également générer un CSV (`;` séparateur) prêt à l'import si tu le souhaites.
+
 ### 10. Procédures d'exécution et validation
 
 Pour garder la documentation utile au quotidien, les commandes essentielles sont rassemblées ici sans répéter les mêmes explications dans chaque guide.
@@ -358,7 +367,9 @@ CESIZen repose désormais sur une base plus propre à maintenir: architecture s�
 
 ### 1. Cahier de tests et Scénarii Détaillés
 
-Afin de s'assurer de la complétude du prototype pour les 2 modules obligatoires (Comptes utilisateurs, Informations) et 1 module optionnel (Activités de détente), voici le détail des scenarii fonctionnels.
+Remarque : les scénarios détaillés ont été déplacés vers `CAHIER_RECETTE_TESTS.md` (racine du projet). La section qui suit conserve un résumé et des cas de référence.
+
+Afin de s'assurer de la complétude du prototype pour les 2 modules obligatoires (Comptes utilisateurs, Informations) et 1 module optionnel (Activités de détente), voici le détail des scenarii fonctionnels (résumé).
 
 #### Module Obligatoire 1 : Comptes Utilisateurs
 | ID Test | Titre | Description de l'action | Résultat Attendu | Statut |
