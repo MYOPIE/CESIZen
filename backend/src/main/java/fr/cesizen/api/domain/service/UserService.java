@@ -111,6 +111,13 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void reactivateUser(@NonNull Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
+        user.setIsActive(true);
+        userRepository.save(user);
+    }
+
     private UserResponse mapToResponse(User user) {
         return UserResponse.builder()
                 .id(user.getId())

@@ -37,6 +37,14 @@ describe('AdminComponent', () => {
     getAllDifficultyLevels: vi.fn().mockReturnValue(of([]))
   } as unknown as DifficultyService;
 
+  const userService = {
+    getAllUsers: vi.fn().mockReturnValue(of([])),
+    promoteToAdmin: vi.fn().mockReturnValue(of(void 0)),
+    demoteFromAdmin: vi.fn().mockReturnValue(of(void 0)),
+    deactivateUser: vi.fn().mockReturnValue(of(void 0)),
+    deleteUser: vi.fn().mockReturnValue(of(void 0))
+  } as unknown as any;
+
   const authService = {
     currentUser$: of({ role: 'ROLE_ADMIN' })
   } as unknown as AuthService;
@@ -63,6 +71,7 @@ describe('AdminComponent', () => {
       informationService,
       categoryService,
       difficultyService,
+      userService,
       authService,
       router as never,
       route as never,
@@ -79,6 +88,7 @@ describe('AdminComponent', () => {
     expect(informationService.getAllInformations).toHaveBeenCalledTimes(1);
     expect(categoryService.getCategories).toHaveBeenCalledTimes(1);
     expect(difficultyService.getAllDifficultyLevels).toHaveBeenCalledTimes(1);
+    expect((userService.getAllUsers as unknown as ReturnType<typeof vi.fn>)).toHaveBeenCalledTimes(1);
   });
 
   it('changes tabs and syncs the router query params', () => {

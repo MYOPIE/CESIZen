@@ -5,7 +5,8 @@ import { ActiviteService, Activite } from '../../services/activite.service';
 import { InformationService, Information } from '../../services/information.service';
 import { CategoryService, Category } from '../../services/category.service';
 import { DifficultyService, DifficultyLevel } from '../../services/difficulty.service';
-import { AuthService } from '../../services/auth.service';
+import { AuthService, UserResponse } from '../../services/auth.service';
+import { UserService } from '../../services/user.service';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -16,7 +17,7 @@ import { Router, ActivatedRoute } from '@angular/router';
   styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent implements OnInit {
-  currentTab: 'activites' | 'informations' | 'categories' = 'activites';
+  currentTab: 'activites' | 'informations' | 'categories' | 'utilisateurs' = 'activites';
 
   activites: Activite[] = [];
   informations: Information[] = [];
@@ -44,11 +45,18 @@ export class AdminComponent implements OnInit {
   categoriesSortColumn: string = '';
   categoriesSortDirection: 'asc' | 'desc' = 'asc';
 
+  users: UserResponse[] = [];
+  showUserForm = false;
+  newUser: Partial<UserResponse> & { password?: string, confirmPassword?: string } = { email: '', firstName: '', lastName: '', password: '', confirmPassword: '' };
+  usersSortColumn: string = '';
+  usersSortDirection: 'asc' | 'desc' = 'asc';
+
   constructor(
     private activiteService: ActiviteService,
     private informationService: InformationService,
     private categoryService: CategoryService,
     private difficultyService: DifficultyService,
+    private userService: UserService,
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
@@ -59,6 +67,7 @@ export class AdminComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       if (params['tab'] === 'informations') this.currentTab = 'informations';
       else if (params['tab'] === 'categories') this.currentTab = 'categories';
+      else if (params['tab'] === 'utilisateurs') this.currentTab = 'utilisateurs';
       else this.currentTab = 'activites';
     });
 
@@ -76,6 +85,77 @@ export class AdminComponent implements OnInit {
     this.loadInformations();
     this.loadCategories();
     this.loadDifficultyLevels();
+    this.loadUsers();
+  }
+
+  // --- USERS --- //
+  loadUsers(): void {
+    this.userService.getAllUsers().subscribe({
+      next: (data) => {
+        this.users = data;
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Erreur chargement utilisateurs', err)
+    });
+  }
+
+  createUser(): void {
+    this.showUserForm = true;
+    this.cdr.detectChanges();
+  }
+
+  submitUser(): void {
+    if (!this.newUser.email || !this.newUser.firstName || !this.newUser.lastName || !this.newUser.password || !this.newUser.confirmPassword) return;
+
+    // Utilise le endpoint /api/v1/auth/register
+    const payload = {
+      email: this.newUser.email,
+      firstName: this.newUser.firstName,
+      lastName: this.newUser.lastName,
+      password: this.newUser.password,
+      confirmPassword: this.newUser.confirmPassword
+    };
+
+    this.authService.register(payload).subscribe({
+      next: () => {
+        this.loadUsers();
+        this.cancelUserForm();
+      },
+      error: (err) => {
+        console.error('Erreur création utilisateur', err);
+        alert('Erreur lors de la création de l\'utilisateur');
+      }
+    });
+  }
+
+  cancelUserForm(): void {
+    this.showUserForm = false;
+    this.newUser = { email: '', firstName: '', lastName: '', password: '', confirmPassword: '' };
+    this.cdr.detectChanges();
+  }
+
+  promoteUser(id: number): void {
+    this.userService.promoteToAdmin(id).subscribe({ next: () => this.loadUsers(), error: (err) => console.error(err) });
+  }
+
+  demoteUser(id: number): void {
+    this.userService.demoteFromAdmin(id).subscribe({ next: () => this.loadUsers(), error: (err) => console.error(err) });
+  }
+
+  toggleUserActive(user: UserResponse): void {
+    if (user.isActive) {
+      if (!confirm('Êtes-vous sûr de vouloir désactiver ce compte ?')) return;
+      this.userService.deactivateUser(user.id).subscribe({ next: () => this.loadUsers(), error: (err) => console.error(err) });
+    } else {
+      if (!confirm('Êtes-vous sûr de vouloir réactiver ce compte ?')) return;
+      this.userService.reactivateUser(user.id).subscribe({ next: () => this.loadUsers(), error: (err) => console.error(err) });
+    }
+  }
+
+  deleteUser(id: number): void {
+    if (confirm('Êtes-vous sûr de vouloir supprimer ce compte utilisateur ?')) {
+      this.userService.deleteUser(id).subscribe({ next: () => this.loadUsers(), error: (err) => console.error(err) });
+    }
   }
 
   loadDifficultyLevels(): void {
@@ -85,7 +165,7 @@ export class AdminComponent implements OnInit {
     });
   }
 
-  setTab(tab: 'activites' | 'informations' | 'categories'): void {
+  setTab(tab: 'activites' | 'informations' | 'categories' | 'utilisateurs'): void {
     this.currentTab = tab;
     this.router.navigate([], {
       relativeTo: this.route,
@@ -340,6 +420,15 @@ export class AdminComponent implements OnInit {
     }
   }
 
+  sortUsers(column: string) {
+    if (this.usersSortColumn === column) {
+      this.usersSortDirection = this.usersSortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.usersSortColumn = column;
+      this.usersSortDirection = 'asc';
+    }
+  }
+
   private compareValues(a: any, b: any, direction: 'asc' | 'desc') {
     if (a == null && b == null) return 0;
     if (a == null) return direction === 'asc' ? -1 : 1;
@@ -410,6 +499,27 @@ export class AdminComponent implements OnInit {
     return [...this.categories].sort((a, b) => {
       const va = (a as any)[col];
       const vb = (b as any)[col];
+      return this.compareValues(va, vb, dir);
+    });
+  }
+
+  get sortedUsers(): UserResponse[] {
+    if (!this.usersSortColumn) return this.users;
+    const col = this.usersSortColumn;
+    const dir = this.usersSortDirection;
+    return [...this.users].sort((a, b) => {
+      let va: any = null;
+      let vb: any = null;
+      switch (col) {
+        case 'id': va = a.id; vb = b.id; break;
+        case 'email': va = a.email; vb = b.email; break;
+        case 'firstName': va = a.firstName; vb = b.firstName; break;
+        case 'lastName': va = a.lastName; vb = b.lastName; break;
+        case 'role': va = a.role; vb = b.role; break;
+        case 'isActive': va = a.isActive ? 1 : 0; vb = b.isActive ? 1 : 0; break;
+        case 'createdAt': va = a.createdAt; vb = b.createdAt; break;
+        default: va = (a as any)[col]; vb = (b as any)[col]; break;
+      }
       return this.compareValues(va, vb, dir);
     });
   }

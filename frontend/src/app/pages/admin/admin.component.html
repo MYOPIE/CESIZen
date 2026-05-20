@@ -25,6 +25,12 @@
         (click)="setTab('categories')">
         Catégories
       </button>
+      <button 
+        class="tab-btn" 
+        [class.active]="currentTab === 'utilisateurs'" 
+        (click)="setTab('utilisateurs')">
+        Utilisateurs
+      </button>
     </div>
 
     <!-- CONTENU ACTIVITES -->
@@ -155,7 +161,7 @@
               </td>
             </tr>
             <tr *ngIf="sortedActivites.length === 0">
-              <td colspan="6" class="text-center">Aucune activité trouvée.</td>
+              <td colspan="8" class="text-center">Aucune activité trouvée.</td>
             </tr>
           </tbody>
         </table>
@@ -271,7 +277,7 @@
               </td>
             </tr>
             <tr *ngIf="sortedInformations.length === 0">
-              <td colspan="6" class="text-center">Aucune information trouvée.</td>
+              <td colspan="7" class="text-center">Aucune information trouvée.</td>
             </tr>
           </tbody>
         </table>
@@ -351,6 +357,120 @@
             <tr *ngIf="sortedCategories.length === 0">
               <td colspan="4" class="text-center">Aucune catégorie trouvée.</td>
             </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- CONTENU UTILISATEURS -->
+    <div class="admin-content" *ngIf="currentTab === 'utilisateurs'">
+      <div class="content-header">
+        <h2>Gestion des Utilisateurs</h2>
+        <button class="btn btn-purple" (click)="createUser()" *ngIf="!showUserForm">+ Nouvel Utilisateur</button>
+      </div>
+
+      <div class="admin-form-container" *ngIf="showUserForm">
+        <h3>Créer un utilisateur</h3>
+        <form (ngSubmit)="submitUser()" #userForm="ngForm">
+          <div class="form-group">
+            <label for="userEmail">Email *</label>
+            <input type="email" id="userEmail" name="email" [(ngModel)]="newUser.email" required class="form-control">
+          </div>
+          <div class="form-group" style="display:flex; gap:1rem;">
+            <div style="flex:1;">
+              <label for="userFirst">Prénom *</label>
+              <input id="userFirst" name="firstName" [(ngModel)]="newUser.firstName" required class="form-control">
+            </div>
+            <div style="flex:1;">
+              <label for="userLast">Nom *</label>
+              <input id="userLast" name="lastName" [(ngModel)]="newUser.lastName" required class="form-control">
+            </div>
+          </div>
+          <div class="form-group" style="display:flex; gap:1rem;">
+            <div style="flex:1;">
+              <label for="userPass">Mot de passe *</label>
+              <input id="userPass" name="password" type="password" [(ngModel)]="newUser.password" required class="form-control">
+            </div>
+            <div style="flex:1;">
+              <label for="userPassConfirm">Confirmer *</label>
+              <input id="userPassConfirm" name="confirmPassword" type="password" [(ngModel)]="newUser.confirmPassword" required class="form-control">
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-purple" [disabled]="!userForm.form.valid">Enregistrer</button>
+            <button type="button" class="btn btn-outline" (click)="cancelUserForm()">Annuler</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th (click)="sortUsers('id')" style="cursor: pointer;">
+                ID
+                <span *ngIf="usersSortColumn === 'id'">
+                  {{ usersSortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+                <span *ngIf="usersSortColumn !== 'id'" style="color: #ccc;">↕</span>
+
+              </th>
+              <th (click)="sortUsers('email')" style="cursor: pointer;">
+                Email
+                <span *ngIf="usersSortColumn === 'email'">
+                  {{ usersSortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+                <span *ngIf="usersSortColumn !== 'email'" style="color: #ccc;">↕</span>
+              </th>
+              <th (click)="sortUsers('firstName')" style="cursor: pointer;">
+                Nom
+                <span *ngIf="usersSortColumn === 'firstName'">
+                  {{ usersSortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+                <span *ngIf="usersSortColumn !== 'firstName'" style="color: #ccc;">↕</span>
+              </th>
+              <th (click)="sortUsers('role')" style="cursor: pointer;">
+                Rôle
+                <span *ngIf="usersSortColumn === 'role'">
+                  {{ usersSortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+                <span *ngIf="usersSortColumn !== 'role'" style="color: #ccc;">↕</span>
+              </th>
+              <th (click)="sortUsers('isActive')" style="cursor: pointer;">
+                Statut
+                <span *ngIf="usersSortColumn === 'isActive'">
+                  {{ usersSortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+                <span *ngIf="usersSortColumn !== 'isActive'" style="color: #ccc;">↕</span>
+              </th>
+              <th (click)="sortUsers('createdAt')" style="cursor: pointer;">
+                Date création
+                <span *ngIf="usersSortColumn === 'createdAt'">
+                  {{ usersSortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+                <span *ngIf="usersSortColumn !== 'createdAt'" style="color: #ccc;">↕</span>
+              </th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let u of sortedUsers">
+              <td>{{ u.id }}</td>
+              <td>{{ u.email }}</td>
+              <td><strong>{{ u.firstName }} {{ u.lastName }}</strong></td>
+              <td>{{ u.role }}</td>
+              <td>
+                <span class="badge" [ngClass]="u.isActive ? 'badge-success' : 'badge-danger'">{{ u.isActive ? 'Actif' : 'Désactivé' }}</span>
+              </td>
+              <td>{{ u.createdAt | date:'dd/MM/yyyy' }}</td>
+              <td class="actions">
+                <button class="btn-action activate" *ngIf="u.role !== 'ROLE_ADMIN'" (click)="promoteUser(u.id)" style="color:#000;">Promouvoir</button>
+                <button class="btn-action activate" *ngIf="u.role === 'ROLE_ADMIN'" (click)="demoteUser(u.id)" style="color:#000;">Retirer admin</button>
+                  <button class="btn-action delete" (click)="toggleUserActive(u)">{{ u.isActive ? '⏸️' : '▶️' }}</button>
+                <button class="btn-action delete" (click)="deleteUser(u.id)">🗑️</button>
+              </td>
+            </tr>
+            <tr *ngIf="sortedUsers.length === 0"><td colspan="7" class="text-center">Aucun utilisateur trouvé.</td></tr>
           </tbody>
         </table>
       </div>

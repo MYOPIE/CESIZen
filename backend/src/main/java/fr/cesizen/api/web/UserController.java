@@ -76,6 +76,17 @@ public class UserController {
         }
     }
 
+    @PutMapping("/{id}/reactivate")
+    public ResponseEntity<?> reactivateUser(@PathVariable @NonNull Long id) {
+        try {
+            userService.reactivateUser(id);
+            return ResponseEntity.ok("Utilisateur réactivé avec succès");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Utilisateur non trouvé");
+        }
+    }
+
     @PutMapping("/{id}/promote-admin")
     public ResponseEntity<?> promoteToAdmin(@PathVariable @NonNull Long id) {
         try {
