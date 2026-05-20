@@ -22,13 +22,13 @@ CREATE TABLE IF NOT EXISTS activities (
     content TEXT,
     instructions TEXT,
     category_id BIGINT,
-    duree INT,
-    difficulte VARCHAR(50),
-    image VARCHAR(255),
+    duration_minutes INT,
+    difficulty_level_id BIGINT,
     is_active BOOLEAN NOT NULL DEFAULT true,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
-    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
+    FOREIGN KEY (difficulty_level_id) REFERENCES difficulty_levels(id) ON DELETE SET NULL
 );
 
 -- Création de la table informations
@@ -37,15 +37,11 @@ CREATE TABLE IF NOT EXISTS informations (
     title VARCHAR(255) NOT NULL,
     content TEXT,
     category_id BIGINT,
-    difficulty_id BIGINT,
     reading_time INT,
-    icon VARCHAR(255),
-    excerpt TEXT,
-    is_published BOOLEAN NOT NULL DEFAULT true,
+    is_published BOOLEAN NOT NULL DEFAULT false,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
-    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
-    FOREIGN KEY (difficulty_id) REFERENCES difficulties(id) ON DELETE SET NULL
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
 );
 
 -- Création de la table categories
@@ -56,10 +52,10 @@ CREATE TABLE IF NOT EXISTS categories (
     UNIQUE(name, type)
 );
 
--- Création de la table difficultés
-CREATE TABLE IF NOT EXISTS difficulties (
+-- Création de la table difficulty_levels
+CREATE TABLE IF NOT EXISTS difficulty_levels (
     id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL UNIQUE
+    name VARCHAR(100) NOT NULL UNIQUE
 );
 
 -- Création des tables de jointure pour les favoris
