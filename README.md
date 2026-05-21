@@ -40,3 +40,7 @@ npm run start
 - Le backend expose un endpoint de verification: `GET /api/health`
 - Le frontend appelle automatiquement `/api/health` au chargement
 - Le proxy Angular est configure dans `frontend/proxy.conf.json` pour rediriger `/api` vers `http://localhost:8080`
+
+## Conformite
+
+- [Documentation RGPD / RGAA](docs/rgpd-rgaa.md)

@@ -28,6 +28,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @SuppressWarnings("null")
     public UserResponse registerUser(UserRegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("Cet email est déjà utilisé");
@@ -46,8 +47,7 @@ public class UserService {
                 .isActive(true)
                 .build();
 
-        User savedUser = userRepository.save(user);
-        return mapToResponse(savedUser);
+        return mapToResponse(userRepository.save(user));
     }
 
     public Optional<User> findByEmail(String email) {
@@ -66,6 +66,7 @@ public class UserService {
                 .toList();
     }
 
+    @SuppressWarnings("null")
     public UserResponse updateUser(@NonNull Long id, UserRegisterRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
@@ -80,14 +81,21 @@ public class UserService {
             user.setPassword(passwordEncoder.encode(request.getPassword()));
         }
 
-        User updatedUser = userRepository.save(user);
-        return mapToResponse(updatedUser);
+        return mapToResponse(userRepository.save(user));
     }
 
     public void deleteUser(@NonNull Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
-        userRepository.delete(user);
+
+        clearUserFavorites(user);
+        userRepository.deleteById(id);
+    }
+
+    public String getEmailById(@NonNull Long id) {
+        return userRepository.findById(id)
+                .map(User::getEmail)
+                .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
     }
 
     public void deactivateUser(@NonNull Long id) {
@@ -129,5 +137,15 @@ public class UserService {
                 .createdAt(user.getCreatedAt().format(formatter))
                 .updatedAt(user.getUpdatedAt().format(formatter))
                 .build();
+    }
+
+    private void clearUserFavorites(User user) {
+        if (user.getFavoriteActivities() != null) {
+            user.getFavoriteActivities().clear();
+        }
+
+        if (user.getFavoriteInformations() != null) {
+            user.getFavoriteInformations().clear();
+        }
     }
 }

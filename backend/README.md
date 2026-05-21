@@ -146,6 +146,7 @@ curl -X POST http://localhost:8080/api/v1/activities \
 - [Guide Installation PostgreSQL](DATABASE_SETUP.md)
 - [Guide Complet Setup](../CESIZEN_SETUP_GUIDE.md)
 - [Collection Postman](CESIZen-API-Postman.json)
+- [Documentation RGPD / RGAA](../docs/rgpd-rgaa.md)
 
 ## ⚙️ Configuration
 

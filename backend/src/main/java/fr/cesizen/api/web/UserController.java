@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,11 +31,13 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserResponse>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or authentication.name == @userService.getEmailById(#id)")
     public ResponseEntity<?> getUserById(@PathVariable @NonNull Long id) {
         try {
             return ResponseEntity.ok(userService.getUserById(id));
@@ -45,6 +48,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or authentication.name == @userService.getEmailById(#id)")
     public ResponseEntity<?> updateUser(@PathVariable @NonNull Long id, @RequestBody UserRegisterRequest request) {
         try {
             return ResponseEntity.ok(userService.updateUser(id, request));
@@ -55,6 +59,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or authentication.name == @userService.getEmailById(#id)")
     public ResponseEntity<?> deleteUser(@PathVariable @NonNull Long id) {
         try {
             userService.deleteUser(id);
@@ -66,6 +71,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/deactivate")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deactivateUser(@PathVariable @NonNull Long id) {
         try {
             userService.deactivateUser(id);
@@ -77,6 +83,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/reactivate")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> reactivateUser(@PathVariable @NonNull Long id) {
         try {
             userService.reactivateUser(id);
@@ -88,6 +95,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/promote-admin")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> promoteToAdmin(@PathVariable @NonNull Long id) {
         try {
             userService.promoteToAdmin(id);
@@ -99,6 +107,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/demote-admin")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> demoteFromAdmin(@PathVariable @NonNull Long id) {
         try {
             userService.demoteFromAdmin(id);
