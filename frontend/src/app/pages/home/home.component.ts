@@ -16,8 +16,8 @@ export class HomeComponent implements OnInit {
   features = [
     {
       icon: '🏥',
-      title: 'Diagnostics',
-      description: 'Testez votre niveau de stress avec des questionnaires basés sur des échelles reconnues'
+      title: 'Informations',
+      description: 'Renseignez-vous sur les différentes pathologies, leurs symptômes et les traitements disponibles'
     },
     {
       icon: '🧘',
