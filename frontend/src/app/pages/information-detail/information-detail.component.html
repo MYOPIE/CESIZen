@@ -1,0 +1,61 @@
+<div class="page information-detail-page">
+  <div class="container">
+    <button class="btn btn-outline" routerLink="/informations">Retour aux informations</button>
+
+    <div *ngIf="isLoading" class="state-card card mt-4">
+      <p>Chargement de l'article...</p>
+    </div>
+
+    <div *ngIf="!isLoading && errorMessage" class="state-card card mt-4">
+      <p>{{ errorMessage }}</p>
+    </div>
+
+    <article *ngIf="!isLoading && information" class="detail-card card card-blue mt-4">
+      <div class="detail-header">
+        <span class="detail-icon">{{ information.icon || '📘' }}</span>
+        <h1>{{ information.title }}</h1>
+      </div>
+
+      <div class="detail-meta">
+        <span><strong>Catégorie</strong><small>{{ information.category?.name || 'Non renseignée' }}</small></span>
+        <span><strong>Lecture</strong><small>{{ information.readingTime || '-' }} min</small></span>
+      </div>
+
+      <section class="detail-section" *ngIf="contentBlocks.length > 0">
+        <h2>Article</h2>
+
+        <div class="rich-content">
+          <ng-container *ngFor="let block of contentBlocks">
+            <h3 *ngIf="block.type === 'heading' && block.level === 2">{{ block.text }}</h3>
+            <h4 *ngIf="block.type === 'heading' && block.level === 3">{{ block.text }}</h4>
+
+            <p *ngIf="block.type === 'paragraph'">{{ block.text }}</p>
+
+            <ul *ngIf="block.type === 'list'">
+              <li *ngFor="let item of block.items">{{ item }}</li>
+            </ul>
+
+            <figure *ngIf="block.type === 'image'" class="media-block">
+              <img [src]="block.url" [alt]="block.caption || 'Image du contenu'">
+              <figcaption *ngIf="block.caption">{{ block.caption }}</figcaption>
+            </figure>
+
+            <figure *ngIf="block.type === 'video'" class="media-block">
+              <div class="video-wrapper" *ngIf="getSafeVideoUrl(block.url) as safeUrl">
+                <iframe
+                  [src]="safeUrl"
+                  title="Vidéo"
+                  loading="lazy"
+                  referrerpolicy="no-referrer"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen>
+                </iframe>
+              </div>
+              <figcaption *ngIf="block.caption">{{ block.caption }}</figcaption>
+            </figure>
+          </ng-container>
+        </div>
+      </section>
+    </article>
+  </div>
+</div>

@@ -124,6 +124,8 @@
     transition: transform $transition-normal, box-shadow $transition-normal;
     display: flex;
     flex-direction: column;
+    border-radius: 16px;
+    border: 1px solid rgba($primary-green, 0.12);
 
     &:hover {
       transform: translateY(-8px);
@@ -175,6 +177,7 @@
       color: $dark-blue;
       margin-bottom: 0.75rem;
       font-size: 1.25rem;
+      line-height: 1.35;
     }
 
     .activite-description {
@@ -183,6 +186,10 @@
       font-size: 0.95rem;
       line-height: 1.6;
       margin-bottom: 1.5rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .activite-info {
@@ -190,12 +197,14 @@
       padding: 1rem;
       border-radius: $border-radius-md;
       margin-bottom: 1.5rem;
+      border: 1px solid rgba($primary-green, 0.12);
 
       .info-item {
         display: flex;
         justify-content: space-between;
         padding: 0.5rem 0;
         font-size: 0.9rem;
+        border-bottom: 1px solid rgba($primary-green, 0.12);
 
         &:last-child {
           border-bottom: none;

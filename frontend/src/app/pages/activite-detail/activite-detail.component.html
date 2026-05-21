@@ -1,0 +1,69 @@
+<div class="page activite-detail-page">
+  <div class="container">
+    <button class="btn btn-outline" routerLink="/activites">Retour aux activites</button>
+
+    <div *ngIf="isLoading" class="state-card card mt-4">
+      <p>Chargement de l'activite...</p>
+    </div>
+
+    <div *ngIf="!isLoading && errorMessage" class="state-card card mt-4">
+      <p>{{ errorMessage }}</p>
+    </div>
+
+    <article *ngIf="!isLoading && activite" class="detail-card card card-green mt-4">
+      <div class="detail-header">
+        <ng-container *ngIf="activite.image; else activityEmoji">
+          <img class="detail-image media-preview" [src]="activite.image" [alt]="activite.title">
+        </ng-container>
+        <ng-template #activityEmoji>
+          <span class="detail-image">🧘</span>
+        </ng-template>
+        <h1>{{ activite.title }}</h1>
+      </div>
+
+      <p class="detail-description">{{ activite.description }}</p>
+
+      <div class="detail-meta">
+        <span><strong>Catégorie</strong><small>{{ activite.category?.name || 'Non renseignée' }}</small></span>
+        <span><strong>Difficulté</strong><small>{{ activite.difficultyLevel?.name || 'Non renseignée' }}</small></span>
+        <span><strong>Durée</strong><small>{{ activite.durationMinutes || activite.duree || '-' }} min</small></span>
+      </div>
+
+      <section class="detail-section" *ngIf="contentBlocks.length > 0">
+        <h2>Contenu</h2>
+
+        <div class="rich-content">
+          <ng-container *ngFor="let block of contentBlocks">
+            <h3 *ngIf="block.type === 'heading' && block.level === 2">{{ block.text }}</h3>
+            <h4 *ngIf="block.type === 'heading' && block.level === 3">{{ block.text }}</h4>
+
+            <p *ngIf="block.type === 'paragraph'">{{ block.text }}</p>
+
+            <ul *ngIf="block.type === 'list'">
+              <li *ngFor="let item of block.items">{{ item }}</li>
+            </ul>
+
+            <figure *ngIf="block.type === 'image'" class="media-block">
+              <img [src]="block.url" [alt]="block.caption || 'Image du contenu'">
+              <figcaption *ngIf="block.caption">{{ block.caption }}</figcaption>
+            </figure>
+
+            <figure *ngIf="block.type === 'video'" class="media-block">
+              <div class="video-wrapper" *ngIf="getSafeVideoUrl(block.url) as safeUrl">
+                <iframe
+                  [src]="safeUrl"
+                  title="Vidéo"
+                  loading="lazy"
+                  referrerpolicy="no-referrer"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen>
+                </iframe>
+              </div>
+              <figcaption *ngIf="block.caption">{{ block.caption }}</figcaption>
+            </figure>
+          </ng-container>
+        </div>
+      </section>
+    </article>
+  </div>
+</div>

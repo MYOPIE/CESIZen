@@ -66,6 +66,10 @@ public class UserService {
                 .toList();
     }
 
+    public long countUsers() {
+        return userRepository.count();
+    }
+
     @SuppressWarnings("null")
     public UserResponse updateUser(@NonNull Long id, UserRegisterRequest request) {
         User user = userRepository.findById(id)

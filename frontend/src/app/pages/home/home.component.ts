@@ -46,11 +46,11 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     // Récupérer le nombre total d'utilisateurs
-    this.authService.getAllUsers().subscribe({
-      next: (users) => {
-        const count = users ? users.length.toString() : '0';
+    this.authService.getUsersCount().subscribe({
+      next: (count) => {
+        const userCount = (count ?? 0).toString();
         this.stats = [
-          { label: 'Comptes créés', value: count },
+          { label: 'Comptes créés', value: userCount },
           this.stats[1],
           this.stats[2]
         ];

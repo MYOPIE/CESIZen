@@ -53,6 +53,18 @@
             <textarea id="actDesc" name="description" [(ngModel)]="newActivite.description" required class="form-control"></textarea>
           </div>
           <div class="form-group">
+            <label for="actContent">Instructions</label>
+            <div class="editor-toolbar">
+              <button type="button" class="btn btn-outline" (click)="appendContentBlock('activite', 'heading')">+ Titre</button>
+              <button type="button" class="btn btn-outline" (click)="appendContentBlock('activite', 'subheading')">+ Sous-titre</button>
+              <button type="button" class="btn btn-outline" (click)="appendContentBlock('activite', 'bullet')">+ Liste</button>
+              <button type="button" class="btn btn-outline" (click)="appendContentBlock('activite', 'image')">+ Image</button>
+              <button type="button" class="btn btn-outline" (click)="appendContentBlock('activite', 'video')">+ Vidéo</button>
+            </div>
+            <textarea id="actContent" name="content" [(ngModel)]="newActivite.content" class="form-control content-editor" rows="10" placeholder="Écris ton contenu :\n## Titre\nParagraphe...\n- Point\n[image](https://...) | Légende\n[video](https://...) | Légende"></textarea>
+            <p class="editor-hint">Format pris en charge: titres (`##`/`###`), listes (`-`), image (`[image](url) | légende`), vidéo YouTube/Vimeo (`[video](url) | légende`).</p>
+          </div>
+          <div class="form-group">
             <label for="actCat">Catégorie *</label>
             <select id="actCat" name="categoryId" [(ngModel)]="newActivite.categoryId" required class="form-control">
               <option [ngValue]="undefined" disabled>Sélectionner une catégorie</option>
@@ -71,10 +83,6 @@
                 <option *ngFor="let diff of difficultyLevels" [ngValue]="diff.id">{{ diff.name }}</option>
               </select>
             </div>
-          </div>
-          <div class="form-group">
-            <label for="actImg">URL de l'image (optionnel)</label>
-            <input type="text" id="actImg" name="image" [(ngModel)]="newActivite.image" class="form-control">
           </div>
           <div class="form-actions">
             <button type="submit" class="btn btn-green" [disabled]="!activiteForm.form.valid">Enregistrer</button>
@@ -185,7 +193,15 @@
           </div>
           <div class="form-group">
             <label for="infoContent">Contenu *</label>
-            <textarea id="infoContent" name="content" [(ngModel)]="newInformation.content" required class="form-control"></textarea>
+            <div class="editor-toolbar">
+              <button type="button" class="btn btn-outline" (click)="appendContentBlock('information', 'heading')">+ Titre</button>
+              <button type="button" class="btn btn-outline" (click)="appendContentBlock('information', 'subheading')">+ Sous-titre</button>
+              <button type="button" class="btn btn-outline" (click)="appendContentBlock('information', 'bullet')">+ Liste</button>
+              <button type="button" class="btn btn-outline" (click)="appendContentBlock('information', 'image')">+ Image</button>
+              <button type="button" class="btn btn-outline" (click)="appendContentBlock('information', 'video')">+ Vidéo</button>
+            </div>
+            <textarea id="infoContent" name="content" [(ngModel)]="newInformation.content" required class="form-control content-editor" rows="10" placeholder="Écris ton article :\n## Titre\nParagraphe...\n- Point\n[image](https://...) | Légende\n[video](https://...) | Légende"></textarea>
+            <p class="editor-hint">Le rendu sera automatiquement structuré sur la page publique (texte, images, vidéos).</p>
           </div>
           <div class="form-group" style="display: flex; gap: 1rem;">
             <div style="flex: 1;">

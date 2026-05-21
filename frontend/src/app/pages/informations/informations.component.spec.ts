@@ -1,10 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject, Subject, of } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { InformationsComponent } from './informations.component';
 import { InformationService, Information } from '../../services/information.service';
 import { AuthService, UserResponse } from '../../services/auth.service';
 import { CategoryService, Category } from '../../services/category.service';
+import { ContentRefreshService } from '../../services/content-refresh.service';
 import { FavoriteService } from '../../services/favorite.service';
 
 describe('InformationsComponent', () => {
@@ -31,6 +32,10 @@ describe('InformationsComponent', () => {
     removeFavoriteInformation: vi.fn().mockReturnValue(of(void 0))
   } as unknown as FavoriteService;
 
+  const contentRefreshService = {
+    informationsChanged$: new Subject<void>().asObservable()
+  } as unknown as ContentRefreshService;
+
   const cdr = {
     detectChanges: vi.fn()
   } as unknown as ChangeDetectorRef;
@@ -47,6 +52,7 @@ describe('InformationsComponent', () => {
       router as never,
       categoryService,
       favoriteService,
+      contentRefreshService,
       cdr
     );
   }

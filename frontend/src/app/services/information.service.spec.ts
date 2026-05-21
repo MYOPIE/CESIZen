@@ -32,7 +32,7 @@ describe('InformationService', () => {
     http.get.mockReturnValue(of(info));
     http.post.mockReturnValue(of(info));
     http.put.mockReturnValue(of(info));
-    http.delete.mockReturnValue(of(undefined));
+      http.delete.mockReturnValue(of('ok'));
 
     const service = createService();
     service.getInformationById(1).subscribe();
@@ -45,13 +45,13 @@ describe('InformationService', () => {
     expect(http.put).toHaveBeenCalledWith('http://localhost:8080/api/v1/informations/1', { title: 'New' });
 
     service.deleteInformation(1).subscribe();
-    expect(http.delete).toHaveBeenCalledWith('http://localhost:8080/api/v1/informations/1');
+      expect(http.delete).toHaveBeenCalledWith('http://localhost:8080/api/v1/informations/1', { responseType: 'text' });
 
     service.publishInformation(1).subscribe();
-    expect(http.put).toHaveBeenCalledWith('http://localhost:8080/api/v1/informations/1/publish', {});
+      expect(http.put).toHaveBeenCalledWith('http://localhost:8080/api/v1/informations/1/publish', {}, { responseType: 'text' });
 
     service.unpublishInformation(1).subscribe();
-    expect(http.put).toHaveBeenCalledWith('http://localhost:8080/api/v1/informations/1/unpublish', {});
+      expect(http.put).toHaveBeenCalledWith('http://localhost:8080/api/v1/informations/1/unpublish', {}, { responseType: 'text' });
   });
 
   it('handles errors gracefully', () => {

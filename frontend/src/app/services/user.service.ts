@@ -28,18 +28,18 @@ export class UserService {
   }
 
   deactivateUser(id: number) {
-    return this.http.put(`${this.apiUrl}/${id}/deactivate`, {});
+    return this.http.put(`${this.apiUrl}/${id}/deactivate`, {}, { responseType: 'text' });
   }
 
   reactivateUser(id: number) {
-    return this.http.put(`${this.apiUrl}/${id}/reactivate`, {});
+    return this.http.put(`${this.apiUrl}/${id}/reactivate`, {}, { responseType: 'text' });
   }
 
   promoteToAdmin(id: number) {
-    return this.http.put(`${this.apiUrl}/${id}/promote-admin`, {});
+    return this.http.put(`${this.apiUrl}/${id}/promote-admin`, {}, { responseType: 'text' });
   }
 
   demoteFromAdmin(id: number) {
-    return this.http.put(`${this.apiUrl}/${id}/demote-admin`, {});
+    return this.http.put(`${this.apiUrl}/${id}/demote-admin`, {}, { responseType: 'text' });
   }
 }

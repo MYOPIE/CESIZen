@@ -49,15 +49,15 @@ export class InformationService {
     return this.http.put<Information>(`${this.apiUrl}/${id}`, info);
   }
 
-  deleteInformation(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  deleteInformation(id: number): Observable<string> {
+    return this.http.delete(`${this.apiUrl}/${id}`, { responseType: 'text' });
   }
 
-  publishInformation(id: number): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${id}/publish`, {});
+  publishInformation(id: number): Observable<string> {
+    return this.http.put(`${this.apiUrl}/${id}/publish`, {}, { responseType: 'text' });
   }
 
-  unpublishInformation(id: number): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${id}/unpublish`, {});
+  unpublishInformation(id: number): Observable<string> {
+    return this.http.put(`${this.apiUrl}/${id}/unpublish`, {}, { responseType: 'text' });
   }
 }

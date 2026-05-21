@@ -236,6 +236,31 @@
   margin-top: 2rem;
 }
 
+.editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.7rem;
+
+  .btn {
+    padding: 0.45rem 0.7rem;
+    font-size: 0.85rem;
+  }
+}
+
+.content-editor {
+  min-height: 210px;
+  line-height: 1.55;
+  resize: vertical;
+}
+
+.editor-hint {
+  margin: 0.55rem 0 0;
+  font-size: 0.82rem;
+  color: $dark-gray;
+  opacity: 0.9;
+}
+
 @media (max-width: 768px) {
   .admin-form-container {
     padding: 1rem;

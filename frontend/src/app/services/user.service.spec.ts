@@ -22,21 +22,21 @@ describe('UserService', () => {
   });
 
   it('calls promote/demote/deactivate/delete endpoints', () => {
-    http.put.mockReturnValue(of(void 0));
+    http.put.mockReturnValue(of('ok'));
     http.delete.mockReturnValue(of('ok'));
 
     const s = createService();
     s.promoteToAdmin(1).subscribe();
-    expect(http.put).toHaveBeenCalledWith('http://localhost:8080/api/v1/users/1/promote-admin', {});
+    expect(http.put).toHaveBeenCalledWith('http://localhost:8080/api/v1/users/1/promote-admin', {}, { responseType: 'text' });
 
     s.demoteFromAdmin(2).subscribe();
-    expect(http.put).toHaveBeenCalledWith('http://localhost:8080/api/v1/users/2/demote-admin', {});
+    expect(http.put).toHaveBeenCalledWith('http://localhost:8080/api/v1/users/2/demote-admin', {}, { responseType: 'text' });
 
     s.deactivateUser(3).subscribe();
-    expect(http.put).toHaveBeenCalledWith('http://localhost:8080/api/v1/users/3/deactivate', {});
+    expect(http.put).toHaveBeenCalledWith('http://localhost:8080/api/v1/users/3/deactivate', {}, { responseType: 'text' });
 
     s.reactivateUser(5).subscribe();
-    expect(http.put).toHaveBeenCalledWith('http://localhost:8080/api/v1/users/5/reactivate', {});
+    expect(http.put).toHaveBeenCalledWith('http://localhost:8080/api/v1/users/5/reactivate', {}, { responseType: 'text' });
 
     s.deleteUser(4).subscribe();
     expect(http.delete).toHaveBeenCalledWith('http://localhost:8080/api/v1/users/4', { responseType: 'text' });

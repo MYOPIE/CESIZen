@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { of } from 'rxjs';
+import { Subject, of } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { AdminComponent } from './admin.component';
 import { ActiviteService } from '../../services/activite.service';
@@ -7,6 +7,7 @@ import { InformationService } from '../../services/information.service';
 import { CategoryService } from '../../services/category.service';
 import { DifficultyService } from '../../services/difficulty.service';
 import { AuthService } from '../../services/auth.service';
+import { ContentRefreshService } from '../../services/content-refresh.service';
 
 describe('AdminComponent', () => {
   const activiteService = {
@@ -49,6 +50,15 @@ describe('AdminComponent', () => {
     currentUser$: of({ role: 'ROLE_ADMIN' })
   } as unknown as AuthService;
 
+  const contentRefreshService = {
+    activitiesChanged$: new Subject<void>().asObservable(),
+    informationsChanged$: new Subject<void>().asObservable(),
+    usersChanged$: new Subject<void>().asObservable(),
+    notifyActivitiesChanged: vi.fn(),
+    notifyInformationsChanged: vi.fn(),
+    notifyUsersChanged: vi.fn()
+  } as unknown as ContentRefreshService;
+
   const router = {
     navigate: vi.fn()
   };
@@ -73,6 +83,7 @@ describe('AdminComponent', () => {
       difficultyService,
       userService,
       authService,
+      contentRefreshService,
       router as never,
       route as never,
       cdr

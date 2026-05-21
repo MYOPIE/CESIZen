@@ -6,6 +6,7 @@ import { InformationService, Information } from '../../services/information.serv
 import { CategoryService, Category } from '../../services/category.service';
 import { DifficultyService, DifficultyLevel } from '../../services/difficulty.service';
 import { AuthService, UserResponse } from '../../services/auth.service';
+import { ContentRefreshService } from '../../services/content-refresh.service';
 import { UserService } from '../../services/user.service';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -28,7 +29,14 @@ export class AdminComponent implements OnInit {
   informationCategories: Category[] = [];
 
   showActiviteForm = false;
-  newActivite: Partial<Activite> & { categoryId?: number, difficultyLevelId?: number } = { title: '', description: '', image: '', isActive: true, duree: 15 };
+  newActivite: Partial<Activite> & { categoryId?: number, difficultyLevelId?: number } = {
+    title: '',
+    description: '',
+    content: '',
+    image: '',
+    isActive: true,
+    duree: 15
+  };
 
   showInformationForm = false;
   newInformation: Partial<Information> & { categoryId?: number } = { title: '', content: '', readingTime: 3, isPublished: true };
@@ -58,6 +66,7 @@ export class AdminComponent implements OnInit {
     private difficultyService: DifficultyService,
     private userService: UserService,
     private authService: AuthService,
+    private contentRefreshService: ContentRefreshService,
     private router: Router,
     private route: ActivatedRoute,
     private cdr: ChangeDetectorRef
@@ -119,6 +128,7 @@ export class AdminComponent implements OnInit {
     this.authService.register(payload).subscribe({
       next: () => {
         this.loadUsers();
+        this.contentRefreshService.notifyUsersChanged();
         this.cancelUserForm();
       },
       error: (err) => {
@@ -154,7 +164,13 @@ export class AdminComponent implements OnInit {
 
   deleteUser(id: number): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer ce compte utilisateur ?')) {
-      this.userService.deleteUser(id).subscribe({ next: () => this.loadUsers(), error: (err) => console.error(err) });
+      this.userService.deleteUser(id).subscribe({
+        next: () => {
+          this.loadUsers();
+          this.contentRefreshService.notifyUsersChanged();
+        },
+        error: (err) => console.error(err)
+      });
     }
   }
 
@@ -195,6 +211,8 @@ export class AdminComponent implements OnInit {
     this.categoryService.createCategory(this.newCategory).subscribe({
       next: () => {
         this.loadCategories();
+        this.contentRefreshService.notifyActivitiesChanged();
+        this.contentRefreshService.notifyInformationsChanged();
         this.cancelCategoryForm();
       },
       error: (err) => {
@@ -213,7 +231,11 @@ export class AdminComponent implements OnInit {
   deleteCategory(id: number): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?')) {
       this.categoryService.deleteCategory(id).subscribe({
-        next: () => this.loadCategories(),
+        next: () => {
+          this.loadCategories();
+          this.contentRefreshService.notifyActivitiesChanged();
+          this.contentRefreshService.notifyInformationsChanged();
+        },
         error: (err) => console.error('Erreur suppression catégorie', err)
       });
     }
@@ -248,6 +270,7 @@ export class AdminComponent implements OnInit {
       this.activiteService.updateActivite(this.newActivite.id, payload).subscribe({
         next: () => {
           this.loadActivites();
+          this.contentRefreshService.notifyActivitiesChanged();
           this.cancelActiviteForm();
         },
         error: (err) => {
@@ -259,6 +282,7 @@ export class AdminComponent implements OnInit {
       this.activiteService.createActivite(payload).subscribe({
         next: () => {
           this.loadActivites();
+          this.contentRefreshService.notifyActivitiesChanged();
           this.cancelActiviteForm();
         },
         error: (err) => {
@@ -271,7 +295,7 @@ export class AdminComponent implements OnInit {
 
   cancelActiviteForm(): void {
     this.showActiviteForm = false;
-    this.newActivite = { title: '', description: '', image: '', isActive: true, duree: 15 };
+    this.newActivite = { title: '', description: '', content: '', image: '', isActive: true, duree: 15 };
     this.cdr.detectChanges();
   }
 
@@ -289,7 +313,10 @@ export class AdminComponent implements OnInit {
   deleteActivite(id: number): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer cette activité ?')) {
       this.activiteService.deleteActivite(id).subscribe({
-        next: () => this.loadActivites(),
+        next: () => {
+          this.loadActivites();
+          this.contentRefreshService.notifyActivitiesChanged();
+        },
         error: (err) => console.error('Erreur suppression activité', err)
       });
     }
@@ -303,6 +330,7 @@ export class AdminComponent implements OnInit {
     request.subscribe({
       next: () => {
         this.loadActivites();
+        this.contentRefreshService.notifyActivitiesChanged();
       },
       error: (err) => console.error('Erreur mise à jour de l\'état de l\'activité', err)
     });
@@ -335,6 +363,7 @@ export class AdminComponent implements OnInit {
       this.informationService.updateInformation(this.newInformation.id, payload).subscribe({
         next: () => {
           this.loadInformations();
+          this.contentRefreshService.notifyInformationsChanged();
           this.cancelInformationForm();
         },
         error: (err) => {
@@ -346,6 +375,7 @@ export class AdminComponent implements OnInit {
       this.informationService.createInformation(payload).subscribe({
         next: () => {
           this.loadInformations();
+          this.contentRefreshService.notifyInformationsChanged();
           this.cancelInformationForm();
         },
         error: (err) => {
@@ -374,7 +404,10 @@ export class AdminComponent implements OnInit {
   deleteInformation(id: number): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer cette information ?')) {
       this.informationService.deleteInformation(id).subscribe({
-        next: () => this.loadInformations(),
+        next: () => {
+          this.loadInformations();
+          this.contentRefreshService.notifyInformationsChanged();
+        },
         error: (err) => console.error('Erreur suppression information', err)
       });
     }
@@ -388,9 +421,51 @@ export class AdminComponent implements OnInit {
     request.subscribe({
       next: () => {
          this.loadInformations();
+        this.contentRefreshService.notifyInformationsChanged();
       },
       error: (err) => console.error('Erreur mise à jour statut information', err)
     });
+  }
+
+  appendContentBlock(target: 'activite' | 'information', block: 'heading' | 'subheading' | 'bullet' | 'image' | 'video'): void {
+    const previous = (target === 'activite' ? this.newActivite.content : this.newInformation.content) || '';
+    const startWithLineBreak = previous.trim().length > 0 ? '\n\n' : '';
+
+    let textToAppend = '';
+
+    if (block === 'heading') {
+      textToAppend = `${startWithLineBreak}## Nouveau chapitre`;
+    } else if (block === 'subheading') {
+      textToAppend = `${startWithLineBreak}### Sous-section`;
+    } else if (block === 'bullet') {
+      textToAppend = `${startWithLineBreak}- Point clé 1\n- Point clé 2`;
+    } else if (block === 'image') {
+      const imageUrl = prompt('URL de l\'image (https://...)');
+      if (!imageUrl) {
+        return;
+      }
+      const caption = prompt('Légende (optionnel)') || '';
+      textToAppend = `${startWithLineBreak}[image](${imageUrl.trim()})${caption ? ` | ${caption.trim()}` : ''}`;
+    } else if (block === 'video') {
+      const videoUrl = prompt('URL vidéo YouTube/Vimeo (https://...)');
+      if (!videoUrl) {
+        return;
+      }
+      const caption = prompt('Légende (optionnel)') || '';
+      textToAppend = `${startWithLineBreak}[video](${videoUrl.trim()})${caption ? ` | ${caption.trim()}` : ''}`;
+    }
+
+    if (target === 'activite') {
+      this.newActivite = {
+        ...this.newActivite,
+        content: `${previous}${textToAppend}`
+      };
+    } else {
+      this.newInformation = {
+        ...this.newInformation,
+        content: `${previous}${textToAppend}`
+      };
+    }
   }
 
   sortActivites(column: string) {

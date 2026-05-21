@@ -49,15 +49,15 @@ export class ActiviteService {
     return this.http.put<Activite>(`${this.apiUrl}/${id}`, activite);
   }
 
-  deleteActivite(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  deleteActivite(id: number): Observable<string> {
+    return this.http.delete(`${this.apiUrl}/${id}`, { responseType: 'text' });
   }
 
-  deactivateActivite(id: number): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${id}/deactivate`, {});
+  deactivateActivite(id: number): Observable<string> {
+    return this.http.put(`${this.apiUrl}/${id}/deactivate`, {}, { responseType: 'text' });
   }
 
-  reactivateActivite(id: number): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/${id}/reactivate`, {});
+  reactivateActivite(id: number): Observable<string> {
+    return this.http.put(`${this.apiUrl}/${id}/reactivate`, {}, { responseType: 'text' });
   }
 }

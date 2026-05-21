@@ -26,6 +26,12 @@ class UserControllerTest {
     }
 
     @Test
+    void getUsersCount_returnsOk() throws Exception {
+        mockMvc.perform(get("/api/v1/users/count"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void getUserById_doesNotThrow() throws Exception {
         mockMvc.perform(get("/api/v1/users/999"))
                 .andExpect(result -> {

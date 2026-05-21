@@ -73,6 +73,8 @@
   transition: transform $transition-normal, box-shadow $transition-normal;
   display: flex;
   flex-direction: column;
+  border-radius: 16px;
+  border: 1px solid rgba($primary-blue, 0.12);
 
   &:hover {
     transform: translateY(-8px);
@@ -102,11 +104,12 @@
     display: inline-block;
     background-color: $pale-blue;
     color: $primary-blue;
-    padding: 0.25rem 0.75rem;
+    padding: 0.32rem 0.78rem;
     border-radius: $border-radius-md;
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
 
   .favorite-btn {
@@ -137,6 +140,7 @@
     margin-bottom: 0.75rem;
     font-size: 1.25rem;
     line-height: 1.4;
+    min-height: 3.2rem;
   }
 
   .article-excerpt {
@@ -145,6 +149,10 @@
     font-size: 0.95rem;
     line-height: 1.6;
     margin-bottom: 1.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .article-footer {

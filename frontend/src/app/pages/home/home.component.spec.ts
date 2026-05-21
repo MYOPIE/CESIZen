@@ -12,7 +12,7 @@ describe('HomeComponent', () => {
   } as unknown as ActiviteService;
 
   const authService = {
-    getAllUsers: vi.fn()
+    getUsersCount: vi.fn()
   } as unknown as AuthService;
 
   const informationService = {
@@ -32,7 +32,7 @@ describe('HomeComponent', () => {
   }
 
   it('updates the stats from the loaded data', () => {
-    (authService.getAllUsers as unknown as ReturnType<typeof vi.fn>).mockReturnValue(of([{ id: 1 }]));
+    (authService.getUsersCount as unknown as ReturnType<typeof vi.fn>).mockReturnValue(of(1));
     (activiteService.getActiveActivites as unknown as ReturnType<typeof vi.fn>).mockReturnValue(of([{ id: 1 }]));
     (informationService.getPublishedInformations as unknown as ReturnType<typeof vi.fn>).mockReturnValue(of([{ id: 1 }]));
 
@@ -47,7 +47,7 @@ describe('HomeComponent', () => {
   });
 
   it('falls back to placeholder values when a source fails', () => {
-    (authService.getAllUsers as unknown as ReturnType<typeof vi.fn>).mockReturnValue(throwError(() => new Error('users')));
+    (authService.getUsersCount as unknown as ReturnType<typeof vi.fn>).mockReturnValue(throwError(() => new Error('users')));
     (activiteService.getActiveActivites as unknown as ReturnType<typeof vi.fn>).mockReturnValue(throwError(() => new Error('activities')));
     (informationService.getPublishedInformations as unknown as ReturnType<typeof vi.fn>).mockReturnValue(throwError(() => new Error('infos')));
 

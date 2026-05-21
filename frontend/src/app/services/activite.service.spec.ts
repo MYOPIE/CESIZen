@@ -38,7 +38,7 @@ describe('ActiviteService', () => {
     http.get.mockReturnValue(of(item));
     http.post.mockReturnValue(of(item));
     http.put.mockReturnValue(of(item));
-    http.delete.mockReturnValue(of(undefined));
+    http.delete.mockReturnValue(of('ok'));
 
     const service = createService();
     service.getActiviteById(1).subscribe();
@@ -51,18 +51,18 @@ describe('ActiviteService', () => {
     expect(http.put).toHaveBeenCalledWith('http://localhost:8080/api/v1/activities/1', { title: 'B' });
 
     service.deleteActivite(1).subscribe();
-    expect(http.delete).toHaveBeenCalledWith('http://localhost:8080/api/v1/activities/1');
+    expect(http.delete).toHaveBeenCalledWith('http://localhost:8080/api/v1/activities/1', { responseType: 'text' });
   });
 
   it('deactivates and reactivates activity', () => {
-    http.put.mockReturnValue(of(undefined));
+      http.put.mockReturnValue(of('ok'));
 
     const service = createService();
     service.deactivateActivite(2).subscribe();
-    expect(http.put).toHaveBeenCalledWith('http://localhost:8080/api/v1/activities/2/deactivate', {});
+      expect(http.put).toHaveBeenCalledWith('http://localhost:8080/api/v1/activities/2/deactivate', {}, { responseType: 'text' });
 
     service.reactivateActivite(2).subscribe();
-    expect(http.put).toHaveBeenCalledWith('http://localhost:8080/api/v1/activities/2/reactivate', {});
+      expect(http.put).toHaveBeenCalledWith('http://localhost:8080/api/v1/activities/2/reactivate', {}, { responseType: 'text' });
   });
 
     it('handles errors gracefully', () => {

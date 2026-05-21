@@ -30,6 +30,11 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<Long> getUsersCount() {
+        return ResponseEntity.ok(userService.countUsers());
+    }
+
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserResponse>> getAllUsers() {

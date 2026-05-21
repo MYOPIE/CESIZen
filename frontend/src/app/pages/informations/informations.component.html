@@ -53,7 +53,7 @@
 
         <div class="article-footer">
           <span class="reading-time">📖 {{ article.readingTime }} min de lecture</span>
-          <button class="btn btn-primary btn-sm">Lire l'article</button>
+          <button class="btn btn-primary btn-sm" [routerLink]="['/informations', article.id]">Lire l'article</button>
         </div>
       </div>
     </div>

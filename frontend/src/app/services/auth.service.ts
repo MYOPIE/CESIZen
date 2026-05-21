@@ -46,6 +46,10 @@ export class AuthService {
     return this.http.get<UserResponse[]>(`http://localhost:8080/api/v1/users`);
   }
 
+  getUsersCount(): Observable<number> {
+    return this.http.get<number>(`http://localhost:8080/api/v1/users/count`);
+  }
+
   register(data: any): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, data);
   }

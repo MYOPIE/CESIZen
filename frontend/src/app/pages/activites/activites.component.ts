@@ -5,6 +5,7 @@ import { RouterModule, Router } from '@angular/router';
 import { ActiviteService, Activite } from '../../services/activite.service';
 import { AuthService } from '../../services/auth.service';
 import { CategoryService, Category } from '../../services/category.service';
+import { ContentRefreshService } from '../../services/content-refresh.service';
 import { FavoriteService } from '../../services/favorite.service';
 
 @Component({
@@ -29,12 +30,15 @@ export class ActivitesComponent implements OnInit {
     private router: Router,
     private categoryService: CategoryService,
     private favoriteService: FavoriteService,
+    private contentRefreshService: ContentRefreshService,
     private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.loadActivities();
     this.loadCategories();
+
+    this.contentRefreshService.activitiesChanged$.subscribe(() => this.loadActivities());
 
     this.authService.currentUser$.subscribe(user => {
       this.isLoggedIn = !!user;
@@ -56,6 +60,7 @@ export class ActivitesComponent implements OnInit {
     this.categoryService.getCategories('ACTIVITY').subscribe({
       next: (data) => {
         this.categories = data;
+        this.cdr.detectChanges();
       },
       error: (err) => console.error('Erreur lors du chargement des catégories', err)
     });
