@@ -75,10 +75,30 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
 
+        boolean emailChanged = request.getEmail() != null && !request.getEmail().isBlank() && !request.getEmail().equals(user.getEmail());
+        boolean passwordChanged = request.getPassword() != null && !request.getPassword().isEmpty();
+
+        if (emailChanged && !passwordChanged) {
+            if (request.getCurrentPassword() == null || request.getCurrentPassword().isBlank()) {
+                throw new IllegalArgumentException("Veuillez renseigner votre mot de passe actuel pour valider le changement d'email");
+            }
+
+            if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+                throw new IllegalArgumentException("Mot de passe actuel incorrect");
+            }
+        }
+
+        if (emailChanged) {
+            if (userRepository.existsByEmail(request.getEmail())) {
+                throw new IllegalArgumentException("Cet email est déjà utilisé");
+            }
+            user.setEmail(request.getEmail());
+        }
+
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
 
-        if (request.getPassword() != null && !request.getPassword().isEmpty()) {
+        if (passwordChanged) {
             if (!request.getPassword().equals(request.getConfirmPassword())) {
                 throw new IllegalArgumentException("Les mots de passe ne correspondent pas");
             }

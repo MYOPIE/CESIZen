@@ -15,6 +15,7 @@ export class CompteComponent implements OnInit {
   currentView: 'login' | 'register' | 'forgot' = 'login';
   successMessage = '';
   errorMessage = '';
+  private originalEmail = '';
 
   loginForm = {
     email: '',
@@ -34,6 +35,7 @@ export class CompteComponent implements OnInit {
 
   userProfile: Partial<UserResponse> = {};
 
+  currentPassword = '';
   updatePassword = '';
   confirmUpdatePassword = '';
 
@@ -46,10 +48,15 @@ export class CompteComponent implements OnInit {
       this.isConnected = !!user;
       if (user) {
         this.userProfile = user;
+        this.originalEmail = user.email || '';
       } else {
         this.userProfile = {};
+        this.originalEmail = '';
         this.currentView = 'login';
       }
+      this.currentPassword = '';
+      this.updatePassword = '';
+      this.confirmUpdatePassword = '';
       this.cdr.detectChanges();
     });
   }
@@ -86,6 +93,34 @@ export class CompteComponent implements OnInit {
   validateEmail(email: string): boolean {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return regex.test(email);
+  }
+
+  hasEmailChanged(): boolean {
+    return !!this.userProfile.email && this.userProfile.email !== this.originalEmail;
+  }
+
+  hasPasswordChange(): boolean {
+    return !!this.updatePassword || !!this.confirmUpdatePassword;
+  }
+
+  requiresCurrentPassword(): boolean {
+    return this.hasEmailChanged() && !this.hasPasswordChange();
+  }
+
+  isUpdateDisabled(): boolean {
+    if (!this.userProfile.email || !this.validateEmail(this.userProfile.email)) {
+      return true;
+    }
+
+    if (this.hasPasswordChange()) {
+      return !this.validatePassword(this.updatePassword) || this.updatePassword !== this.confirmUpdatePassword;
+    }
+
+    if (this.requiresCurrentPassword()) {
+      return !this.currentPassword;
+    }
+
+    return false;
   }
 
   onForgotPassword(): void {
@@ -202,6 +237,7 @@ export class CompteComponent implements OnInit {
     this.authService.logout();
     this.loginForm = { email: '', password: '' };
     this.registerForm = { firstName: '', lastName: '', email: '', password: '', confirmPassword: '', acceptTerms: false };
+    this.currentPassword = '';
     this.updatePassword = '';
     this.confirmUpdatePassword = '';
     this.errorMessage = '';
@@ -211,37 +247,51 @@ export class CompteComponent implements OnInit {
   }
 
   onUpdateProfile(): void {
-    if (!this.userProfile.id || !this.userProfile.firstName || !this.userProfile.lastName) {
-      this.errorMessage = 'Le prénom et le nom sont requis.';
+    if (!this.userProfile.id || !this.userProfile.firstName || !this.userProfile.lastName || !this.userProfile.email) {
+      this.errorMessage = 'Le prénom, le nom et l\'adresse e-mail sont requis.';
       this.cdr.detectChanges();
       return;
     }
 
-    // TODO : implémenter la modification de l'adresse e-mail + vérifier que la nouvelle adresse e-mail n'est pas déjà utilisée par un autre compte + valider le format de la nouvelle adresse e-mail + demander la confirmation du mot de passe actuel pour valider les modifications + envoyer un e-mail de confirmation en cas de changement d'adresse e-mail + implémenter la réinitialisation du mot de passe en cas d'oubli du mot de passe actuel pour valider les modifications
+    if (!this.validateEmail(this.userProfile.email)) {
+      this.errorMessage = 'Veuillez renseigner une adresse e-mail valide.';
+      this.cdr.detectChanges();
+      return;
+    }
 
-    if (this.updatePassword && !this.validatePassword(this.updatePassword)) {
+    if (this.requiresCurrentPassword() && !this.currentPassword) {
+      this.errorMessage = 'Veuillez renseigner votre mot de passe actuel pour valider le changement d\'e-mail.';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    if (this.hasPasswordChange() && !this.validatePassword(this.updatePassword)) {
       this.errorMessage = 'Le mot de passe doit faire au moins 8 caractères, et contenir au moins une majuscule, une minuscule et un chiffre.';
       this.cdr.detectChanges();
       return;
     }
 
-    if (this.updatePassword && this.updatePassword !== this.confirmUpdatePassword) {
+    if (this.hasPasswordChange() && this.updatePassword !== this.confirmUpdatePassword) {
       this.errorMessage = 'Les nouveaux mots de passe ne correspondent pas.';
       this.cdr.detectChanges();
       return;
     }
 
     const updateRequest = {
+      email: this.userProfile.email,
       firstName: this.userProfile.firstName,
       lastName: this.userProfile.lastName,
       password: this.updatePassword || '',
-      confirmPassword: this.confirmUpdatePassword || ''
+      confirmPassword: this.confirmUpdatePassword || '',
+      currentPassword: this.requiresCurrentPassword() ? this.currentPassword : ''
     };
 
     this.authService.updateProfile(this.userProfile.id, updateRequest).subscribe({
       next: (updatedUser) => {
         this.errorMessage = '';
         this.successMessage = 'Profil mis à jour avec succès !';
+        this.originalEmail = updatedUser.email || this.userProfile.email || this.originalEmail;
+        this.currentPassword = '';
         this.updatePassword = '';
         this.confirmUpdatePassword = '';
         this.cdr.detectChanges();
@@ -251,7 +301,6 @@ export class CompteComponent implements OnInit {
         this.successMessage = '';
         this.errorMessage = err.error || 'Erreur lors de la mise à jour du profil';
         this.cdr.detectChanges();
-        this.clearMessageAfterDelay();
       }
     });
   }
@@ -283,6 +332,6 @@ export class CompteComponent implements OnInit {
       this.errorMessage = '';
       this.successMessage = '';
       this.cdr.detectChanges();
-    }, 1500);
+    }, 2000);
   }
 }

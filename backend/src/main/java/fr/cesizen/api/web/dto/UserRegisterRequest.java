@@ -6,6 +6,7 @@ public class UserRegisterRequest {
     private String lastName;
     private String password;
     private String confirmPassword;
+    private String currentPassword;
 
     public UserRegisterRequest() {}
     public UserRegisterRequest(String email, String firstName, String lastName,
@@ -22,10 +23,12 @@ public class UserRegisterRequest {
     public String getLastName()        { return lastName; }
     public String getPassword()        { return password; }
     public String getConfirmPassword() { return confirmPassword; }
+    public String getCurrentPassword() { return currentPassword; }
 
     public void setEmail(String email)                   { this.email = email; }
     public void setFirstName(String firstName)           { this.firstName = firstName; }
     public void setLastName(String lastName)             { this.lastName = lastName; }
     public void setPassword(String password)             { this.password = password; }
     public void setConfirmPassword(String confirmPassword) { this.confirmPassword = confirmPassword; }
+    public void setCurrentPassword(String currentPassword) { this.currentPassword = currentPassword; }
 }

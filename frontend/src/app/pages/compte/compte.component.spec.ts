@@ -11,7 +11,8 @@ describe('CompteComponent', () => {
     currentUser$: currentUser$.asObservable(),
     login: vi.fn(),
     register: vi.fn(),
-    logout: vi.fn()
+    logout: vi.fn(),
+    updateProfile: vi.fn()
   } as unknown as AuthService;
 
   const cdr = {
@@ -156,5 +157,92 @@ describe('CompteComponent', () => {
     component.onForgotPassword();
 
     expect(component.errorMessage).toBe('Veuillez renseigner votre adresse e-mail.');
+  });
+
+  it('allows the profile update without changing the password when the email stays the same', () => {
+    const component = createComponent();
+
+    component.userProfile = {
+      id: 1,
+      firstName: 'Marie',
+      lastName: 'Curie',
+      email: 'marie.curie@example.com'
+    };
+    (component as unknown as { originalEmail: string }).originalEmail = 'marie.curie@example.com';
+
+    expect(component.isUpdateDisabled()).toBe(false);
+  });
+
+  it('blocks profile update and shows the current password prompt when the email changes', () => {
+    const component = createComponent();
+
+    component.userProfile = {
+      id: 7,
+      email: 'new@example.com',
+      firstName: 'Marie',
+      lastName: 'Curie'
+    };
+    (component as unknown as { originalEmail: string }).originalEmail = 'marie.curie@example.com';
+
+    expect(component.hasEmailChanged()).toBe(true);
+    expect(component.isUpdateDisabled()).toBe(true);
+
+    component.currentPassword = 'current-password';
+
+    expect(component.isUpdateDisabled()).toBe(false);
+  });
+
+  it('updates the profile with the modified email once the current password is provided', () => {
+    const component = createComponent();
+    const updatedUser: UserResponse = {
+      id: 7,
+      email: 'new@example.com',
+      firstName: 'Marie',
+      lastName: 'Curie',
+      role: 'ROLE_USER',
+      isActive: true,
+      createdAt: '2026-01-01T00:00:00Z',
+      updatedAt: '2026-01-02T00:00:00Z'
+    };
+
+    (authService.updateProfile as ReturnType<typeof vi.fn>).mockReturnValue(of(updatedUser));
+
+    component.userProfile = {
+      id: 7,
+      email: 'new@example.com',
+      firstName: 'Marie',
+      lastName: 'Curie'
+    };
+    (component as unknown as { originalEmail: string }).originalEmail = 'marie.curie@example.com';
+    component.currentPassword = 'current-password';
+
+    component.onUpdateProfile();
+
+    expect(authService.updateProfile).toHaveBeenCalledWith(7, {
+      email: 'new@example.com',
+      firstName: 'Marie',
+      lastName: 'Curie',
+      password: '',
+      confirmPassword: '',
+      currentPassword: 'current-password'
+    });
+    expect(component.successMessage).toBe('Profil mis à jour avec succès !');
+  });
+
+  it('switches to the password change flow when a new password is entered', () => {
+    const component = createComponent();
+
+    component.userProfile = {
+      id: 8,
+      email: 'user@example.com',
+      firstName: 'Jean',
+      lastName: 'Dupont'
+    };
+    (component as unknown as { originalEmail: string }).originalEmail = 'user@example.com';
+    component.updatePassword = 'Password1';
+    component.confirmUpdatePassword = 'Password1';
+
+    expect(component.requiresCurrentPassword()).toBe(false);
+    expect(component.isUpdateDisabled()).toBe(false);
   });
 });

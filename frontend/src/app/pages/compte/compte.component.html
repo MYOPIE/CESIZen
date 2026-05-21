@@ -9,7 +9,7 @@
       {{ errorMessage }}
     </div>
 
-    <!-- Section Connecté -->
+    <!-- Section compte connecté -->
     <div *ngIf="isConnected" class="connected-section">
       <div class="profile-card card card-blue">
         <div class="profile-header">
@@ -46,10 +46,18 @@
               <input type="text" id="lastName" class="form-control" [(ngModel)]="userProfile.lastName" name="lastName" required>
             </div>
           </div>
+
           <div class="form-group">
             <label for="email">E-mail</label>
-            <input type="email" id="email" class="form-control" [value]="userProfile.email" disabled>
+            <input type="email" id="email" class="form-control" [(ngModel)]="userProfile.email" name="email" required>
+            <small *ngIf="hasEmailChanged()" class="form-hint">L'e-mail a été modifié. Saisissez votre mot de passe pour valider le changement.</small>
           </div>
+
+          <div class="form-group" *ngIf="requiresCurrentPassword()">
+            <label for="currentPassword">Mot de passe actuel</label>
+            <input type="password" id="currentPassword" class="form-control" [(ngModel)]="currentPassword" name="currentPassword" placeholder="••••••••">
+          </div>
+
           <div class="form-group">
             <label for="newPassword">Nouveau mot de passe</label>
             <input type="password" id="newPassword" class="form-control" [(ngModel)]="updatePassword" name="newPassword" placeholder="Laissez vide pour ne pas modifier">
@@ -68,12 +76,14 @@
               </li>
             </ul>
           </div>
+
           <div class="form-group" *ngIf="updatePassword">
             <label for="confirmNewPassword">Confirmer le nouveau mot de passe</label>
             <input type="password" id="confirmNewPassword" class="form-control" [(ngModel)]="confirmUpdatePassword" name="confirmNewPassword">
           </div>
+
           <div class="form-buttons">
-            <button type="submit" class="btn btn-primary">Mettre à jour</button>
+            <button type="submit" class="btn btn-primary" [disabled]="isUpdateDisabled()">Mettre à jour</button>
           </div>
         </form>
       </div>
@@ -85,7 +95,7 @@
       </div>
     </div>
 
-    <!-- Section Non connecté -->
+    <!-- Section compte non connecté -->
     <div *ngIf="!isConnected" class="auth-section">
       <div class="auth-container">
         <!-- Formulaire de connexion -->
@@ -96,9 +106,9 @@
           <form (ngSubmit)="onLogin()">
             <div class="form-group">
               <label for="loginEmail">E-mail</label>
-              <input 
-                type="email" 
-                id="loginEmail" 
+              <input
+                type="email"
+                id="loginEmail"
                 class="form-control"
                 [(ngModel)]="loginForm.email"
                 name="email"
@@ -108,9 +118,9 @@
 
             <div class="form-group">
               <label for="loginPassword">Mot de passe</label>
-              <input 
-                type="password" 
-                id="loginPassword" 
+              <input
+                type="password"
+                id="loginPassword"
                 class="form-control"
                 [(ngModel)]="loginForm.password"
                 name="password"
@@ -136,9 +146,9 @@
             <div class="row">
               <div class="form-group col">
                 <label for="registerFirstName">Prénom</label>
-                <input 
-                  type="text" 
-                  id="registerFirstName" 
+                <input
+                  type="text"
+                  id="registerFirstName"
                   class="form-control"
                   [(ngModel)]="registerForm.firstName"
                   name="firstName"
@@ -147,9 +157,9 @@
               </div>
               <div class="form-group col">
                 <label for="registerLastName">Nom</label>
-                <input 
-                  type="text" 
-                  id="registerLastName" 
+                <input
+                  type="text"
+                  id="registerLastName"
                   class="form-control"
                   [(ngModel)]="registerForm.lastName"
                   name="lastName"
@@ -160,9 +170,9 @@
 
             <div class="form-group">
               <label for="registerEmail">E-mail</label>
-              <input 
-                type="email" 
-                id="registerEmail" 
+              <input
+                type="email"
+                id="registerEmail"
                 class="form-control"
                 [(ngModel)]="registerForm.email"
                 name="email"
@@ -172,9 +182,9 @@
 
             <div class="form-group">
               <label for="registerPassword">Mot de passe</label>
-              <input 
-                type="password" 
-                id="registerPassword" 
+              <input
+                type="password"
+                id="registerPassword"
                 class="form-control"
                 [(ngModel)]="registerForm.password"
                 name="password"
@@ -198,9 +208,9 @@
 
             <div class="form-group">
               <label for="confirmPassword">Confirmer mot de passe</label>
-              <input 
-                type="password" 
-                id="confirmPassword" 
+              <input
+                type="password"
+                id="confirmPassword"
                 class="form-control"
                 [(ngModel)]="registerForm.confirmPassword"
                 name="confirmPassword"
@@ -209,8 +219,8 @@
             </div>
 
             <div class="form-group checkbox">
-              <input 
-                type="checkbox" 
+              <input
+                type="checkbox"
                 id="acceptTerms"
                 [(ngModel)]="registerForm.acceptTerms"
                 name="acceptTerms"
@@ -234,9 +244,9 @@
           <form (ngSubmit)="onForgotPassword()">
             <div class="form-group">
               <label for="forgotEmail">E-mail</label>
-              <input 
-                type="email" 
-                id="forgotEmail" 
+              <input
+                type="email"
+                id="forgotEmail"
                 class="form-control"
                 [(ngModel)]="forgotEmail"
                 name="forgotEmail"

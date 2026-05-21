@@ -474,7 +474,7 @@
               <td>{{ u.id }}</td>
               <td>{{ u.email }}</td>
               <td><strong>{{ u.firstName }} {{ u.lastName }}</strong></td>
-              <td>{{ u.role }}</td>
+              <td>{{ u.role === 'ROLE_ADMIN' ? 'Administrateur' : 'Utilisateur' }}</td>
               <td>
                 <span class="badge" [ngClass]="u.isActive ? 'badge-success' : 'badge-danger'">{{ u.isActive ? 'Actif' : 'Désactivé' }}</span>
               </td>
