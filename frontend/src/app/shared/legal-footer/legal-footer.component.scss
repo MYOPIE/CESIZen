@@ -1,0 +1,42 @@
+@use '../../../styles/variables.scss' as *;
+
+.legal-footer {
+  background: linear-gradient(135deg, rgba($dark-blue, 0.98), rgba($primary-blue, 0.96));
+  color: $white;
+  padding: 2rem 0;
+  margin-top: auto;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 2rem;
+
+  h3,
+  h4 {
+    color: $white;
+    margin-bottom: 0.75rem;
+  }
+
+  p,
+  li,
+  a {
+    color: rgba($white, 0.9);
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li + li {
+    margin-top: 0.45rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}

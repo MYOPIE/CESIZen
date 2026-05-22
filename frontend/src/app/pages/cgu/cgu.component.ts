@@ -1,0 +1,12 @@
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+
+@Component({
+  selector: 'app-cgu',
+  standalone: true,
+  imports: [CommonModule, RouterModule],
+  templateUrl: './cgu.component.html',
+  styleUrl: './cgu.component.scss'
+})
+export class CguComponent {}

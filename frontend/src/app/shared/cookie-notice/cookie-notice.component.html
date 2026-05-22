@@ -1,0 +1,16 @@
+<section class="cookie-notice" *ngIf="isVisible" aria-label="Information RGPD">
+  <div class="cookie-notice-card">
+    <div class="cookie-notice-text">
+      <h2>Information confidentialité</h2>
+      <p>
+        CESIZen n'utilise pas de cookies publicitaires ni de mesure d'audience. Seuls des stockages strictement nécessaires au fonctionnement du compte et à la sécurité peuvent être utilisés.
+        Consultez la <a routerLink="/cookies">politique cookies</a> et la <a routerLink="/confidentialite">politique de confidentialité</a> pour le détail.
+      </p>
+    </div>
+
+    <div class="cookie-notice-actions">
+      <button type="button" class="btn btn-primary btn-sm" (click)="dismiss()">J'ai compris</button>
+      <a routerLink="/mentions-legales" class="cookie-link">Mentions légales</a>
+    </div>
+  </div>
+</section>
