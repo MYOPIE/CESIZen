@@ -8,6 +8,7 @@ import { CategoryService } from '../../services/category.service';
 import { DifficultyService } from '../../services/difficulty.service';
 import { AuthService } from '../../services/auth.service';
 import { ContentRefreshService } from '../../services/content-refresh.service';
+import { NotificationService } from '../../shared/notification.service';
 
 describe('AdminComponent', () => {
   const activiteService = {
@@ -71,6 +72,12 @@ describe('AdminComponent', () => {
     detectChanges: vi.fn()
   } as unknown as ChangeDetectorRef;
 
+  const notificationService = {
+    showSuccess: vi.fn(),
+    showError: vi.fn(),
+    showInfo: vi.fn()
+  } as unknown as NotificationService;
+
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -86,7 +93,8 @@ describe('AdminComponent', () => {
       contentRefreshService,
       router as never,
       route as never,
-      cdr
+      cdr,
+      notificationService
     );
   }
 

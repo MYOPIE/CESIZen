@@ -29,9 +29,15 @@ export class NotificationService {
     }
   }
 
-  showSuccess(message: string, ttl = 4000) { this.push({ type: 'success', message }, ttl); }
-  showError(message: string, ttl = 6000) { this.push({ type: 'error', message }, ttl); }
-  showInfo(message: string, ttl = 4000) { this.push({ type: 'info', message }, ttl); }
+  showSuccess(message: string, ttl = 2000) { this.push({ type: 'success', message }, ttl); }
+  showError(message?: string, ttl = 6000) { 
+    const errorMsg = (message && message.trim()) ? message.trim() : 'Une erreur est survenue';
+    this.push({ type: 'error', message: errorMsg }, ttl); 
+  }
+  showInfo(message?: string, ttl = 4000) { 
+    const infoMsg = (message && message.trim()) ? message.trim() : 'Information';
+    this.push({ type: 'info', message: infoMsg }, ttl); 
+  }
 
   remove(id: number) {
     const list = this.notificationsSubject.value.filter(n => n.id !== id);

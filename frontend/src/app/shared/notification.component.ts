@@ -8,7 +8,7 @@ import { NotificationService, Notification } from './notification.service';
   imports: [CommonModule],
   template: `
     <div class="notifications" aria-live="polite">
-      <div *ngFor="let n of notifications" class="toast" [ngClass]="n.type">
+      <div *ngFor="let n of (svc.notifications$ | async)" class="toast" [ngClass]="n.type">
         <span class="message">{{ n.message }}</span>
         <button class="close" (click)="dismiss(n.id)">×</button>
       </div>
@@ -26,11 +26,7 @@ import { NotificationService, Notification } from './notification.service';
   ]
 })
 export class NotificationComponent {
-  notifications: Notification[] = [];
-
-  constructor(private svc: NotificationService) {
-    this.svc.notifications$.subscribe(list => this.notifications = list);
-  }
+  constructor(public svc: NotificationService) {}
 
   dismiss(id: number) { this.svc.remove(id); }
 }
