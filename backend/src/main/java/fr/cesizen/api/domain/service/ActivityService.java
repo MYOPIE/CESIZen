@@ -115,6 +115,13 @@ public class ActivityService {
     public void deleteActivity(@NonNull Long id) {
         Activity activity = activityRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Activité non trouvée"));
+        // Supprimer les références de cette activité dans les favoris des utilisateurs
+        userRepository.findAll().forEach(user -> {
+            if (user.getFavoriteActivities() != null && user.getFavoriteActivities().remove(activity)) {
+                userRepository.save(user);
+            }
+        });
+
         activityRepository.delete(activity);
     }
 

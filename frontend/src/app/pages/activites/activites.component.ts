@@ -50,7 +50,19 @@ export class ActivitesComponent implements OnInit {
     this.activiteService.getActiveActivites().subscribe({
       next: (data) => {
         this.activites = data;
-        this.cdr.detectChanges();
+        // Si l'utilisateur est connecté, récupérer ses favoris et marquer les activités
+        if (this.authService.currentUserValue) {
+          this.favoriteService.getFavoriteActivities().subscribe({
+            next: (fav) => {
+              const favIds = new Set(fav.map((a: any) => a.id));
+              this.activites.forEach(a => a.isFavorite = favIds.has(a.id));
+              this.cdr.detectChanges();
+            },
+            error: () => this.cdr.detectChanges()
+          });
+        } else {
+          this.cdr.detectChanges();
+        }
       },
       error: (err) => console.error('Erreur lors du chargement des activités', err)
     });

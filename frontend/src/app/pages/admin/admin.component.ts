@@ -9,6 +9,7 @@ import { AuthService, UserResponse } from '../../services/auth.service';
 import { ContentRefreshService } from '../../services/content-refresh.service';
 import { UserService } from '../../services/user.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { NotificationService } from '../../shared/notification.service';
 
 @Component({
   selector: 'app-admin',
@@ -69,7 +70,8 @@ export class AdminComponent implements OnInit {
     private contentRefreshService: ContentRefreshService,
     private router: Router,
     private route: ActivatedRoute,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -130,10 +132,11 @@ export class AdminComponent implements OnInit {
         this.loadUsers();
         this.contentRefreshService.notifyUsersChanged();
         this.cancelUserForm();
+        this.notificationService.showSuccess('Utilisateur créé avec succès');
       },
       error: (err) => {
         console.error('Erreur création utilisateur', err);
-        alert('Erreur lors de la création de l\'utilisateur');
+        this.notificationService.showError(err?.error || 'Erreur lors de la création de l\'utilisateur');
       }
     });
   }
@@ -145,20 +148,20 @@ export class AdminComponent implements OnInit {
   }
 
   promoteUser(id: number): void {
-    this.userService.promoteToAdmin(id).subscribe({ next: () => this.loadUsers(), error: (err) => console.error(err) });
+    this.userService.promoteToAdmin(id).subscribe({ next: () => { this.loadUsers(); this.notificationService.showSuccess('Utilisateur promu administrateur'); }, error: (err) => { console.error(err); this.notificationService.showError(err?.error || 'Erreur lors de la promotion'); } });
   }
 
   demoteUser(id: number): void {
-    this.userService.demoteFromAdmin(id).subscribe({ next: () => this.loadUsers(), error: (err) => console.error(err) });
+    this.userService.demoteFromAdmin(id).subscribe({ next: () => { this.loadUsers(); this.notificationService.showSuccess('Rôle admin retiré'); }, error: (err) => { console.error(err); this.notificationService.showError(err?.error || 'Erreur lors de la modification du rôle'); } });
   }
 
   toggleUserActive(user: UserResponse): void {
     if (user.isActive) {
       if (!confirm('Êtes-vous sûr de vouloir désactiver ce compte ?')) return;
-      this.userService.deactivateUser(user.id).subscribe({ next: () => this.loadUsers(), error: (err) => console.error(err) });
+      this.userService.deactivateUser(user.id).subscribe({ next: () => { this.loadUsers(); this.notificationService.showSuccess('Utilisateur désactivé'); }, error: (err) => { console.error(err); this.notificationService.showError(err?.error || 'Erreur lors de la désactivation'); } });
     } else {
       if (!confirm('Êtes-vous sûr de vouloir réactiver ce compte ?')) return;
-      this.userService.reactivateUser(user.id).subscribe({ next: () => this.loadUsers(), error: (err) => console.error(err) });
+      this.userService.reactivateUser(user.id).subscribe({ next: () => { this.loadUsers(); this.notificationService.showSuccess('Utilisateur réactivé'); }, error: (err) => { console.error(err); this.notificationService.showError(err?.error || 'Erreur lors de la réactivation'); } });
     }
   }
 
@@ -168,8 +171,9 @@ export class AdminComponent implements OnInit {
         next: () => {
           this.loadUsers();
           this.contentRefreshService.notifyUsersChanged();
+          this.notificationService.showSuccess('Utilisateur supprimé');
         },
-        error: (err) => console.error(err)
+        error: (err) => { console.error(err); this.notificationService.showError(err?.error || 'Erreur lors de la suppression de l\'utilisateur'); }
       });
     }
   }
@@ -214,10 +218,11 @@ export class AdminComponent implements OnInit {
         this.contentRefreshService.notifyActivitiesChanged();
         this.contentRefreshService.notifyInformationsChanged();
         this.cancelCategoryForm();
+        this.notificationService.showSuccess('Catégorie créée');
       },
       error: (err) => {
         console.error('Erreur création catégorie', err);
-        alert('Erreur lors de la création de la catégorie');
+        this.notificationService.showError(err?.error || 'Erreur lors de la création de la catégorie');
       }
     });
   }
@@ -235,8 +240,9 @@ export class AdminComponent implements OnInit {
           this.loadCategories();
           this.contentRefreshService.notifyActivitiesChanged();
           this.contentRefreshService.notifyInformationsChanged();
+          this.notificationService.showSuccess('Catégorie supprimée');
         },
-        error: (err) => console.error('Erreur suppression catégorie', err)
+        error: (err) => { console.error('Erreur suppression catégorie', err); this.notificationService.showError(err?.error || 'Erreur lors de la suppression de la catégorie'); }
       });
     }
   }
@@ -272,10 +278,11 @@ export class AdminComponent implements OnInit {
           this.loadActivites();
           this.contentRefreshService.notifyActivitiesChanged();
           this.cancelActiviteForm();
+          this.notificationService.showSuccess('Activité mise à jour');
         },
         error: (err) => {
           console.error('Erreur mise à jour activité', err);
-          alert('Erreur lors de la mise à jour de l\'activité');
+          this.notificationService.showError(err?.error || 'Erreur lors de la mise à jour de l\'activité');
         }
       });
     } else {
@@ -284,10 +291,11 @@ export class AdminComponent implements OnInit {
           this.loadActivites();
           this.contentRefreshService.notifyActivitiesChanged();
           this.cancelActiviteForm();
+          this.notificationService.showSuccess('Activité créée');
         },
         error: (err) => {
           console.error('Erreur création activité', err);
-          alert('Erreur lors de la création de l\'activité');
+          this.notificationService.showError(err?.error || 'Erreur lors de la création de l\'activité');
         }
       });
     }
@@ -316,8 +324,9 @@ export class AdminComponent implements OnInit {
         next: () => {
           this.loadActivites();
           this.contentRefreshService.notifyActivitiesChanged();
+          this.notificationService.showSuccess('Activité supprimée');
         },
-        error: (err) => console.error('Erreur suppression activité', err)
+        error: (err) => { console.error('Erreur suppression activité', err); this.notificationService.showError(err?.error || 'Erreur lors de la suppression de l\'activité'); }
       });
     }
   }
@@ -331,8 +340,9 @@ export class AdminComponent implements OnInit {
       next: () => {
         this.loadActivites();
         this.contentRefreshService.notifyActivitiesChanged();
+        this.notificationService.showSuccess('Statut de l\'activité mis à jour');
       },
-      error: (err) => console.error('Erreur mise à jour de l\'état de l\'activité', err)
+      error: (err) => { console.error('Erreur mise à jour de l\'état de l\'activité', err); this.notificationService.showError(err?.error || 'Erreur lors de la mise à jour'); }
     });
   }
 
@@ -365,10 +375,11 @@ export class AdminComponent implements OnInit {
           this.loadInformations();
           this.contentRefreshService.notifyInformationsChanged();
           this.cancelInformationForm();
+          this.notificationService.showSuccess('Information mise à jour');
         },
         error: (err) => {
           console.error('Erreur mise à jour information', err);
-          alert('Erreur lors de la mise à jour de l\'information');
+          this.notificationService.showError(err?.error || 'Erreur lors de la mise à jour de l\'information');
         }
       });
     } else {
@@ -377,10 +388,11 @@ export class AdminComponent implements OnInit {
           this.loadInformations();
           this.contentRefreshService.notifyInformationsChanged();
           this.cancelInformationForm();
+          this.notificationService.showSuccess('Information créée');
         },
         error: (err) => {
           console.error('Erreur création information', err);
-          alert('Erreur lors de la création de l\'information');
+          this.notificationService.showError(err?.error || 'Erreur lors de la création de l\'information');
         }
       });
     }
@@ -407,8 +419,9 @@ export class AdminComponent implements OnInit {
         next: () => {
           this.loadInformations();
           this.contentRefreshService.notifyInformationsChanged();
+          this.notificationService.showSuccess('Information supprimée');
         },
-        error: (err) => console.error('Erreur suppression information', err)
+        error: (err) => { console.error('Erreur suppression information', err); this.notificationService.showError(err?.error || 'Erreur lors de la suppression de l\'information'); }
       });
     }
   }
@@ -422,8 +435,9 @@ export class AdminComponent implements OnInit {
       next: () => {
          this.loadInformations();
         this.contentRefreshService.notifyInformationsChanged();
+        this.notificationService.showSuccess('Statut de l\'information mis à jour');
       },
-      error: (err) => console.error('Erreur mise à jour statut information', err)
+      error: (err) => { console.error('Erreur mise à jour statut information', err); this.notificationService.showError(err?.error || 'Erreur lors de la mise à jour'); }
     });
   }
 
