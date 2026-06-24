@@ -1,12 +1,13 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { AuthService, UserResponse } from '../../services/auth.service';
 
 @Component({
   selector: 'app-compte',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './compte.component.html',
   styleUrl: './compte.component.scss'
 })
@@ -322,6 +323,46 @@ export class CompteComponent implements OnInit {
         });
       }
     }
+  }
+
+  exportMyData(): void {
+    if (!this.userProfile.id) {
+      this.errorMessage = 'Aucune donnée de profil à exporter pour le moment.';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    const exportPayload = {
+      exportedAt: new Date().toISOString(),
+      source: 'CESIZen',
+      profile: {
+        id: this.userProfile.id,
+        firstName: this.userProfile.firstName,
+        lastName: this.userProfile.lastName,
+        email: this.userProfile.email,
+        role: this.userProfile.role,
+        isActive: this.userProfile.isActive,
+        createdAt: this.userProfile.createdAt,
+        updatedAt: this.userProfile.updatedAt
+      },
+      storage: {
+        currentUser: true,
+        token: !!localStorage.getItem('token')
+      }
+    };
+
+    const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `cesizen-donnees-compte-${this.userProfile.id}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+
+    this.successMessage = 'Export des données généré avec succès.';
+    this.errorMessage = '';
+    this.cdr.detectChanges();
+    this.clearMessageAfterDelay();
   }
 
   clearMessageAfterDelay(): void {

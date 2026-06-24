@@ -113,6 +113,8 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("Utilisateur non trouvé"));
 
         clearUserFavorites(user);
+        // Persister la suppression des favoris pour assurer la mise à jour des tables de jointure
+        userRepository.save(user);
         userRepository.deleteById(id);
     }
 

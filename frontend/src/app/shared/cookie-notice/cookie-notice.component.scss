@@ -1,0 +1,75 @@
+@use '../../../styles/variables.scss' as *;
+
+.cookie-notice {
+  position: fixed;
+  left: 1rem;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 1300;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.cookie-notice-card {
+  pointer-events: auto;
+  width: min(1100px, 100%);
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border-radius: 18px;
+  background: rgba($dark-blue, 0.98);
+  color: $white;
+  box-shadow: $shadow-medium;
+  border: 1px solid rgba($white, 0.12);
+}
+
+.cookie-notice-text {
+  h2 {
+    color: $white;
+    margin-bottom: 0.35rem;
+    font-size: 1.05rem;
+  }
+
+  p {
+    margin: 0;
+    color: rgba($white, 0.92);
+  }
+
+  a {
+    color: $light-green;
+    font-weight: 600;
+  }
+}
+
+.cookie-notice-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-end;
+  white-space: nowrap;
+}
+
+.cookie-link {
+  color: rgba($white, 0.88);
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .cookie-notice {
+    left: 0.5rem;
+    right: 0.5rem;
+    bottom: 0.5rem;
+  }
+
+  .cookie-notice-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cookie-notice-actions {
+    align-items: stretch;
+  }
+}

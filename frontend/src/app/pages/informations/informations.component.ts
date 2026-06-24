@@ -47,7 +47,18 @@ export class InformationsComponent implements OnInit {
     this.informationService.getPublishedInformations().subscribe({
       next: (data) => {
         this.articles = data;
-        this.cdr.detectChanges();
+        if (this.authService.currentUserValue) {
+          this.favoriteService.getFavoriteInformations().subscribe({
+            next: (fav) => {
+              const favIds = new Set(fav.map((i: any) => i.id));
+              this.articles.forEach(a => a.isFavorite = favIds.has(a.id));
+              this.cdr.detectChanges();
+            },
+            error: () => this.cdr.detectChanges()
+          });
+        } else {
+          this.cdr.detectChanges();
+        }
       },
       error: (err) => console.error('Erreur lors du chargement des informations', err)
     });

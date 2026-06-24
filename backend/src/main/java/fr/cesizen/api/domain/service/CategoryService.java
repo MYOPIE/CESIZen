@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fr.cesizen.api.domain.entity.Category;
+import fr.cesizen.api.domain.repository.ActivityRepository;
 import fr.cesizen.api.domain.repository.CategoryRepository;
+import fr.cesizen.api.domain.repository.InformationRepository;
 import fr.cesizen.api.web.dto.CategoryRequest;
 import fr.cesizen.api.web.dto.CategoryResponse;
 
@@ -16,9 +18,13 @@ import fr.cesizen.api.web.dto.CategoryResponse;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final ActivityRepository activityRepository;
+    private final InformationRepository informationRepository;
 
-    public CategoryService(CategoryRepository categoryRepository) {
+    public CategoryService(CategoryRepository categoryRepository, ActivityRepository activityRepository, InformationRepository informationRepository) {
         this.categoryRepository = categoryRepository;
+        this.activityRepository = activityRepository;
+        this.informationRepository = informationRepository;
     }
 
     public CategoryResponse createCategory(CategoryRequest request) {
@@ -71,6 +77,14 @@ public class CategoryService {
     public void deleteCategory(@NonNull Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Catégorie non trouvée"));
+        // Vérifier si la catégorie est utilisée par au moins une activité ou information
+        boolean usedByActivities = activityRepository.existsByCategoryId(id);
+        boolean usedByInformations = informationRepository.existsByCategoryId(id);
+
+        if (usedByActivities || usedByInformations) {
+            throw new IllegalArgumentException("Impossible de supprimer : la catégorie est utilisée par au moins une activité ou information");
+        }
+
         categoryRepository.delete(category);
     }
 

@@ -11,6 +11,7 @@ import fr.cesizen.api.domain.entity.Category;
 import fr.cesizen.api.domain.entity.Information;
 import fr.cesizen.api.domain.repository.CategoryRepository;
 import fr.cesizen.api.domain.repository.InformationRepository;
+import fr.cesizen.api.domain.repository.UserRepository;
 import fr.cesizen.api.web.dto.CategoryResponse;
 import fr.cesizen.api.web.dto.InformationRequest;
 import fr.cesizen.api.web.dto.InformationResponse;
@@ -21,11 +22,13 @@ public class InformationService {
 
     private final InformationRepository informationRepository;
     private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public InformationService(InformationRepository informationRepository, CategoryRepository categoryRepository) {
+    public InformationService(InformationRepository informationRepository, CategoryRepository categoryRepository, UserRepository userRepository) {
         this.informationRepository = informationRepository;
         this.categoryRepository = categoryRepository;
+        this.userRepository = userRepository;
     }
 
     public InformationResponse createInformation(@NonNull InformationRequest request) {
@@ -95,6 +98,13 @@ public class InformationService {
     public void deleteInformation(@NonNull Long id) {
         Information information = informationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Information non trouvée"));
+        // Supprimer les références de cette information dans les favoris des utilisateurs
+        userRepository.findAll().forEach(user -> {
+            if (user.getFavoriteInformations() != null && user.getFavoriteInformations().remove(information)) {
+                userRepository.save(user);
+            }
+        });
+
         informationRepository.delete(information);
     }
 

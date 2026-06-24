@@ -1,0 +1,7 @@
+@use '../../../styles/variables.scss' as *;
+
+.legal-page {
+  .legal-card {
+    border-left: 4px solid $warning;
+  }
+}

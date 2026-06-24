@@ -90,6 +90,7 @@
 
       <!-- Actions de compte -->
       <div class="account-actions mt-4">
+        <button class="btn btn-primary" (click)="exportMyData()">Télécharger mes données</button>
         <button class="btn btn-secondary" (click)="onLogout()">Se déconnecter</button>
         <button class="btn btn-warning" (click)="onDeleteAccount()">Supprimer mon compte</button>
       </div>
@@ -225,7 +226,7 @@
                 [(ngModel)]="registerForm.acceptTerms"
                 name="acceptTerms"
               >
-              <label for="acceptTerms">J'accepte les conditions d'utilisation et la politique de confidentialité</label>
+              <label for="acceptTerms">J'accepte les <a routerLink="/cgu">conditions d'utilisation</a>, la <a routerLink="/confidentialite">politique de confidentialité</a> et la <a routerLink="/cookies">politique cookies</a></label>
             </div>
 
             <button type="submit" class="btn btn-green btn-block">S'inscrire</button>
@@ -271,6 +272,7 @@
           <li>Nous respectons strictement le RGPD</li>
           <li>Votre mot de passe ne nous est jamais transmis en clair</li>
           <li>Vous pouvez supprimer votre compte et toutes vos données à tout moment</li>
+          <li>Vous pouvez télécharger vos données personnelles depuis cette page</li>
         </ul>
       </div>
     </div>

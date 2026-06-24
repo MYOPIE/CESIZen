@@ -1,5 +1,82 @@
-<app-navbar></app-navbar>
+<nav class="navbar">
+	<div class="navbar-container">
+		<div class="navbar-logo">
+			<span class="logo-icon">◇</span>
+			<span class="logo-text">CESIZen</span>
+		</div>
 
-<router-outlet></router-outlet>
+		<button class="navbar-toggle" (click)="toggleMenu()" [attr.aria-expanded]="isMenuOpen">
+			<span></span>
+			<span></span>
+			<span></span>
+		</button>
+
+		<ul class="navbar-menu" [class.active]="isMenuOpen">
+			<li><a routerLink="/" routerLinkActive="active" (click)="closeMenu()" [routerLinkActiveOptions]="{ exact: true }">Accueil</a></li>
+			<li><a routerLink="/informations" routerLinkActive="active" (click)="closeMenu()">Informations</a></li>
+			<li><a routerLink="/activites" routerLinkActive="active" (click)="closeMenu()">Activités de détente</a></li>
+
+			<li *ngIf="currentUser?.role === 'ROLE_ADMIN'">
+				<a routerLink="/admin" routerLinkActive="active" (click)="closeMenu()">Panel Admin</a>
+			</li>
+
+			<li>
+				<a routerLink="/compte" routerLinkActive="active" (click)="closeMenu()">
+					<ng-container *ngIf="currentUser; else notLogged">
+						👤 {{ userDisplayName }}
+					</ng-container>
+					<ng-template #notLogged>Mon compte</ng-template>
+				</a>
+			</li>
+		</ul>
+	</div>
+</nav>
+
+<section class="cookie-notice" aria-label="Information RGPD" [class.is-hidden]="cookieNoticeHidden">
+	<div class="cookie-notice-card">
+		<div class="cookie-notice-text">
+			<h2>Information confidentialité</h2>
+			<p>
+				CESIZen n'utilise pas de cookies publicitaires ni de mesure d'audience. Seuls des stockages strictement nécessaires au fonctionnement du compte et à la sécurité peuvent être utilisés.
+				Consultez la <a href="/cookies">politique cookies</a> et la <a href="/confidentialite">politique de confidentialité</a> pour le détail.
+			</p>
+		</div>
+
+		<div class="cookie-notice-actions">
+			<button type="button" class="btn btn-primary btn-sm" (click)="dismissCookieNotice()">J'ai compris</button>
+			<a href="/mentions-legales" class="cookie-link">Mentions légales</a>
+		</div>
+	</div>
+</section>
+
+<app-notification></app-notification>
+
+<main class="app-content">
+	<router-outlet></router-outlet>
+</main>
+
+<footer class="legal-footer">
+	<div class="container footer-grid">
+		<div>
+			<h3>CESIZen</h3>
+			<p>Plateforme d'information et d'accompagnement. Les contenus sont pédagogiques et ne remplacent pas un avis médical.</p>
+		</div>
+
+		<div>
+			<h4>Documents</h4>
+			<ul>
+				<li><a href="/mentions-legales">Mentions légales</a></li>
+				<li><a href="/confidentialite">Politique de confidentialité</a></li>
+				<li><a href="/cgu">Conditions d'utilisation</a></li>
+				<li><a href="/cookies">Politique cookies</a></li>
+			</ul>
+		</div>
+
+		<div>
+			<h4>Droits RGPD</h4>
+			<p>Accès, rectification, effacement, limitation, opposition et portabilité sont décrits dans la politique de confidentialité.</p>
+		</div>
+	</div>
+</footer>
 
 

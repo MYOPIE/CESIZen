@@ -30,4 +30,14 @@ export class FavoriteService {
     const userId = this.authService.currentUserValue?.id;
     return this.http.delete<void>(`${this.apiUrl}/users/${userId}/informations/${informationId}`);
   }
+
+  getFavoriteActivities(): Observable<any[]> {
+    const userId = this.authService.currentUserValue?.id;
+    return this.http.get<any[]>(`${this.apiUrl}/users/${userId}`);
+  }
+
+  getFavoriteInformations(): Observable<any[]> {
+    const userId = this.authService.currentUserValue?.id;
+    return this.http.get<any[]>(`${this.apiUrl}/users/${userId}/informations`);
+  }
 }
