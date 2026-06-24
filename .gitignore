@@ -24,8 +24,4 @@ backend/target/
 Thumbs.db
 
 # Documentation
-CAHIER_RECETTE_TESTS.md
-DOCUMENTATION_TECHNIQUE_BLOC_2.md
-JWT_DOCUMENTATION.md
-presentation_slides.md
-tech_summary.md
+docs/
